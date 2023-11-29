@@ -8,4 +8,4 @@ This service is responsible for generating verification reports given metadata a
 > TODO
 
 # Architectural overview
-![](./architecture.png)
+![](./doc/architecture.png)
