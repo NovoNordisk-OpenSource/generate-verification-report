@@ -7,5 +7,5 @@ This service is responsible for generating verification reports given metadata a
 # How to use this?
 > TODO
 
-# Architectural overview
-![](./doc/architecture.png)
+# Generator workflow 
+![](./doc/workflow.png)
