@@ -26,10 +26,20 @@ func main() {
 	if err := VerifyParameters(ctx, Logger); err != nil {
 		panic(err)
 	}
+	// TODO: Port of stages
+	if err := GenerateVerificationReport(ctx, Logger); err != nil {
+		panic(err)
+	}
 }
 
 func VerifyParameters(ctx context.Context, log zerolog.Logger) error {
 	log.Info().Msg("Verifying parameters")
+
+	return nil
+}
+
+func GenerateVerificationReport(ctx context.Context, log zerolog.Logger) error {
+	log.Info().Msg("Generating verification report")
 
 	return nil
 }
