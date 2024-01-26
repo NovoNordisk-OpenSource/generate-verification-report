@@ -9,32 +9,34 @@ import (
 	"os"
 
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 
 	"dagger.io/dagger"
 )
 
+var Logger zerolog.Logger
+
 func main() {
-	initLog()
+	Logger = initLogger()
 
 	ctx := context.Background()
-	if err := CollectParameters(ctx); err != nil {
+
+	if err := CollectParameters(ctx, Logger); err != nil {
 		panic(err)
 	}
-	if err := VerifyParameters(ctx); err != nil {
+	if err := VerifyParameters(ctx, Logger); err != nil {
 		panic(err)
 	}
 }
 
-func VerifyParameters(ctx context.Context) error {
+func VerifyParameters(ctx context.Context, log zerolog.Logger) error {
 	log.Info().Msg("Verifying parameters")
 
 	return nil
 }
 
-func CollectParameters(ctx context.Context) error {
+func CollectParameters(ctx context.Context, log zerolog.Logger) error {
 	// Initialize Dagger client
-	client, err := dagger.Connect(ctx, dagger.WithLogOutput(os.Stderr))
+	client, err := dagger.Connect(ctx, dagger.WithLogOutput(log))
 	if err != nil {
 		return err
 	}
@@ -71,7 +73,18 @@ func CollectParameters(ctx context.Context) error {
 	return nil
 }
 
-func initLog() {
+func initLogger() zerolog.Logger {
+	logFile, _ := os.OpenFile(
+		"run.log",
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
+		0644,
+	)
+	consoleWriter := zerolog.ConsoleWriter{Out: os.Stdout}
+
+	multiWriter := zerolog.MultiLevelWriter(consoleWriter, logFile)
+
+	log := zerolog.New(multiWriter).With().Timestamp().Logger()
+
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	debug := flag.Bool("debug", false, "sets log level to debug")
 
@@ -83,11 +96,14 @@ func initLog() {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
 
-	log.Info().Msg("Running..")
+	log.Info().Msg("Logger initialized")
+	return log
 }
 
 // NOTE: For debugging purposes for now
 func readAndPrintJSON(fileName string) error {
+	log := Logger
+
 	// Open the JSON file
 	file, err := os.Open(fileName)
 	if err != nil {
@@ -111,7 +127,7 @@ func readAndPrintJSON(fileName string) error {
 	}
 
 	// Print the content
-	fmt.Printf("JSON Data:\n%+v\n", jsonData)
+	log.Info().Msg(fmt.Sprintf("JSON Data:\n%+v\n", jsonData))
 
 	return nil
 }
