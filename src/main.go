@@ -10,42 +10,42 @@ import (
 
 	"dagger.io/dagger"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
-//var Logger zerolog.Logger
-
 func main() {
-	//log := initLogger()
-	//ctx := context.WithValue(context.Background(), "log", log)
+	log.Logger = initLogger()
+	log.Info().Msg("Logger initialized")
+
 	ctx := context.Background()
 
-	if err := CollectParameters(ctx, log); err != nil {
+	if err := CollectParameters(ctx); err != nil {
 		panic(err)
 	}
-	if err := VerifyParameters(ctx, log); err != nil {
+	if err := VerifyParameters(ctx); err != nil {
 		panic(err)
 	}
 	// TODO: Port of stages
-	if err := GenerateVerificationReport(ctx, log); err != nil {
+	if err := GenerateVerificationReport(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func VerifyParameters(ctx context.Context, log zerolog.Logger) error {
+func VerifyParameters(ctx context.Context) error {
 	log.Info().Msg("Verifying parameters")
 
 	return nil
 }
 
-func GenerateVerificationReport(ctx context.Context, log zerolog.Logger) error {
+func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msg("Generating verification report")
 
 	return nil
 }
 
-func CollectParameters(ctx context.Context, log zerolog.Logger) error {
+func CollectParameters(ctx context.Context) error {
 	// Initialize Dagger client
-	client, err := dagger.Connect(ctx, dagger.WithLogOutput(log))
+	client, err := dagger.Connect(ctx, dagger.WithLogOutput(log.Logger))
 	if err != nil {
 		return err
 	}
@@ -94,7 +94,7 @@ func initLogger() zerolog.Logger {
 
 	multiWriter := zerolog.MultiLevelWriter(consoleWriter, logFile)
 
-	log := zerolog.New(multiWriter).With().Timestamp().Logger()
+	multi := zerolog.New(multiWriter).With().Timestamp().Logger()
 
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	debug := flag.Bool("debug", false, "sets log level to debug")
@@ -107,8 +107,7 @@ func initLogger() zerolog.Logger {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
 
-	log.Info().Msg("Logger initialized")
-	return log
+	return multi
 }
 
 // NOTE: For debugging purposes for now
