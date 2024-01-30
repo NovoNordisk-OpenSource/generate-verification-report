@@ -5,7 +5,23 @@ Software developers who understand the QMS toolchain.
 This service is responsible for generating verification reports given metadata about the QMS pipeline run, the test results, and Git context.
 
 # How to use this?
-> TODO
+> Mostly still TODO
+
+## Installed prerequisites
+- golang (version: >=1.21.6)
+- dagger runtime (version: >= 0.9.7)
+
+> The Dagger runtime is not required, but it renders nicer and logs are filtered properly when using it over:
+> ```bash
+> go run main.go
+> ```
+
+## Running the Dagger workflow
+From within `/src`, run:
+
+```bash
+dagger run go run main.go
+```
 
 # Generator workflow 
 ![](./doc/workflow.png)
