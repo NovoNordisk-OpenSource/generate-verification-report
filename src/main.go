@@ -8,26 +8,25 @@ import (
 	"io"
 	"os"
 
-	"github.com/rs/zerolog"
-
 	"dagger.io/dagger"
+	"github.com/rs/zerolog"
 )
 
-var Logger zerolog.Logger
+//var Logger zerolog.Logger
 
 func main() {
-	Logger = initLogger()
-
+	//log := initLogger()
+	//ctx := context.WithValue(context.Background(), "log", log)
 	ctx := context.Background()
 
-	if err := CollectParameters(ctx, Logger); err != nil {
+	if err := CollectParameters(ctx, log); err != nil {
 		panic(err)
 	}
-	if err := VerifyParameters(ctx, Logger); err != nil {
+	if err := VerifyParameters(ctx, log); err != nil {
 		panic(err)
 	}
 	// TODO: Port of stages
-	if err := GenerateVerificationReport(ctx, Logger); err != nil {
+	if err := GenerateVerificationReport(ctx, log); err != nil {
 		panic(err)
 	}
 }
@@ -73,9 +72,11 @@ func CollectParameters(ctx context.Context, log zerolog.Logger) error {
 	}
 	for _, entry := range entries {
 		if entry == "parameters.json" {
-			err := readAndPrintJSON(entry)
+			json, err := readJSON(entry)
 			if err != nil {
-				fmt.Println("Error:", err)
+				log.Error().Msg(fmt.Sprintln("Error:", err))
+			} else {
+				log.Info().Msg(json)
 			}
 		}
 	}
@@ -111,20 +112,18 @@ func initLogger() zerolog.Logger {
 }
 
 // NOTE: For debugging purposes for now
-func readAndPrintJSON(fileName string) error {
-	log := Logger
-
+func readJSON(fileName string) (string, error) {
 	// Open the JSON file
 	file, err := os.Open(fileName)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer file.Close()
 
 	// Read the content of the file
 	data, err := io.ReadAll(file)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	// Create a map to unmarshal JSON data
@@ -133,11 +132,11 @@ func readAndPrintJSON(fileName string) error {
 	// Unmarshal JSON data into the map
 	err = json.Unmarshal(data, &jsonData)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	// Print the content
-	log.Info().Msg(fmt.Sprintf("JSON Data:\n%+v\n", jsonData))
+	json := fmt.Sprintf("JSON Data:\n%+v\n", jsonData)
 
-	return nil
+	return json, nil
 }
