@@ -73,19 +73,6 @@ func CollectParameters(ctx context.Context) error {
 	}
 	defer client.Close()
 
-	// // Run commands in container environment
-	// out, err := client.
-	// 	Container().
-	// 	From("alpine:3.17").
-	// 	WithExec([]string{"apk", "add", "curl"}).
-	// 	WithExec([]string{"ls", "-la"}).
-	// 	Stdout(ctx)
-	// if err != nil {
-	// 	return err
-	// }
-	// // Print result
-	// fmt.Println(out)
-
 	log.Info().Msg("Collecting parameters")
 	entries, err := client.Host().Directory(".").Entries(ctx)
 	if err != nil {
@@ -160,4 +147,9 @@ func readJSON(fileName string) (string, error) {
 	json := fmt.Sprintf("JSON Data:\n%+v\n", jsonData)
 
 	return json, nil
+}
+
+type Parameters struct {
+	PipelineId  string `json:"pipeline_id"`
+	ProjectName string `json:"project_name"`
 }
