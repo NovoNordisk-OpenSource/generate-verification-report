@@ -2,15 +2,14 @@ package main
 
 import (
 	"context"
+	"dagger.io/dagger"
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io"
-	"os"
-
-	"dagger.io/dagger"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"io"
+	"os"
 )
 
 func main() {
@@ -20,13 +19,16 @@ func main() {
 	ctx := context.Background()
 
 	if err := CollectParameters(ctx); err != nil {
+		log.Error().Msg(fmt.Sprintln("Error:", err))
 		panic(err)
 	}
 	if err := VerifyParameters(ctx); err != nil {
+		log.Error().Msg(fmt.Sprintln("Error:", err))
 		panic(err)
 	}
 	// TODO: Port of stages
 	if err := GenerateVerificationReport(ctx); err != nil {
+		log.Error().Msg(fmt.Sprintln("Error:", err))
 		panic(err)
 	}
 }
@@ -38,7 +40,27 @@ func VerifyParameters(ctx context.Context) error {
 }
 
 func GenerateVerificationReport(ctx context.Context) error {
+	// Initialize Dagger client
+	client, err := dagger.Connect(ctx, dagger.WithLogOutput(log.Logger))
+	if err != nil {
+		return err
+	}
+	defer client.Close()
+
 	log.Info().Msg("Generating verification report")
+
+	hostdir := "output"
+
+	_, err = client.Container().From("alpine:latest").
+		WithDirectory("output", client.Directory().WithNewFile("report.html", "This is a test verification report generated from a Dagger workflow")).
+		WithWorkdir(".").
+		WithExec([]string{"ls", "-la", "output"}).
+		WithExec([]string{"cat", "output/report.html"}).
+		Directory("output").
+		Export(ctx, hostdir)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
