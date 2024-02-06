@@ -4,7 +4,10 @@
 Software developers who understand the QMS toolchain.
 
 # What does this do?
-This service is responsible for generating verification reports given metadata about the QMS pipeline run, the test results, and Git context.
+This workflow is responsible for generating verification reports given metadata about the QMS pipeline run, the test results, and Git context.
+It is intended to be called from within the GitHub action that generates a verification report as part of the QMS pipeline.
+
+However, it can technically be invoked from anywhere capable of running Dagger and Docker Engine.
 
 # How to use this?
 First, go to the `/src` directory.
@@ -26,6 +29,8 @@ Any output in this directory will be overwritten between runs unless the generat
 > ```text
 > go run main.go
 > ```
+
+An additional requirement is that the executing host environment can reach public Docker Hub image registry.
 
 ## Running the Dagger workflow
 The production codebase lives in the `/src` directory.
