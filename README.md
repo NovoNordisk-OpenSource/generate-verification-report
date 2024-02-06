@@ -28,6 +28,8 @@ Any output in this directory will be overwritten between runs unless the generat
 > ```
 
 ## Running the Dagger workflow
+The production codebase lives in the `/src` directory.
+
 From within `/src`, run:
 
 ```text
@@ -35,6 +37,8 @@ dagger run go run main.go
 ```
 
 ## Running tests
+The test codebase lives in the `/test` directory and is consuming the production codebase. It is thus not part of the production codebase.
+
 From within `/test`, run:
 
 ```text
