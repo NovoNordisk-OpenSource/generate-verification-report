@@ -9,14 +9,14 @@ This service is responsible for generating verification reports given metadata a
 # How to use this?
 First, go to the `/src` directory.
 
-Parameters are provided by editing the `parameters.json` file here.
+Parameters are provided here by editing the `parameters.json` file.
 
 Logs will be written to a `run.log` file in the same place everytime the Dagger workflow is run. This file is appended between runs.
 
 Output from any run will be placed in a directory here called `output`. The content in this will be the verification report HTML file.
 Any output in this directory will be overwritten between runs unless the generated filename is different because of different intput parameters.
 
-> TODO: Determine hos test results are ingested—probably from an `input` directory.
+> TODO: Determine how test results are ingested—probably from an `input` directory.
 
 ## Installed prerequisites
 - golang (version: >=1.21.6)
