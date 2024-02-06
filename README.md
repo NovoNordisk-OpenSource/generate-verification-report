@@ -23,5 +23,12 @@ From within `/src`, run:
 dagger run go run main.go
 ```
 
+## Running tests
+From within `/test`, run:
+
+```bash
+go test
+```
+
 # Generator workflow 
 ![](./doc/workflow.png)
