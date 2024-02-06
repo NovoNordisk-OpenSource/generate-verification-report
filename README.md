@@ -20,7 +20,7 @@ Any output in this directory will be overwritten between runs unless the generat
 
 ## Installed prerequisites
 - golang (version: >=1.21.6)
-- dagger runtime (version: >= 0.9.7)
+- dagger runtime (version: >= 0.9.8)
 
 > The Dagger runtime is not required, but it renders nicer and logs are filtered properly when using it over:
 > ```text
