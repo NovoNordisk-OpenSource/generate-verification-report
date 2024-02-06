@@ -1,3 +1,5 @@
+[![Go Tests](https://github.com/BI-Data-Management-And-Analytics/verification-report-service/actions/workflows/on_commit.yml/badge.svg?branch=main)](https://github.com/BI-Data-Management-And-Analytics/verification-report-service/actions/workflows/on_commit.yml)
+
 # Who is this for?
 Software developers who understand the QMS toolchain.
 
