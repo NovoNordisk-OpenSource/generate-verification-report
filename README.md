@@ -30,7 +30,7 @@ Any output in this directory will be overwritten between runs unless the generat
 > go run main.go
 > ```
 
-An additional requirement is that the executing host environment can reach public Docker Hub image registry.
+An additional requirement is that the executing host environment can reach the public Docker Hub image registry.
 
 ## Running the Dagger workflow
 The production codebase lives in the `/src` directory.
