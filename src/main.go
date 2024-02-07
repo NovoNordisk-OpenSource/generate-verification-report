@@ -2,14 +2,15 @@ package main
 
 import (
 	"context"
-	"dagger.io/dagger"
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	"io"
 	"os"
+
+	"dagger.io/dagger"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
 func main() {
@@ -26,15 +27,72 @@ func main() {
 		log.Error().Msg(fmt.Sprintln("Error:", err))
 		panic(err)
 	}
+	if err := CreateVerificationReportFilename(ctx); err != nil {
+		log.Error().Msg(fmt.Sprintln("Error:", err))
+		panic(err)
+	}
+	if err := CreateVerificationReportArtifactName(ctx); err != nil {
+		log.Error().Msg(fmt.Sprintln("Error:", err))
+		panic(err)
+	}
 	// TODO: Port of stages
 	if err := GenerateVerificationReport(ctx); err != nil {
 		log.Error().Msg(fmt.Sprintln("Error:", err))
 		panic(err)
 	}
+
+	// Collect and verify parameters
+
+	// Collect and verify test results
+
+	// Checkout the repository (or provide a path for it? locally)
+
+	// Preprocess
+	// - Run scripts that collect GitHub/ADO information via API
+	// - Run scripts that render/generate HTML
+	// - Run scripts that generate report filename and artifact name
+
+	// Generate verification report
 }
 
 func VerifyParameters(ctx context.Context) error {
 	log.Info().Msg("Verifying parameters")
+
+	return nil
+}
+
+func CreateVerificationReportFilename(ctx context.Context) error {
+	log.Info().Msg("Creating verification report filename")
+
+	// - bash: echo "##vso[task.setvariable variable=verification_report_file]$(${{ parameters.get_verification_report_filename_for_context_sh_location }} "${{ parameters.environment_name }}" "$(Build.BuildId)" "${{ parameters.ready_for }}").html"
+	// displayName: Generate verification report filename
+
+	return nil
+}
+
+func CreateVerificationReportArtifactName(ctx context.Context) error {
+	// - bash: echo "##vso[task.setvariable variable=verification_report_artifact]$(${{ parameters.get_verification_report_artifact_name_for_context_sh_location }} "${{ parameters.ready_for }}")"
+	// displayName: Generate verification report artifact name
+
+	// log.Info().Msg("Creating verification report artifact name")
+
+	// // Initialize Dagger client
+	// client, err := dagger.Connect(ctx, dagger.WithLogOutput(log.Logger))
+	// if err != nil {
+	// 	return err
+	// }
+	// defer client.Close()
+
+	// // Execute the bash script and set the output as a variable value
+	// output, err := client.Container().From("alpine:latest").
+	// 	WithExec([]string{"sh", "-c", fmt.Sprintf("get_verification_report_artifact_name_for_context.sh %s", parameters.ready_for)}).
+	// 	Export(ctx, "")
+	// if err != nil {
+	// 	return err
+	// }
+
+	// // Set the output as a variable value on the Dagger context
+	// ctx = context.WithValue(ctx, "verification_report_artifact", string(output))
 
 	return nil
 }
@@ -81,11 +139,11 @@ func CollectParameters(ctx context.Context) error {
 	}
 	for _, entry := range entries {
 		if entry == "parameters.json" {
-			json, err := readJSON(entry)
+			parameters, err := readParameters(entry)
 			if err != nil {
 				log.Error().Msg(fmt.Sprintln("Error:", err))
 			} else {
-				log.Info().Msg(json)
+				log.Info().Msg(fmt.Sprintf("Parsed parameters: %+v", parameters))
 			}
 		}
 	}
@@ -120,36 +178,33 @@ func initLogger() zerolog.Logger {
 }
 
 // NOTE: For debugging purposes for now
-func readJSON(fileName string) (string, error) {
+func readParameters(fileName string) (Parameters, error) {
 	// Open the JSON file
 	file, err := os.Open(fileName)
 	if err != nil {
-		return "", err
+		return Parameters{}, err
 	}
 	defer file.Close()
 
 	// Read the content of the file
 	data, err := io.ReadAll(file)
 	if err != nil {
-		return "", err
+		return Parameters{}, err
 	}
 
 	// Create a map to unmarshal JSON data
-	var jsonData map[string]interface{}
-
-	// Unmarshal JSON data into the map
-	err = json.Unmarshal(data, &jsonData)
+	var parameters Parameters
+	log.Info().Msg(fmt.Sprintf("parameters.json: \n%s", data))
+	err = json.Unmarshal([]byte(data), &parameters)
 	if err != nil {
-		return "", err
+		return Parameters{}, err
 	}
 
-	// Print the content
-	json := fmt.Sprintf("JSON Data:\n%+v\n", jsonData)
-
-	return json, nil
+	return parameters, nil
 }
 
 type Parameters struct {
 	PipelineId  string `json:"pipeline_id"`
 	ProjectName string `json:"project_name"`
+	ReadyFor    string `json:"ready_for"`
 }

@@ -1,4 +1,5 @@
 {
     "pipeline_id": "testname",
-    "project_name": "test project name"
+    "project_name": "test project name",
+    "ready_for": "use"
 }
