@@ -1,4 +1,4 @@
-name: Go Tests
+name: Unit Tests
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    name: Run tests
+    name: Run unit tests
     runs-on: ubuntu-latest
 
     steps:
@@ -20,6 +20,6 @@ jobs:
           go-version: 1.21.6
           cache: false
 
-      - name: Run tests
+      - name: Run unit tests
         run: go test ./...
         working-directory: test
