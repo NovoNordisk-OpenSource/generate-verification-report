@@ -39,6 +39,9 @@ jobs:
       - name: Test that output report file is generated and not empty
         run: |
           if [ $(wc -c < "output/report.html") -eq 0 ]; then
-          exit 1
+            echo "File exists and is not empty"
+          else
+            echo "File does not exist or is empty"
+            exit 1
           fi
 
