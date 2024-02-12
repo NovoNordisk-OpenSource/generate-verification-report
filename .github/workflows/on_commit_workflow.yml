@@ -39,6 +39,8 @@ jobs:
       - name: Test that output report file is generated and not empty
         working-directory: src
         run: |
+          ls -la
+          ls -la output
           if [ $(wc -c < "output/report.html") -eq 0 ]; then
             echo "File exists and is not empty"
           else
