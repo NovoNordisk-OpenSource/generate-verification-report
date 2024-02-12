@@ -35,3 +35,10 @@ jobs:
           verb: run
           args: go run main.go
           version: "0.9.9"
+
+      - name: Test that output report file is generated and not empty
+        run: |
+          if [ $(wc -c < "output/report.html") -eq 0 ]; then
+          exit 1
+          fi
+
