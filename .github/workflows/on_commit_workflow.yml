@@ -37,6 +37,7 @@ jobs:
           version: "0.9.9"
 
       - name: Test that output report file is generated and not empty
+        working-directory: src
         run: |
           if [ $(wc -c < "output/report.html") -eq 0 ]; then
             echo "File exists and is not empty"
