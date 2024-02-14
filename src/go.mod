@@ -3,7 +3,7 @@ module github.com/BI-Data-Management-And-Analytics/verification-report-service
 go 1.21.6
 
 require (
-	dagger.io/dagger v0.9.9
+	dagger.io/dagger v0.9.10
 	github.com/rs/zerolog v1.31.0
 )
 
