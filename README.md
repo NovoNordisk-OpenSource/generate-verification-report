@@ -23,7 +23,7 @@ Any output in this directory will be overwritten between runs unless the generat
 
 ## Installed prerequisites
 - golang (version: >=1.22.0)
-- dagger runtime (version: >= 0.9.9)
+- dagger runtime (version: >= 0.9.10)
 
 > The Dagger runtime is not required, but it renders nicer and logs are filtered properly when using it over:
 > ```text
@@ -44,7 +44,9 @@ dagger run go run main.go
 ## Running tests
 The test codebase lives in the `/test` directory and is consuming the production codebase. It is thus not part of the production codebase.
 
-From within `/test`, run:
+Two subgroups of tests exist: `unit tests` and `integration tests`. They have their own folders in `/test` and are run separately.
+
+From within `/test/integration` or `/test/unit`, run:
 
 ```text
 go test
