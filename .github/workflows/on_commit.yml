@@ -22,4 +22,4 @@ jobs:
 
       - name: Run unit tests
         run: go test ./...
-        working-directory: test
+        working-directory: test/unit
