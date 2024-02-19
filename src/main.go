@@ -108,17 +108,21 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msg("Generating verification report")
 
 	hostdir := "output"
+	//reportTemplateFile := client.Host().File("template/VerificationReportTemplate.html")
 
 	_, err = client.Container().From("alpine:latest").
-		WithDirectory("output", client.Directory().WithNewFile("report.html", "This is a test verification report generated from a Dagger workflow")).
+		WithDirectory("output", client.Directory().WithFile("report.html", client.Host().File("template/VerificationReportTemplate.html"))).
 		WithWorkdir(".").
 		WithExec([]string{"ls", "-la", "output"}).
-		WithExec([]string{"cat", "output/report.html"}).
 		Directory("output").
 		Export(ctx, hostdir)
 	if err != nil {
 		return err
 	}
+
+	generatedReportFile := client.Host().File("output/report.html")
+	size, err := generatedReportFile.Size(ctx)
+	log.Info().Msgf("Verification report generated: output/report.html is %d bytes", size)
 
 	return nil
 }
