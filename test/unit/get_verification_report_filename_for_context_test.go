@@ -13,7 +13,7 @@ func TestGenerateVerificationReportFilename(t *testing.T) {
 	readyFor := "use"
 
 	// Run the bash script
-	cmd := exec.Command("bash", "-c", "../src/script/get_verification_report_filename_for_context.sh \""+envName+"\" \""+buildID+"\" \""+readyFor+"\"")
+	cmd := exec.Command("bash", "-c", "../../src/script/get_verification_report_filename_for_context.sh \""+envName+"\" \""+buildID+"\" \""+readyFor+"\"")
 	output, err := cmd.Output()
 	if err != nil {
 		t.Fatalf("Failed to execute script: %v", err)

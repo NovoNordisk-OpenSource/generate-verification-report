@@ -1,6 +1,6 @@
 module github.com/BI-Data-Management-And-Analytics/verification-report-service
 
-go 1.21.6
+go 1.22.0
 
 require (
 	dagger.io/dagger v0.9.10

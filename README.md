@@ -22,7 +22,7 @@ Any output in this directory will be overwritten between runs unless the generat
 > TODO: Determine how test results are ingested—probably from an `input` directory.
 
 ## Installed prerequisites
-- golang (version: >=1.21.7)
+- golang (version: >=1.22.0)
 - dagger runtime (version: >= 0.9.9)
 
 > The Dagger runtime is not required, but it renders nicer and logs are filtered properly when using it over:

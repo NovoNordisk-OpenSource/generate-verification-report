@@ -17,7 +17,7 @@ func TestGenerateVerificationReportArtifactName(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.readyFor, func(t *testing.T) {
-			cmd := exec.Command("bash", "-c", "../src/script/get_verification_report_artifact_name_for_context.sh "+test.readyFor)
+			cmd := exec.Command("bash", "-c", "../../src/script/get_verification_report_artifact_name_for_context.sh "+test.readyFor)
 			output, err := cmd.Output()
 			if err != nil {
 				t.Fatalf("Failed to execute script: %v", err)
