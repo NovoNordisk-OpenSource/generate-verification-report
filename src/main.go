@@ -120,6 +120,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		return err
 	}
 
+	// NOTE: Logging file size is for debugging purposes for now——may be removed in the future unless having it in the logs is useful
 	generatedReportFile := client.Host().File("output/report.html")
 	size, err := generatedReportFile.Size(ctx)
 	log.Info().Msgf("Verification report generated: output/report.html is %d bytes", size)
