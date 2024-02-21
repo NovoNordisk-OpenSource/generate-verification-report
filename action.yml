@@ -38,7 +38,7 @@ runs:
     - name: Generate verification report
       uses: dagger/dagger-for-github@v5
       with:
-        workdir: .
+        workdir: src
         verb: run
-        args: go run generate-verification-report/src/main.go
+        args: go run main.go
         version: "0.9.10"
