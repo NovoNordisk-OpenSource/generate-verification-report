@@ -11,8 +11,6 @@ runs:
   steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        path: generate-verification-report
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -25,7 +23,14 @@ runs:
       run: |
         echo "Test input: ${{ inputs.test }}"
         echo "Current directory: $(pwd)"
+        echo "Current:"
         ls -la
+        echo ""
+        echo "Parent:"
+        ls -la ../
+        echo ""
+        echo "Grandparent:"
+        ls -la ../../
     
     - name: Generate verification report
       uses: dagger/dagger-for-github@v5
