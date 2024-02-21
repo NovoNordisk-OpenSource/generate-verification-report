@@ -1,4 +1,4 @@
-[![Go Tests](https://github.com/BI-Data-Management-And-Analytics/verification-report-service/actions/workflows/on_commit.yml/badge.svg?branch=main)](https://github.com/BI-Data-Management-And-Analytics/verification-report-service/actions/workflows/on_commit.yml) [![Integration Tests](https://github.com/BI-Data-Management-And-Analytics/verification-report-service/actions/workflows/on_commit_workflow.yml/badge.svg?branch=main)](https://github.com/BI-Data-Management-And-Analytics/verification-report-service/actions/workflows/on_commit_workflow.yml)
+[![Unit Tests](https://github.com/nn-dma/generate-verification-report/actions/workflows/on_commit.yml/badge.svg?branch=main)](https://github.com/nn-dma/generate-verification-report/actions/workflows/on_commit.yml) [![Integration Tests](https://github.com/nn-dma/generate-verification-report/actions/workflows/on_commit_workflow.yml/badge.svg?branch=main)](https://github.com/nn-dma/generate-verification-report/actions/workflows/on_commit_workflow.yml)
 
 # Who is this for?
 Software developers who understand the QMS toolchain.
