@@ -13,6 +13,7 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: nn-dma/generate-verification-report
+        path: .
 
     - name: Set up Go
       uses: actions/setup-go@v4
