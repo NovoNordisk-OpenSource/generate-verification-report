@@ -9,9 +9,21 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v4
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: 1.22.0
+        cache: false
     - name: Generate verification report
+      uses: dagger/dagger-for-github@v5
+      with:
+        workdir: src
+        verb: run
+        args: go run main.go
+        version: "0.9.10"
+    - name: Run other tests (dev debug)
       shell: bash
       run: |
         echo "Test input: ${{ inputs.test }}"
