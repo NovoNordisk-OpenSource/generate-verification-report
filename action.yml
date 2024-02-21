@@ -1,0 +1,19 @@
+name: 'QMS generate verification report'
+description: 'Generates a verification report based on pipeline metadata and test results as inputs.'
+inputs:
+  test:
+    required: true
+    description: 'test'
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Generate verification report
+      shell: bash
+      run: |
+        echo "Test input: ${{ inputs.test }}"
+        echo "Current directory: $(pwd)"
+        ls -la
