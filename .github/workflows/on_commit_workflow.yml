@@ -20,14 +20,6 @@ jobs:
           go-version: 1.22.0
           cache: false
 
-      # - name: Install Go module dependencies
-      #   run: go mod download
-      #   working-directory: src
-
-      # - name: Run Dagger workflow
-      #   run: dagger run go run main.go
-      #   working-directory: src
-
       - name: Test Dagger workflow
         uses: dagger/dagger-for-github@v5
         with:
