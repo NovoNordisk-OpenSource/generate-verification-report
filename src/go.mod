@@ -1,4 +1,4 @@
-module github.com/BI-Data-Management-And-Analytics/verification-report-service
+module github.com/nn-dma/generate-verification-report
 
 go 1.22.0
 

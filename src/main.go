@@ -8,6 +8,8 @@ import (
 	"io"
 	"os"
 
+	"github.com/nn-dma/generate-verification-report/param"
+
 	"dagger.io/dagger"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -183,33 +185,27 @@ func initLogger() zerolog.Logger {
 }
 
 // NOTE: For debugging purposes for now
-func readParameters(fileName string) (Parameters, error) {
+func readParameters(fileName string) (param.Parameters, error) {
 	// Open the JSON file
 	file, err := os.Open(fileName)
 	if err != nil {
-		return Parameters{}, err
+		return param.Parameters{}, err
 	}
 	defer file.Close()
 
 	// Read the content of the file
 	data, err := io.ReadAll(file)
 	if err != nil {
-		return Parameters{}, err
+		return param.Parameters{}, err
 	}
 
 	// Create a map to unmarshal JSON data
-	var parameters Parameters
+	var parameters param.Parameters
 	log.Info().Msg(fmt.Sprintf("parameters.json: \n%s", data))
 	err = json.Unmarshal([]byte(data), &parameters)
 	if err != nil {
-		return Parameters{}, err
+		return param.Parameters{}, err
 	}
 
 	return parameters, nil
-}
-
-type Parameters struct {
-	PipelineId  string `json:"pipeline_id"`
-	ProjectName string `json:"project_name"`
-	ReadyFor    string `json:"ready_for"`
 }
