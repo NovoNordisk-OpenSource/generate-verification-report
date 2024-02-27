@@ -1,4 +1,4 @@
 # Here you place
 
 - parameters.json   : Containing all the parameters provided to the Dagger workflow
-- testresults.zip   : Containing the test results in JSON (Allure formatted), one JSON file per test result
+- /testresults      : Directory containing the test results in JSON (Allure formatted), one JSON file per test result
