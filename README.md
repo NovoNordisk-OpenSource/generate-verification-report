@@ -52,5 +52,20 @@ From within `/test/integration` or `/test/unit`, run:
 go test
 ```
 
+## Running workflows locally with `ant`
+The GitHub workflows can be executed locally with [ant](). Install with Homebrew or another package manager.
+
+When running the workflows locally, `ant` might initially ask you which container size to use. *Medium* should work fine for the time being.
+
+To execute the unit tests workflow, from within `/`, run:
+```text
+act --container-architecture linux/amd64 -W .github/workflows/on_commit.yml
+```
+
+To execute the integration tests workflow, from within `/`, run:
+```text
+act --container-architecture linux/amd64 -W .github/workflows/on_commit_workflow.yml
+```
+
 # Generator workflow 
 ![](./doc/workflow.png)
