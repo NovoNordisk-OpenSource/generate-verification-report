@@ -42,6 +42,9 @@ func main() {
 		panic(err)
 	}
 	// Generate verification report
+	// -Collect test results
+	// -TODO: Verify test results (out of scope for now)
+	// -Checkout the repository (or provide a path for it? locally)
 	// - Preprocess
 	// -- Run scripts that collect GitHub/ADO information via API
 	// -- Run scripts that render/generate HTML
@@ -50,10 +53,6 @@ func main() {
 		log.Error().Msg(fmt.Sprintln(err))
 		panic(err)
 	}
-
-	// TODO: Collect and verify test results (out of scope for now)
-
-	// Checkout the repository (or provide a path for it? locally)
 }
 
 func VerifyParameters(ctx context.Context) error {
@@ -81,7 +80,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	collector := client.Container().From("alpine:latest").
 		WithWorkdir(".").
 		WithDirectory("input/testresults", client.Host().Directory(path.Join(InputDir, "testresults"))).
-		WithExec([]string{"ls", "-la", path.Join(InputDir, "testresults")})
+		WithExec([]string{"sh", "-c", "echo 'number of test results (.json files):' $(ls -1 input/testresults | grep .json | wc -l)"})
 	if err != nil {
 		return err
 	}
