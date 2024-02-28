@@ -91,11 +91,12 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	hostOutputDir := OutputDir
 
-	generator := client.Container().From("alpine:latest").
+	generator := client.Container().From("python:3.12.2-slim-bookworm").
 		WithDirectory("input/testresults", collector.Directory("input/testresults")).
 		WithDirectory(OutputDir, client.Directory().WithFile("report.html", client.Host().File("template/VerificationReportTemplate.html"))).
 		WithWorkdir(".").
-		WithExec([]string{"ls", "-la", OutputDir})
+		WithExec([]string{"ls", "-la", OutputDir}).
+		WithExec([]string{"python", "--version"})
 	if err != nil {
 		return err
 	}
