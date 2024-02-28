@@ -7,12 +7,18 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
 
 	"github.com/nn-dma/generate-verification-report/param"
 
 	"dagger.io/dagger"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+)
+
+const (
+	InputDir  = "input"
+	OutputDir = "output"
 )
 
 func main() {
@@ -109,23 +115,27 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Generating verification report")
 
-	hostdir := "output"
+	hostdir := OutputDir
 	//reportTemplateFile := client.Host().File("template/VerificationReportTemplate.html")
 
 	_, err = client.Container().From("alpine:latest").
-		WithDirectory("output", client.Directory().WithFile("report.html", client.Host().File("template/VerificationReportTemplate.html"))).
+		WithDirectory(OutputDir, client.Directory().WithFile("report.html", client.Host().File("template/VerificationReportTemplate.html"))).
 		WithWorkdir(".").
-		WithExec([]string{"ls", "-la", "output"}).
-		Directory("output").
+		WithExec([]string{"ls", "-la", OutputDir}).
+		Directory(OutputDir).
 		Export(ctx, hostdir)
 	if err != nil {
 		return err
 	}
 
 	// NOTE: Logging file size is for debugging purposes for now——may be removed in the future unless having it in the logs is useful
-	generatedReportFile := client.Host().File("output/report.html")
+	reportTemplateFile := path.Join(OutputDir, "report.html")
+	generatedReportFile := client.Host().File(reportTemplateFile)
 	size, err := generatedReportFile.Size(ctx)
-	log.Info().Msgf("Verification report generated: output/report.html is %d bytes", size)
+	if err != nil {
+		return err
+	}
+	log.Info().Msgf("Verification report generated: %s/report.html is %d bytes", OutputDir, size)
 
 	return nil
 }
@@ -139,7 +149,7 @@ func CollectParameters(ctx context.Context) error {
 	defer client.Close()
 
 	log.Info().Msg("Collecting parameters")
-	entries, err := client.Host().Directory(".").Entries(ctx)
+	entries, err := client.Host().Directory(InputDir).Entries(ctx)
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return err
