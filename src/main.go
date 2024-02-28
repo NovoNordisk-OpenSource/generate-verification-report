@@ -27,10 +27,12 @@ var (
 
 func main() {
 	log.Logger = initLogger()
+	log.Info().Msg("---- NEW RUN ----")
 	log.Info().Msg("Logger initialized")
 
 	ctx := context.Background()
 
+	// Collect and verify parameters
 	if err := CollectParameters(ctx); err != nil {
 		log.Error().Msg(fmt.Sprintln(err))
 		panic(err)
@@ -39,32 +41,19 @@ func main() {
 		log.Error().Msg(fmt.Sprintln(err))
 		panic(err)
 	}
-	if err := CreateVerificationReportFilename(ctx); err != nil {
-		log.Error().Msg(fmt.Sprintln(err))
-		panic(err)
-	}
-	if err := CreateVerificationReportArtifactName(ctx); err != nil {
-		log.Error().Msg(fmt.Sprintln(err))
-		panic(err)
-	}
-	// TODO: Port of stages
+	// Generate verification report
+	// - Preprocess
+	// -- Run scripts that collect GitHub/ADO information via API
+	// -- Run scripts that render/generate HTML
+	// -- Run scripts that generate report filename and artifact name
 	if err := GenerateVerificationReport(ctx); err != nil {
 		log.Error().Msg(fmt.Sprintln(err))
 		panic(err)
 	}
 
-	// Collect and verify parameters
-
-	// Collect and verify test results
+	// TODO: Collect and verify test results (out of scope for now)
 
 	// Checkout the repository (or provide a path for it? locally)
-
-	// Preprocess
-	// - Run scripts that collect GitHub/ADO information via API
-	// - Run scripts that render/generate HTML
-	// - Run scripts that generate report filename and artifact name
-
-	// Generate verification report
 }
 
 func VerifyParameters(ctx context.Context) error {
@@ -77,43 +66,9 @@ func VerifyParameters(ctx context.Context) error {
 	return nil
 }
 
-func CreateVerificationReportFilename(ctx context.Context) error {
-	log.Info().Msg("Creating verification report filename")
-
-	// - bash: echo "##vso[task.setvariable variable=verification_report_file]$(${{ parameters.get_verification_report_filename_for_context_sh_location }} "${{ parameters.environment_name }}" "$(Build.BuildId)" "${{ parameters.ready_for }}").html"
-	// displayName: Generate verification report filename
-
-	return nil
-}
-
-func CreateVerificationReportArtifactName(ctx context.Context) error {
-	// - bash: echo "##vso[task.setvariable variable=verification_report_artifact]$(${{ parameters.get_verification_report_artifact_name_for_context_sh_location }} "${{ parameters.ready_for }}")"
-	// displayName: Generate verification report artifact name
-
-	// log.Info().Msg("Creating verification report artifact name")
-
-	// // Initialize Dagger client
-	// client, err := dagger.Connect(ctx, dagger.WithLogOutput(log.Logger))
-	// if err != nil {
-	// 	return err
-	// }
-	// defer client.Close()
-
-	// // Execute the bash script and set the output as a variable value
-	// output, err := client.Container().From("alpine:latest").
-	// 	WithExec([]string{"sh", "-c", fmt.Sprintf("get_verification_report_artifact_name_for_context.sh %s", parameters.ready_for)}).
-	// 	Export(ctx, "")
-	// if err != nil {
-	// 	return err
-	// }
-
-	// // Set the output as a variable value on the Dagger context
-	// ctx = context.WithValue(ctx, "verification_report_artifact", string(output))
-
-	return nil
-}
-
 func GenerateVerificationReport(ctx context.Context) error {
+	// TODO: Port of stages
+
 	// Initialize Dagger client
 	client, err := dagger.Connect(ctx, dagger.WithLogOutput(log.Logger))
 	if err != nil {
@@ -121,17 +76,36 @@ func GenerateVerificationReport(ctx context.Context) error {
 	}
 	defer client.Close()
 
+	// 1. Collect test results
+	log.Info().Msg("Collecting test results")
+	collector := client.Container().From("alpine:latest").
+		WithWorkdir(".").
+		WithDirectory("input/testresults", client.Host().Directory(path.Join(InputDir, "testresults"))).
+		WithExec([]string{"ls", "-la", path.Join(InputDir, "testresults")})
+	if err != nil {
+		return err
+	}
+	log.Info().Msg("Test results collected")
+
+	// 2. Generate verification report
 	log.Info().Msg("Generating verification report")
 
-	hostdir := OutputDir
-	//reportTemplateFile := client.Host().File("template/VerificationReportTemplate.html")
+	hostOutputDir := OutputDir
 
-	_, err = client.Container().From("alpine:latest").
+	generator := client.Container().From("alpine:latest").
+		WithDirectory("/input/testresults", collector.Directory("/input/testresults")).
 		WithDirectory(OutputDir, client.Directory().WithFile("report.html", client.Host().File("template/VerificationReportTemplate.html"))).
 		WithWorkdir(".").
-		WithExec([]string{"ls", "-la", OutputDir}).
+		WithExec([]string{"ls", "-la", OutputDir})
+	if err != nil {
+		return err
+	}
+
+	// 3. Export the verification report to host 'output' directory
+	_, err = client.Container().From("alpine:latest").
+		WithFile("/output/report.html", generator.File("/output/report.html")).
 		Directory(OutputDir).
-		Export(ctx, hostdir)
+		Export(ctx, hostOutputDir)
 	if err != nil {
 		return err
 	}
@@ -210,7 +184,6 @@ func initLogger() zerolog.Logger {
 	return multi
 }
 
-// NOTE: For debugging purposes for now
 func readParameters(fileName string) (inputs.Parameters, error) {
 	// Open the JSON file
 	file, err := os.Open(fileName)
@@ -224,6 +197,7 @@ func readParameters(fileName string) (inputs.Parameters, error) {
 	if err != nil {
 		return inputs.Parameters{}, err
 	}
+	// NOTE: For debugging purposes for now
 	log.Info().Msg(fmt.Sprintf("Raw parameters: \n%s", data))
 
 	// Create a map to unmarshal JSON data
