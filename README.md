@@ -57,12 +57,12 @@ The GitHub workflows can be executed locally with [act](https://github.com/nekto
 
 When running the workflows locally, `act` might initially ask you which container size to use. *Medium* should work fine for the time being.
 
-To execute the unit tests workflow, from within `/`, run:
+To execute the **unit tests** workflow, from within `/`, run:
 ```text
 act --container-architecture linux/amd64 -W .github/workflows/on_commit.yml
 ```
 
-To execute the integration tests workflow, from within `/`, run:
+To execute the **integration tests** workflow, from within `/`, run:
 ```text
 act --container-architecture linux/amd64 -W .github/workflows/on_commit_workflow.yml
 ```
