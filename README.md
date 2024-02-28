@@ -74,4 +74,4 @@ act --container-architecture linux/amd64 -W .github/workflows/on_commit_workflow
 ```
 
 # Generator workflow 
-![](./doc/workflow.png)
+![](./doc/dagger_workflow.png)
