@@ -69,6 +69,11 @@ func main() {
 
 func VerifyParameters(ctx context.Context) error {
 	log.Info().Msg("Verifying parameters")
+	// Check if parameters are valid
+	if valid, err := parameters.IsValid(); !valid {
+		return err
+	}
+	log.Info().Msg("Parameters are valid")
 
 	return nil
 }
@@ -163,20 +168,14 @@ func CollectParameters(ctx context.Context) error {
 			entryPath := path.Join(InputDir, entry)
 			log.Info().Msg(fmt.Sprintf("Found parameters file: '%s'", entryPath))
 			log.Info().Msg(fmt.Sprintf("Reading '%s'", entryPath))
-			parameters, err = readParameters(entryPath)
+			parameters, err = readParameters(entryPath) // Set the global parameters variable
 			if err != nil {
 				log.Error().Msg(fmt.Sprintln("Error:", err))
 			} else {
-				log.Info().Msg(fmt.Sprintf("Parsed parameters: %+v", parameters))
+				log.Info().Msg(fmt.Sprintf("Parsed parameters: %#v", parameters))
 			}
 		}
 	}
-
-	// Check if parameters are valid
-	if valid, err := parameters.IsValid(); !valid {
-		return err
-	}
-	log.Info().Msg("Parameters are valid")
 
 	return nil
 }
