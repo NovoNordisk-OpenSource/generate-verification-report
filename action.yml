@@ -41,7 +41,7 @@ runs:
         workdir: src
         verb: run
         args: go run main.go
-        version: "0.9.11"
+        version: "0.10.0"
 
     - name: Upload verification report
       uses: actions/upload-artifact@v4
