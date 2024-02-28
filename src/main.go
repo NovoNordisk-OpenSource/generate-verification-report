@@ -9,7 +9,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/nn-dma/generate-verification-report/param"
+	"github.com/nn-dma/generate-verification-report/inputs"
 
 	"dagger.io/dagger"
 	"github.com/rs/zerolog"
@@ -19,6 +19,10 @@ import (
 const (
 	InputDir  = "input"
 	OutputDir = "output"
+)
+
+var (
+	parameters inputs.Parameters
 )
 
 func main() {
@@ -156,7 +160,10 @@ func CollectParameters(ctx context.Context) error {
 	}
 	for _, entry := range entries {
 		if entry == "parameters.json" {
-			parameters, err := readParameters(entry)
+			entryPath := path.Join(InputDir, entry)
+			log.Info().Msg(fmt.Sprintf("Found parameters file: '%s'", entryPath))
+			log.Info().Msg(fmt.Sprintf("Reading '%s'", entryPath))
+			parameters, err = readParameters(entryPath)
 			if err != nil {
 				log.Error().Msg(fmt.Sprintln("Error:", err))
 			} else {
@@ -164,6 +171,12 @@ func CollectParameters(ctx context.Context) error {
 			}
 		}
 	}
+
+	// Check if parameters are valid
+	if valid, err := parameters.IsValid(); !valid {
+		return err
+	}
+	log.Info().Msg("Parameters are valid")
 
 	return nil
 }
@@ -195,26 +208,26 @@ func initLogger() zerolog.Logger {
 }
 
 // NOTE: For debugging purposes for now
-func readParameters(fileName string) (param.Parameters, error) {
+func readParameters(fileName string) (inputs.Parameters, error) {
 	// Open the JSON file
 	file, err := os.Open(fileName)
 	if err != nil {
-		return param.Parameters{}, err
+		return inputs.Parameters{}, err
 	}
 	defer file.Close()
 
 	// Read the content of the file
 	data, err := io.ReadAll(file)
 	if err != nil {
-		return param.Parameters{}, err
+		return inputs.Parameters{}, err
 	}
+	log.Info().Msg(fmt.Sprintf("Raw parameters: \n%s", data))
 
 	// Create a map to unmarshal JSON data
-	var parameters param.Parameters
-	log.Info().Msg(fmt.Sprintf("parameters.json: \n%s", data))
+	var parameters inputs.Parameters
 	err = json.Unmarshal([]byte(data), &parameters)
 	if err != nil {
-		return param.Parameters{}, err
+		return inputs.Parameters{}, err
 	}
 
 	return parameters, nil

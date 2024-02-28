@@ -1,7 +1,8 @@
-package param
+package inputs
+
+import "errors"
 
 type Parameters struct {
-	PipelineId                                            string `json:"pipeline_id"`
 	EnvironmentName                                       string `json:"environment_name"`
 	ExtractRequirementsNameToIdMappingPyLocation          string `json:"extract_requirements_name_to_id_mapping_py_location"`
 	FeatureFilesPath                                      string `json:"feature_files_path"`
@@ -24,4 +25,13 @@ type Parameters struct {
 	TestResultsFormat                                     string `json:"test_results_format"`
 	VerificationReportTemplateLocation                    string `json:"verification_report_template_location"`
 	// TemplateRepo                                          string `json:"template_repo"` // no longer required in the Dagger version
+}
+
+func (p *Parameters) IsValid() (bool, error) {
+	// Guard clauses
+	if p.PipelineRunId == "" {
+		return false, errors.New("pipeline_run_id is required")
+	}
+
+	return true, nil
 }
