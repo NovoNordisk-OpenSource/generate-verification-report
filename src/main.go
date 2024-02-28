@@ -93,7 +93,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	hostOutputDir := OutputDir
 
 	generator := client.Container().From("alpine:latest").
-		WithDirectory("/input/testresults", collector.Directory("/input/testresults")).
+		WithDirectory("input/testresults", collector.Directory("input/testresults")).
 		WithDirectory(OutputDir, client.Directory().WithFile("report.html", client.Host().File("template/VerificationReportTemplate.html"))).
 		WithWorkdir(".").
 		WithExec([]string{"ls", "-la", OutputDir})
@@ -103,7 +103,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	// 3. Export the verification report to host 'output' directory
 	_, err = client.Container().From("alpine:latest").
-		WithFile("/output/report.html", generator.File("/output/report.html")).
+		WithFile("output/report.html", generator.File("output/report.html")).
 		Directory(OutputDir).
 		Export(ctx, hostOutputDir)
 	if err != nil {
