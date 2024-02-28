@@ -26,7 +26,7 @@ jobs:
           workdir: src
           verb: run
           args: go run main.go
-          version: "0.9.10"
+          version: "0.10.0"
 
       - name: Run integration tests
         run: go test ./...
