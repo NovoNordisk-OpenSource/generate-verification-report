@@ -10,16 +10,22 @@ It is intended to be called from within the GitHub action that generates a verif
 However, it can technically be invoked from anywhere capable of running Dagger and Docker Engine.
 
 # How to use this?
-First, go to the `/src` directory.
+First, go to the `/src` directory. Following paths mentioned are relative to this.
 
-Parameters are provided here by editing the `parameters.json` file.
+### Inputs
 
-Logs will be written to a `run.log` file in the same place everytime the Dagger workflow is run. This file is appended between runs.
+Parameters are provided here by editing the `parameters.json` file. It is located in the `/input` directory *(not to be confused with the **`inputs`** directory, which is a Go package)*.
 
-Output from any run will be placed in a directory here called `output`. The content in this will be the verification report HTML file.
+Test results provided as input to the Dagger worklow must be placed in the `/input/testresults` directory. For now, the test results must be in the form of one JSON file per test case result and each must be in the Allure-format.
+
+### Outputs
+
+Output from any run will be placed in a directory here called `/output`. The content in this will be the verification report HTML file.
 Any output in this directory will be overwritten between runs unless the generated filename is different because of different intput parameters.
 
-> TODO: Determine how test results are ingested—probably from an `input` directory.
+#### Logs
+
+Logs will be written to a `run.log` file in the same place everytime the Dagger workflow is run. This file is appended between runs.
 
 ## Installed prerequisites
 - golang (version: >=1.22.0)
