@@ -9,6 +9,8 @@ It is intended to be called from within the GitHub action that generates a verif
 
 However, it can technically be invoked from anywhere capable of running Dagger and Docker Engine.
 
+![](./doc/dagger_workflow.png)
+
 # How to use this?
 First, go to the `/src` directory. Following paths mentioned are relative to this.
 
@@ -72,6 +74,3 @@ To execute the **integration tests** workflow, from within `/`, run:
 ```text
 act --container-architecture linux/amd64 -W .github/workflows/on_commit_workflow.yml
 ```
-
-# Generator workflow 
-![](./doc/dagger_workflow.png)
