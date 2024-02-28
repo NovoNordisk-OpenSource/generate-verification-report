@@ -53,7 +53,7 @@ go test
 ```
 
 ## Running workflows locally with `ant`
-The GitHub workflows can be executed locally with [ant](). Install with Homebrew or another package manager.
+The GitHub workflows can be executed locally with [act](https://github.com/nektos/act). Install with Homebrew or another package manager.
 
 When running the workflows locally, `ant` might initially ask you which container size to use. *Medium* should work fine for the time being.
 
