@@ -32,24 +32,24 @@ func main() {
 	ctx := context.Background()
 
 	if err := CollectParameters(ctx); err != nil {
-		log.Error().Msg(fmt.Sprintln("Error:", err))
+		log.Error().Msg(fmt.Sprintln(err))
 		panic(err)
 	}
 	if err := VerifyParameters(ctx); err != nil {
-		log.Error().Msg(fmt.Sprintln("Error:", err))
+		log.Error().Msg(fmt.Sprintln(err))
 		panic(err)
 	}
 	if err := CreateVerificationReportFilename(ctx); err != nil {
-		log.Error().Msg(fmt.Sprintln("Error:", err))
+		log.Error().Msg(fmt.Sprintln(err))
 		panic(err)
 	}
 	if err := CreateVerificationReportArtifactName(ctx); err != nil {
-		log.Error().Msg(fmt.Sprintln("Error:", err))
+		log.Error().Msg(fmt.Sprintln(err))
 		panic(err)
 	}
 	// TODO: Port of stages
 	if err := GenerateVerificationReport(ctx); err != nil {
-		log.Error().Msg(fmt.Sprintln("Error:", err))
+		log.Error().Msg(fmt.Sprintln(err))
 		panic(err)
 	}
 
@@ -162,18 +162,23 @@ func CollectParameters(ctx context.Context) error {
 		log.Error().Msg(err.Error())
 		return err
 	}
+	found := false
 	for _, entry := range entries {
 		if entry == "parameters.json" {
+			found = true
 			entryPath := path.Join(InputDir, entry)
 			log.Info().Msg(fmt.Sprintf("Found parameters file: '%s'", entryPath))
 			log.Info().Msg(fmt.Sprintf("Reading '%s'", entryPath))
 			parameters, err = readParameters(entryPath) // Set the global parameters variable
 			if err != nil {
-				log.Error().Msg(fmt.Sprintln("Error:", err))
+				log.Error().Msg(fmt.Sprintln(err))
 			} else {
 				log.Info().Msg(fmt.Sprintf("Parsed parameters: %#v", parameters))
 			}
 		}
+	}
+	if !found {
+		return fmt.Errorf("expected file 'parameters.json' not found in directory '%s'", InputDir)
 	}
 
 	return nil
