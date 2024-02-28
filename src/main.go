@@ -69,7 +69,6 @@ func main() {
 
 func VerifyParameters(ctx context.Context) error {
 	log.Info().Msg("Verifying parameters")
-	// Check if parameters are valid
 	if valid, err := parameters.IsValid(); !valid {
 		return err
 	}
