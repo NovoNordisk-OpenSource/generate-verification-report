@@ -91,12 +91,15 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	hostOutputDir := OutputDir
 
-	generator := client.Container().From("python:3.12.2-slim-bookworm").
+	generator := client.Container().From("python:3.12.2-bookworm").
 		WithDirectory("input/testresults", collector.Directory("input/testresults")).
 		WithDirectory(OutputDir, client.Directory().WithFile("report.html", client.Host().File("template/VerificationReportTemplate.html"))).
 		WithWorkdir(".").
 		WithExec([]string{"ls", "-la", OutputDir}).
-		WithExec([]string{"python", "--version"})
+		WithExec([]string{"python", "--version"}).
+		WithExec([]string{"sh", "-c", "git version"}).
+		WithExec([]string{"sh", "-c", "echo current directory: $(pwd)"}).
+		WithExec([]string{"sh", "-c", "echo branch: $(git branch --show-current)"})
 	if err != nil {
 		return err
 	}
