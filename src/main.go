@@ -92,6 +92,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 	hostOutputDir := OutputDir
 
 	generator := client.Container().From("python:3.12.2-bookworm").
+		WithEnvVariable("GITHUB_SHA", os.Getenv("GITHUB_SHA")).
+		WithEnvVariable("GITHUB_REF", os.Getenv("GITHUB_REF")).
 		WithDirectory("input/testresults", collector.Directory("input/testresults")).
 		WithDirectory(OutputDir, client.Directory().WithFile("report.html", client.Host().File("template/VerificationReportTemplate.html"))).
 		WithWorkdir(".").
