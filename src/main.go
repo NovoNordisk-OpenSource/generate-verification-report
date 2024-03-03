@@ -100,8 +100,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"sh", "-c", "git version"}).
 		WithExec([]string{"sh", "-c", "echo current directory: $(pwd)"}).
 		WithExec([]string{"sh", "-c", "echo branch: $(git branch --show-current)"}).
-		WithExec([]string{"sh", "-c", "echo triggering commit hash: $GITHUB_SHA"}).
-		WithExec([]string{"sh", "-c", "echo triggering branch: $GITHUB_REF"})
+		WithExec([]string{"sh", "-c", "echo triggering commit hash: ${GITHUB_SHA}"}).
+		WithExec([]string{"sh", "-c", "echo triggering branch: ${GITHUB_REF}"})
 	if err != nil {
 		return err
 	}
