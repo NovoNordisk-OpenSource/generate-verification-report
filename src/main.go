@@ -93,7 +93,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	generator := client.Container().From("python:3.12.2-bookworm").
 		WithEnvVariable("GITHUB_SHA", os.Getenv("GITHUB_SHA")).
-		WithEnvVariable("GITHUB_REF", os.Getenv("GITHUB_REF")).
+		WithEnvVariable("GITHUB_REF_NAME", os.Getenv("GITHUB_REF_NAME")).
 		WithDirectory("input/testresults", collector.Directory("input/testresults")).
 		WithDirectory(OutputDir, client.Directory().WithFile("report.html", client.Host().File("template/VerificationReportTemplate.html"))).
 		WithWorkdir(".").
@@ -103,7 +103,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"sh", "-c", "echo current directory: $(pwd)"}).
 		WithExec([]string{"sh", "-c", "echo branch: $(git branch --show-current)"}).
 		WithExec([]string{"sh", "-c", "echo triggering commit hash: ${GITHUB_SHA}"}).
-		WithExec([]string{"sh", "-c", "echo triggering branch: ${GITHUB_REF}"})
+		WithExec([]string{"sh", "-c", "echo triggering branch: ${GITHUB_REF_NAME}"})
 	if err != nil {
 		return err
 	}
