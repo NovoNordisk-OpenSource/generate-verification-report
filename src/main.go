@@ -89,12 +89,15 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	// 2. Generate verification report
 	log.Info().Msg("Generating verification report")
-	hostOutputDir := OutputDir
+	// Define local variables and secrets required for the verification report generation
+	hostOutputDir := OutputDir // TODO: May just be the OutputDir variable (i.e. no need for hostOutputDir)
+	GITHUB_TOKEN := client.SetSecret("GITHUB_TOKEN", os.Getenv("GITHUB_TOKEN"))
 
 	log.Info().Msg("Preparing state with parameters and test results and outputting debug information")
 	generator := client.Container().From("python:3.12.2-bookworm").
 		WithEnvVariable("GITHUB_SHA", os.Getenv("GITHUB_SHA")).
 		WithEnvVariable("GITHUB_REF_NAME", os.Getenv("GITHUB_REF_NAME")).
+		WithSecretVariable("GITHUB_TOKEN", GITHUB_TOKEN).
 		WithDirectory("input/testresults", collector.Directory("input/testresults")).
 		WithDirectory(OutputDir, client.Directory().WithFile("report.html", client.Host().File("template/VerificationReportTemplate.html"))).
 		WithWorkdir(".").
@@ -189,6 +192,71 @@ func GenerateVerificationReport(ctx context.Context) error {
 		// TODO: Port
 		/*
 			cd ..
+		*/
+
+	log.Info().Msg("Extracting and rendering test results")
+	generator = generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering test results'")})
+		// TODO: Port + write tests
+		/*
+			python3 ${{ parameters.render_json_test_result_py_location }} -folder $(Pipeline.Workspace)/${{ parameters.test_results_artifact_name }} -mapping ./requirementsNameToIdMapping.dict > testResultsHtml.html
+			python3 ${{ parameters.render_replace_py_location }} -render ./testResultsHtml.html -template ${{ parameters.verification_report_template_location }} -placeholder "<var>TESTCASE_RESULTS</var>"
+		*/
+
+	log.Info().Msg("Rendering IT solution name")
+	generator = generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering IT solution name'")})
+		// TODO: Port + write tests
+		/*
+			sed -i 's|<var>IT_SOLUTION_NAME</var>|${{ parameters.it_solution_name }}|g' ${{ parameters.verification_report_template_location }}
+		*/
+
+	log.Info().Msg("Rendering pipeline run ID")
+	generator = generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run ID'")})
+		// TODO: Port + write tests
+		/*
+			sed -i 's|<var>PIPELINE_RUN_ID</var>|$(Build.BuildId)|g' ${{ parameters.verification_report_template_location }}
+		*/
+
+	log.Info().Msg("Rendering target environment name")
+	generator = generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering target environment name'")})
+		// TODO: Port + write tests
+		/*
+			sed -i 's|<var>ENVIRONMENT</var>|${{ parameters.environment_name }}|g' ${{ parameters.verification_report_template_location }}
+		*/
+
+	log.Info().Msg("Rendering GitHub project name")
+	generator = generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering GitHub project name'")})
+		// TODO: Port + write tests
+		/*
+			sed -i 's|<var>ADO_PROJECT_NAME</var>|$(System.TeamProject)|g' ${{ parameters.verification_report_template_location }}
+		*/
+
+	log.Info().Msg("Rendering 'ready for' (production/use) value")
+	generator = generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering 'ready for' (production/use) value'")})
+		// TODO: Port + write tests
+		/*
+			sed -i 's|<var>IS_READY_FOR</var>|${{ parameters.ready_for }}|g' ${{ parameters.verification_report_template_location }}
+		*/
+
+	log.Info().Msg("Rendering pipeline run link")
+	generator = generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run link'")})
+		// TODO: Port + write tests
+		/*
+			sed -i 's|<var>ADO_PIPELINE_RUN_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)\&view=results|g' ${{ parameters.verification_report_template_location }}
+		*/
+
+	log.Info().Msg("Rendering pipeline run artifacts link")
+	generator = generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run artifacts link'")})
+		// TODO: Port + write tests
+		/*
+			sed -i 's|<var>ARTIFACTS_ADO_PIPELINE_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)\&view=artifacts\&pathAsName=false\&type=publishedArtifacts|g' ${{ parameters.verification_report_template_location }}
 		*/
 
 	// 3. Export the verification report to host 'output' directory
