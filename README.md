@@ -57,13 +57,13 @@ Two subgroups of tests exist: `unit tests` and `integration tests`. They have th
 To execute unit tests , from within `/` run:
 
 ```text
-go test -C test/unit ./... -v
+go test -C test/unit -v
 ```
 
 To execute integration tests , from within `/` run:
 
 ```text
-go test -C test/integration ./... -v
+go test -C test/integration -v
 ```
 
 ## Running workflows locally with `act`

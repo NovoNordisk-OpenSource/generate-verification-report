@@ -28,5 +28,5 @@ jobs:
           version: "0.10.0"
 
       - name: Run integration tests
-        run: go test -C test/integration ./... -v
+        run: go test -C test/integration -v
 

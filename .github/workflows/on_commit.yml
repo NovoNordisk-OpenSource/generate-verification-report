@@ -21,4 +21,4 @@ jobs:
           cache: false
 
       - name: Run unit tests
-        run: go test -C test/unit ./... -v
+        run: go test -C test/unit -v
