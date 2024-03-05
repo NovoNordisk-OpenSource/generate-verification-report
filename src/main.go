@@ -298,10 +298,10 @@ func GenerateVerificationReport(ctx context.Context) error {
 		echo "##vso[task.setvariable variable=verification_report_file]$(${{ parameters.get_verification_report_filename_for_context_sh_location }} "${{ parameters.environment_name }}" "$(Build.BuildId)" "${{ parameters.ready_for }}").html"
 	*/
 
-	log.Info().Msg("Generate verification report filename")
+	log.Info().Msg("Generate verification report artifact name")
 	generator = generator.
 		WithWorkdir(".").
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Generate verification report filename'")})
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Generate verification report artifact name'")})
 	// TODO: Port + write tests
 	// TODO: Consider moving to the alpine container
 	/*
