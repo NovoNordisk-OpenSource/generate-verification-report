@@ -259,6 +259,24 @@ func GenerateVerificationReport(ctx context.Context) error {
 			sed -i 's|<var>ARTIFACTS_ADO_PIPELINE_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)\&view=artifacts\&pathAsName=false\&type=publishedArtifacts|g' ${{ parameters.verification_report_template_location }}
 		*/
 
+	log.Info().Msg("Generate verification report filename")
+	generator = generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Generate verification report filename'")})
+		// TODO: Port + write tests
+		// TODO: Consider moving to the alpine container
+		/*
+			echo "##vso[task.setvariable variable=verification_report_file]$(${{ parameters.get_verification_report_filename_for_context_sh_location }} "${{ parameters.environment_name }}" "$(Build.BuildId)" "${{ parameters.ready_for }}").html"
+		*/
+
+	log.Info().Msg("Generate verification report filename")
+	generator = generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Generate verification report filename'")})
+		// TODO: Port + write tests
+		// TODO: Consider moving to the alpine container
+		/*
+			echo "##vso[task.setvariable variable=verification_report_artifact]$(${{ parameters.get_verification_report_artifact_name_for_context_sh_location }} "${{ parameters.ready_for }}")"
+		*/
+
 	// 3. Export the verification report to host 'output' directory
 	_, err = client.Container().From("alpine:latest").
 		WithFile("output/report.html", generator.File("output/report.html")).
