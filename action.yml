@@ -46,4 +46,4 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: verification-report-for-validation
-        path: src/output/report.html
+        path: output/report.html
