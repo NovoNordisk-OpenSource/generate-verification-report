@@ -83,11 +83,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msg("Collecting test results")
 	collector := client.Container().From("alpine:latest").
 		WithWorkdir(".").
-		WithDirectory("input/testresults", client.Host().Directory(path.Join(InputDir, "testresults"))).
+		WithDirectory("input/testresults", client.Host().Directory(path.Join("src", InputDir, "testresults"))).
 		WithExec([]string{"sh", "-c", "echo 'number of test results (.json files):' $(ls -1 input/testresults | grep .json | wc -l)"})
-	if err != nil {
-		return err
-	}
 	log.Info().Msg("Test results collected")
 
 	// 2. Generate verification report
@@ -98,14 +95,14 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Preparing state with parameters and test results and outputting debug information")
 	generator := client.Container().From("python:3.12.2-bookworm").
+		WithWorkdir(".").
 		WithEnvVariable("GITHUB_SHA", os.Getenv("GITHUB_SHA")).
 		WithEnvVariable("GITHUB_REF_NAME", os.Getenv("GITHUB_REF_NAME")).
 		WithSecretVariable("GITHUB_TOKEN", GITHUB_TOKEN).
-		WithDirectory(ScriptDir, client.Host().Directory(ScriptDir)).
+		WithDirectory(ScriptDir, client.Host().Directory(path.Join("src", ScriptDir))).
 		WithDirectory(RequirementsDir, client.Host().Directory(parameters.FeatureFilesPath)).
 		WithDirectory("input/testresults", collector.Directory("input/testresults")).
-		WithDirectory(OutputDir, client.Directory().WithFile("report.html", client.Host().File("template/VerificationReportTemplate.html"))).
-		WithWorkdir(".").
+		WithDirectory(OutputDir, client.Directory().WithFile("report.html", client.Host().File("src/template/VerificationReportTemplate.html"))).
 		WithExec([]string{"mkdir", ArtifactDir}).
 		WithExec([]string{"ls", "-la", OutputDir}).
 		WithExec([]string{"python", "--version"}).
@@ -117,6 +114,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering pull request links")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering pull request links'")})
 	// TODO: Port to GitHub API + write tests
 	/*
@@ -128,6 +126,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering pull request closed timestamp")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering pull request closed timestamp'")})
 	// TODO: Port to GitHub API + write tests
 	/*
@@ -139,6 +138,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering related work items")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering related work items'")})
 	// TODO: Port to GitHub API + write tests
 	/*
@@ -151,6 +151,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Entering folder '$(Build.Repository.Name)' for correct script execution context")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Entering folder '$(Build.Repository.Name)' for correct script execution context'")})
 	// TODO: Port
 	/*
@@ -159,6 +160,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and mapping feature names with unique tags")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and mapping feature names with unique tags'")}).
 		// TODO: Port + write tests
 		/*
@@ -166,16 +168,17 @@ func GenerateVerificationReport(ctx context.Context) error {
 		*/
 		WithExec([]string{"ls", "-la"}).
 		WithExec([]string{"ls", "-la", ScriptDir}).
-		WithExec([]string{"ls", "-la", RequirementsDir}).
+		//WithExec([]string{"ls", "-la", RequirementsDir}).
 		WithExec([]string{"python", parameters.ExtractRequirementsNameToIdMappingPyLocation, "-folder", RequirementsDir}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join(ArtifactDir, "requirementsNameToIdMapping.dict")}).
 		WithExec([]string{"ls", "-la"}).
 		WithExec([]string{"ls", "-la", ScriptDir}).
-		WithExec([]string{"ls", "-la", RequirementsDir}).
+		//WithExec([]string{"ls", "-la", RequirementsDir}).
 		WithExec([]string{"ls", "-la", ArtifactDir}).
 		WithExec([]string{"cat", path.Join(ArtifactDir, "requirementsNameToIdMapping.dict")})
 
 	log.Info().Msg("Extracting and rendering requirements")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering requirements'")})
 	// TODO: Port + write tests
 	/*
@@ -185,6 +188,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering design specifications")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering design specifications'")})
 	// TODO: Port + write tests
 	/*
@@ -194,6 +198,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering configuration specifications")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering configuration specifications'")})
 	// TODO: Port + write tests
 	/*
@@ -203,6 +208,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Exiting folder '$(Build.Repository.Name)' for correct script execution context")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Exiting folder '$(Build.Repository.Name)' for correct script execution context'")})
 	// TODO: Port
 	/*
@@ -211,6 +217,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering test results")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering test results'")})
 	// TODO: Port + write tests
 	/*
@@ -220,6 +227,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Rendering IT solution name")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering IT solution name'")})
 	// TODO: Port + write tests
 	/*
@@ -228,6 +236,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Rendering pipeline run ID")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run ID'")})
 	// TODO: Port + write tests
 	/*
@@ -236,6 +245,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Rendering target environment name")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering target environment name'")})
 	// TODO: Port + write tests
 	/*
@@ -244,6 +254,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Rendering GitHub project name")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering GitHub project name'")})
 	// TODO: Port + write tests
 	/*
@@ -252,6 +263,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Rendering 'ready for' (production/use) value")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering 'ready for' (production/use) value'")})
 	// TODO: Port + write tests
 	/*
@@ -260,6 +272,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Rendering pipeline run link")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run link'")})
 	// TODO: Port + write tests
 	/*
@@ -268,6 +281,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Rendering pipeline run artifacts link")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run artifacts link'")})
 	// TODO: Port + write tests
 	/*
@@ -276,6 +290,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Generate verification report filename")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Generate verification report filename'")})
 	// TODO: Port + write tests
 	// TODO: Consider moving to the alpine container
@@ -285,6 +300,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Generate verification report filename")
 	generator = generator.
+		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Generate verification report filename'")})
 	// TODO: Port + write tests
 	// TODO: Consider moving to the alpine container
@@ -294,6 +310,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	// 3. Export the verification report to host 'output' directory
 	_, err = client.Container().From("alpine:latest").
+		WithWorkdir(".").
 		WithFile("output/report.html", generator.File("output/report.html")).
 		Directory(OutputDir).
 		Export(ctx, hostOutputDir)
@@ -322,7 +339,7 @@ func CollectParameters(ctx context.Context) error {
 	defer client.Close()
 
 	log.Info().Msg("Collecting parameters")
-	entries, err := client.Host().Directory(InputDir).Entries(ctx)
+	entries, err := client.Host().Directory(path.Join("src", InputDir)).Entries(ctx)
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return err
@@ -343,7 +360,7 @@ func CollectParameters(ctx context.Context) error {
 		}
 	}
 	if !found {
-		return fmt.Errorf("expected file 'parameters.json' not found in directory '%s'", InputDir)
+		return fmt.Errorf("expected file 'parameters.json' not found in directory '%s'", path.Join("src", InputDir))
 	}
 
 	return nil
