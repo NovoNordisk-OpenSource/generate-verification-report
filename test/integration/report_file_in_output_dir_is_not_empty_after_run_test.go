@@ -9,7 +9,7 @@ func TestReportFileIsNotEmpty(t *testing.T) {
 	// Set up the test case
 	reportFile := "report.html"
 	outputDir := "output"
-	filePath := "../../src/" + outputDir + "/" + reportFile
+	filePath := "../../" + outputDir + "/" + reportFile
 
 	// Check if the file is not empty
 	fileInfo, _ := os.Stat(filePath)

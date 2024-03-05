@@ -54,10 +54,16 @@ The test codebase lives in the `/test` directory and is consuming the production
 
 Two subgroups of tests exist: `unit tests` and `integration tests`. They have their own folders in `/test` and are run separately.
 
-From within `/test/integration` or `/test/unit`, run:
+To execute unit tests , from within `/` run:
 
 ```text
-go test
+go test -C test/unit ./... -v
+```
+
+To execute integration tests , from within `/` run:
+
+```text
+go test -C test/integration ./... -v
 ```
 
 ## Running workflows locally with `act`
