@@ -18,8 +18,11 @@ import (
 )
 
 const (
-	InputDir  = "input"
-	OutputDir = "output"
+	InputDir        = "input"
+	OutputDir       = "output"
+	ScriptDir       = "script"
+	ArtifactDir     = "artifact"
+	RequirementsDir = "requirements"
 )
 
 var (
@@ -98,9 +101,12 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithEnvVariable("GITHUB_SHA", os.Getenv("GITHUB_SHA")).
 		WithEnvVariable("GITHUB_REF_NAME", os.Getenv("GITHUB_REF_NAME")).
 		WithSecretVariable("GITHUB_TOKEN", GITHUB_TOKEN).
+		WithDirectory(ScriptDir, client.Host().Directory(ScriptDir)).
+		WithDirectory(RequirementsDir, client.Host().Directory(parameters.FeatureFilesPath)).
 		WithDirectory("input/testresults", collector.Directory("input/testresults")).
 		WithDirectory(OutputDir, client.Directory().WithFile("report.html", client.Host().File("template/VerificationReportTemplate.html"))).
 		WithWorkdir(".").
+		WithExec([]string{"mkdir", ArtifactDir}).
 		WithExec([]string{"ls", "-la", OutputDir}).
 		WithExec([]string{"python", "--version"}).
 		WithExec([]string{"sh", "-c", "git version"}).
@@ -112,170 +118,179 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msg("Extracting and rendering pull request links")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering pull request links'")})
-		// TODO: Port to GitHub + write tests
-		/*
-			echo "python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result pull_request_id"
-			prId=$(python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result pull_request_id)
-			echo $prId
-			sed -i "s|<var>PULL_REQUEST_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_git/$(Build.Repository.Name)/pullrequest/$prId|g" ${{ parameters.verification_report_template_location }}
-		*/
+	// TODO: Port to GitHub API + write tests
+	/*
+		echo "python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result pull_request_id"
+		prId=$(python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result pull_request_id)
+		echo $prId
+		sed -i "s|<var>PULL_REQUEST_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_git/$(Build.Repository.Name)/pullrequest/$prId|g" ${{ parameters.verification_report_template_location }}
+	*/
 
 	log.Info().Msg("Extracting and rendering pull request closed timestamp")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering pull request closed timestamp'")})
-		// TODO: Port to GitHub + write tests
-		/*
-			echo "python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result pull_request_closed_timestamp"
-			prClosedTimestamp=$(python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result pull_request_closed_timestamp)
-			echo $prClosedTimestamp
-			sed -i "s|<var>TIMESTAMP_PIPELINE_START</var>|$prClosedTimestamp|g" ${{ parameters.verification_report_template_location }}
-		*/
+	// TODO: Port to GitHub API + write tests
+	/*
+		echo "python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result pull_request_closed_timestamp"
+		prClosedTimestamp=$(python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result pull_request_closed_timestamp)
+		echo $prClosedTimestamp
+		sed -i "s|<var>TIMESTAMP_PIPELINE_START</var>|$prClosedTimestamp|g" ${{ parameters.verification_report_template_location }}
+	*/
 
 	log.Info().Msg("Extracting and rendering related work items")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering related work items'")})
-		// TODO: Port + write tests
-		/*
-			echo "python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result work_items > workItemsHtml.html"
-			python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result work_items > workItemsHtml.html
-			cat workItemsHtml.html
-			python3 ${{ parameters.render_replace_py_location }} -render ./workItemsHtml.html -template ${{ parameters.verification_report_template_location }} -placeholder "<var>WORK_ITEM_LINKS</var>"
-			python3 ${{ parameters.render_replace_py_location }} -render ./workItemsHtml.html -template ${{ parameters.verification_report_template_location }} -placeholder "<kbd><var>CHANGE_ITEM</var></kbd>"
-		*/
+	// TODO: Port to GitHub API + write tests
+	/*
+		echo "python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result work_items > workItemsHtml.html"
+		python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result work_items > workItemsHtml.html
+		cat workItemsHtml.html
+		python3 ${{ parameters.render_replace_py_location }} -render ./workItemsHtml.html -template ${{ parameters.verification_report_template_location }} -placeholder "<var>WORK_ITEM_LINKS</var>"
+		python3 ${{ parameters.render_replace_py_location }} -render ./workItemsHtml.html -template ${{ parameters.verification_report_template_location }} -placeholder "<kbd><var>CHANGE_ITEM</var></kbd>"
+	*/
 
 	log.Info().Msg("Entering folder '$(Build.Repository.Name)' for correct script execution context")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Entering folder '$(Build.Repository.Name)' for correct script execution context'")})
-		// TODO: Port
-		/*
-			cd $(Build.Repository.Name)
-		*/
+	// TODO: Port
+	/*
+		cd $(Build.Repository.Name)
+	*/
 
 	log.Info().Msg("Extracting and mapping feature names with unique tags")
 	generator = generator.
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and mapping feature names with unique tags'")})
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and mapping feature names with unique tags'")}).
 		// TODO: Port + write tests
 		/*
 			python3 ../${{ parameters.extract_requirements_name_to_id_mapping_py_location }} -folder ${{ parameters.feature_files_path }} > ../requirementsNameToIdMapping.dict
 		*/
+		WithExec([]string{"ls", "-la"}).
+		WithExec([]string{"ls", "-la", ScriptDir}).
+		WithExec([]string{"ls", "-la", RequirementsDir}).
+		WithExec([]string{"python", parameters.ExtractRequirementsNameToIdMappingPyLocation, "-folder", RequirementsDir}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join(ArtifactDir, "requirementsNameToIdMapping.dict")}).
+		WithExec([]string{"ls", "-la"}).
+		WithExec([]string{"ls", "-la", ScriptDir}).
+		WithExec([]string{"ls", "-la", RequirementsDir}).
+		WithExec([]string{"ls", "-la", ArtifactDir}).
+		WithExec([]string{"cat", path.Join(ArtifactDir, "requirementsNameToIdMapping.dict")})
 
 	log.Info().Msg("Extracting and rendering requirements")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering requirements'")})
-		// TODO: Port + write tests
-		/*
-			python3 ../${{ parameters.render_requirements_py_location }} -folder ${{ parameters.feature_files_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfRequirementsHtml.html
-			python3 ../${{ parameters.render_replace_py_location }} -render ./listOfRequirementsHtml.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_REQUIREMENTS</var>"
-		*/
+	// TODO: Port + write tests
+	/*
+		python3 ../${{ parameters.render_requirements_py_location }} -folder ${{ parameters.feature_files_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfRequirementsHtml.html
+		python3 ../${{ parameters.render_replace_py_location }} -render ./listOfRequirementsHtml.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_REQUIREMENTS</var>"
+	*/
 
 	log.Info().Msg("Extracting and rendering design specifications")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering design specifications'")})
-		// TODO: Port + write tests
-		/*
-			python3 ../${{ parameters.render_design_specifications_py_location }} -folder ${{ parameters.system_design_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfDesignSpecifications.html
-			python3 ../${{ parameters.render_replace_py_location }} -render ./listOfDesignSpecifications.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_DESIGN_SPECIFICATIONS</var>"
-		*/
+	// TODO: Port + write tests
+	/*
+		python3 ../${{ parameters.render_design_specifications_py_location }} -folder ${{ parameters.system_design_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfDesignSpecifications.html
+		python3 ../${{ parameters.render_replace_py_location }} -render ./listOfDesignSpecifications.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_DESIGN_SPECIFICATIONS</var>"
+	*/
 
 	log.Info().Msg("Extracting and rendering configuration specifications")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering configuration specifications'")})
-		// TODO: Port + write tests
-		/*
-			python3 ../${{ parameters.render_configuration_specifications_py_location }} -folder ${{ parameters.system_configuration_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfConfigurationSpecifications.html
-			python3 ../${{ parameters.render_replace_py_location }} -render ./listOfConfigurationSpecifications.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_CONFIGURATION_SPECIFICATIONS</var>"
-		*/
+	// TODO: Port + write tests
+	/*
+		python3 ../${{ parameters.render_configuration_specifications_py_location }} -folder ${{ parameters.system_configuration_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfConfigurationSpecifications.html
+		python3 ../${{ parameters.render_replace_py_location }} -render ./listOfConfigurationSpecifications.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_CONFIGURATION_SPECIFICATIONS</var>"
+	*/
 
 	log.Info().Msg("Exiting folder '$(Build.Repository.Name)' for correct script execution context")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Exiting folder '$(Build.Repository.Name)' for correct script execution context'")})
-		// TODO: Port
-		/*
-			cd ..
-		*/
+	// TODO: Port
+	/*
+		cd ..
+	*/
 
 	log.Info().Msg("Extracting and rendering test results")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering test results'")})
-		// TODO: Port + write tests
-		/*
-			python3 ${{ parameters.render_json_test_result_py_location }} -folder $(Pipeline.Workspace)/${{ parameters.test_results_artifact_name }} -mapping ./requirementsNameToIdMapping.dict > testResultsHtml.html
-			python3 ${{ parameters.render_replace_py_location }} -render ./testResultsHtml.html -template ${{ parameters.verification_report_template_location }} -placeholder "<var>TESTCASE_RESULTS</var>"
-		*/
+	// TODO: Port + write tests
+	/*
+		python3 ${{ parameters.render_json_test_result_py_location }} -folder $(Pipeline.Workspace)/${{ parameters.test_results_artifact_name }} -mapping ./requirementsNameToIdMapping.dict > testResultsHtml.html
+		python3 ${{ parameters.render_replace_py_location }} -render ./testResultsHtml.html -template ${{ parameters.verification_report_template_location }} -placeholder "<var>TESTCASE_RESULTS</var>"
+	*/
 
 	log.Info().Msg("Rendering IT solution name")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering IT solution name'")})
-		// TODO: Port + write tests
-		/*
-			sed -i 's|<var>IT_SOLUTION_NAME</var>|${{ parameters.it_solution_name }}|g' ${{ parameters.verification_report_template_location }}
-		*/
+	// TODO: Port + write tests
+	/*
+		sed -i 's|<var>IT_SOLUTION_NAME</var>|${{ parameters.it_solution_name }}|g' ${{ parameters.verification_report_template_location }}
+	*/
 
 	log.Info().Msg("Rendering pipeline run ID")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run ID'")})
-		// TODO: Port + write tests
-		/*
-			sed -i 's|<var>PIPELINE_RUN_ID</var>|$(Build.BuildId)|g' ${{ parameters.verification_report_template_location }}
-		*/
+	// TODO: Port + write tests
+	/*
+		sed -i 's|<var>PIPELINE_RUN_ID</var>|$(Build.BuildId)|g' ${{ parameters.verification_report_template_location }}
+	*/
 
 	log.Info().Msg("Rendering target environment name")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering target environment name'")})
-		// TODO: Port + write tests
-		/*
-			sed -i 's|<var>ENVIRONMENT</var>|${{ parameters.environment_name }}|g' ${{ parameters.verification_report_template_location }}
-		*/
+	// TODO: Port + write tests
+	/*
+		sed -i 's|<var>ENVIRONMENT</var>|${{ parameters.environment_name }}|g' ${{ parameters.verification_report_template_location }}
+	*/
 
 	log.Info().Msg("Rendering GitHub project name")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering GitHub project name'")})
-		// TODO: Port + write tests
-		/*
-			sed -i 's|<var>ADO_PROJECT_NAME</var>|$(System.TeamProject)|g' ${{ parameters.verification_report_template_location }}
-		*/
+	// TODO: Port + write tests
+	/*
+		sed -i 's|<var>ADO_PROJECT_NAME</var>|$(System.TeamProject)|g' ${{ parameters.verification_report_template_location }}
+	*/
 
 	log.Info().Msg("Rendering 'ready for' (production/use) value")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering 'ready for' (production/use) value'")})
-		// TODO: Port + write tests
-		/*
-			sed -i 's|<var>IS_READY_FOR</var>|${{ parameters.ready_for }}|g' ${{ parameters.verification_report_template_location }}
-		*/
+	// TODO: Port + write tests
+	/*
+		sed -i 's|<var>IS_READY_FOR</var>|${{ parameters.ready_for }}|g' ${{ parameters.verification_report_template_location }}
+	*/
 
 	log.Info().Msg("Rendering pipeline run link")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run link'")})
-		// TODO: Port + write tests
-		/*
-			sed -i 's|<var>ADO_PIPELINE_RUN_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)\&view=results|g' ${{ parameters.verification_report_template_location }}
-		*/
+	// TODO: Port + write tests
+	/*
+		sed -i 's|<var>ADO_PIPELINE_RUN_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)\&view=results|g' ${{ parameters.verification_report_template_location }}
+	*/
 
 	log.Info().Msg("Rendering pipeline run artifacts link")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run artifacts link'")})
-		// TODO: Port + write tests
-		/*
-			sed -i 's|<var>ARTIFACTS_ADO_PIPELINE_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)\&view=artifacts\&pathAsName=false\&type=publishedArtifacts|g' ${{ parameters.verification_report_template_location }}
-		*/
+	// TODO: Port + write tests
+	/*
+		sed -i 's|<var>ARTIFACTS_ADO_PIPELINE_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)\&view=artifacts\&pathAsName=false\&type=publishedArtifacts|g' ${{ parameters.verification_report_template_location }}
+	*/
 
 	log.Info().Msg("Generate verification report filename")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Generate verification report filename'")})
-		// TODO: Port + write tests
-		// TODO: Consider moving to the alpine container
-		/*
-			echo "##vso[task.setvariable variable=verification_report_file]$(${{ parameters.get_verification_report_filename_for_context_sh_location }} "${{ parameters.environment_name }}" "$(Build.BuildId)" "${{ parameters.ready_for }}").html"
-		*/
+	// TODO: Port + write tests
+	// TODO: Consider moving to the alpine container
+	/*
+		echo "##vso[task.setvariable variable=verification_report_file]$(${{ parameters.get_verification_report_filename_for_context_sh_location }} "${{ parameters.environment_name }}" "$(Build.BuildId)" "${{ parameters.ready_for }}").html"
+	*/
 
 	log.Info().Msg("Generate verification report filename")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Generate verification report filename'")})
-		// TODO: Port + write tests
-		// TODO: Consider moving to the alpine container
-		/*
-			echo "##vso[task.setvariable variable=verification_report_artifact]$(${{ parameters.get_verification_report_artifact_name_for_context_sh_location }} "${{ parameters.ready_for }}")"
-		*/
+	// TODO: Port + write tests
+	// TODO: Consider moving to the alpine container
+	/*
+		echo "##vso[task.setvariable variable=verification_report_artifact]$(${{ parameters.get_verification_report_artifact_name_for_context_sh_location }} "${{ parameters.ready_for }}")"
+	*/
 
 	// 3. Export the verification report to host 'output' directory
 	_, err = client.Container().From("alpine:latest").
