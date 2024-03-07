@@ -17,7 +17,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: 1.22.0
+          go-version: 1.22.1
           cache: false
 
       - name: Test Dagger workflow
@@ -25,7 +25,7 @@ jobs:
         with:
           verb: run
           args: go run -C src main.go
-          version: "0.10.0"
+          version: "0.10.1"
 
       - name: Run integration tests
         run: go test -C test/integration -v
