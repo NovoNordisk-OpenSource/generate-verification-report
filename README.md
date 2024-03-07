@@ -30,8 +30,8 @@ Any output in this directory will be overwritten between runs unless the generat
 Logs will be written to a `run.log` file in the same place everytime the Dagger workflow is run. This file is appended between runs.
 
 ## Installed prerequisites
-- golang (version: >=1.22.0)
-- dagger runtime (version: >= 0.9.11)
+- golang (version: >=1.22.1)
+- dagger runtime (version: >= 0.10.1)
 
 > The Dagger runtime is not required, but it renders nicer and logs are filtered properly when using it over:
 > ```text
@@ -41,12 +41,12 @@ Logs will be written to a `run.log` file in the same place everytime the Dagger 
 An additional requirement is that the executing host environment can reach the public Docker Hub image registry.
 
 ## Running the Dagger workflow
-The production codebase lives in the `/src` directory.
+The production codebase lives in the `/` directory.
 
-From within `/src`, run:
+From within `/`, run:
 
 ```text
-dagger run go run main.go
+dagger run go run -C src main.go
 ```
 
 ## Running tests
