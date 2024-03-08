@@ -33,11 +33,6 @@ Logs will be written to a `run.log` file in the same place everytime the Dagger 
 - golang (version: >=1.22.1)
 - dagger runtime (version: >= 0.10.1)
 
-> The Dagger runtime is not required, but it renders nicer and logs are filtered properly when using it over:
-> ```text
-> go run main.go
-> ```
-
 An additional requirement is that the executing host environment can reach the public Docker Hub image registry.
 
 ## Running the Dagger workflow
