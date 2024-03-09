@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/nn-dma/generate-verification-report/color"
 	"github.com/nn-dma/generate-verification-report/inputs"
@@ -27,13 +28,23 @@ const (
 
 var (
 	parameters inputs.Parameters
+	workDir    string
 )
 
-func main() {
+func init() {
 	log.Logger = initLogger()
-	log.Info().Msg("---- NEW RUN ----")
-	log.Info().Msg("Logger initialized")
+	log.Info().Msg("---- NEW RUN, Logger initialized ----")
 
+	currentDir, err := os.Getwd()
+	if err != nil {
+		log.Error().Msg(fmt.Sprintln(err))
+		panic(err)
+	}
+	workDir = strings.Split(currentDir, "/src")[0]
+	log.Info().Msg(fmt.Sprintf("Working directory: '%s'", workDir))
+}
+
+func main() {
 	ctx := context.Background()
 
 	// Collect and verify parameters
@@ -83,14 +94,15 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msg("Collecting test results")
 	collector := client.Container().From("alpine:latest").
 		WithWorkdir(".").
-		WithDirectory("input/testresults", client.Host().Directory(path.Join("src", InputDir, "testresults"))).
+		WithDirectory("input/testresults", client.Host().Directory(path.Join(InputDir, "testresults"))).
+		WithExec([]string{"ls", "-la"}).
+		WithExec([]string{"ls", "-la", "input"}).
 		WithExec([]string{"sh", "-c", "echo 'number of test results (.json files):' $(ls -1 input/testresults | grep .json | wc -l)"})
 	log.Info().Msg("Test results collected")
 
 	// 2. Generate verification report
 	log.Info().Msg("Generating verification report")
 	// Define local variables and secrets required for the verification report generation
-	hostOutputDir := OutputDir // TODO: May just be the OutputDir variable (i.e. no need for hostOutputDir)
 	GITHUB_TOKEN := client.SetSecret("GITHUB_TOKEN", os.Getenv("GITHUB_TOKEN"))
 
 	log.Info().Msg("Preparing state with parameters and test results and outputting debug information")
@@ -313,7 +325,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithWorkdir(".").
 		WithFile("output/report.html", generator.File("output/report.html")).
 		Directory(OutputDir).
-		Export(ctx, hostOutputDir)
+		Export(ctx, OutputDir)
 	if err != nil {
 		return err
 	}
@@ -339,7 +351,7 @@ func CollectParameters(ctx context.Context) error {
 	defer client.Close()
 
 	log.Info().Msg("Collecting parameters")
-	entries, err := client.Host().Directory(path.Join("src", InputDir)).Entries(ctx)
+	entries, err := client.Host().Directory(InputDir).Entries(ctx)
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return err
@@ -348,7 +360,7 @@ func CollectParameters(ctx context.Context) error {
 	for _, entry := range entries {
 		if entry == "parameters.json" {
 			found = true
-			entryPath := path.Join(InputDir, entry)
+			entryPath := path.Join(workDir, InputDir, entry)
 			log.Info().Msg(fmt.Sprintf("Found parameters file: '%s'", entryPath))
 			log.Info().Msg(fmt.Sprintf("Reading '%s'", entryPath))
 			parameters, err = readParameters(entryPath) // Set the global parameters variable
@@ -360,7 +372,7 @@ func CollectParameters(ctx context.Context) error {
 		}
 	}
 	if !found {
-		return fmt.Errorf("expected file 'parameters.json' not found in directory '%s'", path.Join("src", InputDir))
+		return fmt.Errorf("expected file 'parameters.json' not found in directory '%s'", InputDir)
 	}
 
 	return nil

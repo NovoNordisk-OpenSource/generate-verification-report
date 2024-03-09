@@ -27,6 +27,10 @@ jobs:
           args: go run -C src main.go
           version: "0.10.1"
 
+      - name: Print logs
+        if: always()
+        run: cat src/run.log
+
       - name: Run integration tests
         run: go test -C test/integration -v
 

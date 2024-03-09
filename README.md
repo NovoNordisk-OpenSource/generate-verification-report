@@ -12,7 +12,7 @@ However, it can technically be invoked from anywhere capable of running Dagger a
 ![](./doc/dagger_workflow.png)
 
 # How to use this?
-First, go to the `/src` directory. Following paths mentioned are relative to this.
+First, go to the `/` directory. Following paths mentioned are relative to this.
 
 ### Inputs
 
@@ -27,7 +27,7 @@ Any output in this directory will be overwritten between runs unless the generat
 
 #### Logs
 
-Logs will be written to a `run.log` file in the same place everytime the Dagger workflow is run. This file is appended between runs.
+Logs will be written to a `src/run.log` file in the same place everytime the Dagger workflow is run. This file is appended between runs.
 
 ## Installed prerequisites
 - golang (version: >=1.22.1)
@@ -36,7 +36,7 @@ Logs will be written to a `run.log` file in the same place everytime the Dagger 
 An additional requirement is that the executing host environment can reach the public Docker Hub image registry.
 
 ## Running the Dagger workflow
-The production codebase lives in the `/` directory.
+The production codebase lives in the `/src` directory.
 
 From within `/`, run:
 
