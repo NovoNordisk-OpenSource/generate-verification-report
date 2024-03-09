@@ -18,7 +18,7 @@ runs:
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
-        go-version: 1.22.0
+        go-version: 1.22.1
         cache: false
     
     - name: Run other tests (dev debug)
@@ -40,7 +40,12 @@ runs:
       with:
         verb: run
         args: go run -C src main.go
-        version: "0.10.0"
+        version: "0.10.1"
+
+    - name: Print logs
+      shell: bash
+      if: always()
+      run: cat src/run.log
 
     - name: Upload verification report
       uses: actions/upload-artifact@v4
