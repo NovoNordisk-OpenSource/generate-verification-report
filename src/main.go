@@ -95,8 +95,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	collector := client.Container().From("alpine:latest").
 		WithWorkdir(".").
 		WithDirectory("input/testresults", client.Host().Directory(path.Join(InputDir, "testresults"))).
-		WithExec([]string{"ls", "-la"}).
-		WithExec([]string{"ls", "-la", "input"}).
 		WithExec([]string{"sh", "-c", "echo 'number of test results (.json files):' $(ls -1 input/testresults | grep .json | wc -l)"})
 	log.Info().Msg("Test results collected")
 

@@ -2,4 +2,5 @@
 .DS_Store
 run.log
 **/output
-**/input/testresults/*
+**/input/testresults/*.json
+**/input/testresults/*.txt

@@ -12,11 +12,11 @@ However, it can technically be invoked from anywhere capable of running Dagger a
 ![](./doc/dagger_workflow.png)
 
 # How to use this?
-First, go to the `/` directory. Following paths mentioned are relative to this.
+First, go to the repository root `/`. Following paths mentioned are relative to this directory.
 
 ### Inputs
 
-Parameters are provided here by editing the `parameters.json` file. It is located in the `/input` directory *(not to be confused with the **`inputs`** directory, which is a Go package)*.
+Parameters are provided here by editing the `parameters.json` file. It is located in the `/input` directory *(not to be confused with the **`inputs`** directory inside `/src`, which is a Go package)*.
 
 Test results provided as input to the Dagger worklow must be placed in the `/input/testresults` directory. For now, the test results must be in the form of one JSON file per test case result and each must be in the Allure-format.
 
@@ -33,12 +33,14 @@ Logs will be written to a `src/run.log` file in the same place everytime the Dag
 - golang (version: >=1.22.1)
 - dagger runtime (version: >= 0.10.1)
 
+Install with Homebrew or another package manager.
+
 An additional requirement is that the executing host environment can reach the public Docker Hub image registry.
 
 ## Running the Dagger workflow
 The production codebase lives in the `/src` directory.
 
-From within `/`, run:
+From within the repository root `/`, run:
 
 ```text
 dagger run go run -C src main.go
@@ -47,15 +49,15 @@ dagger run go run -C src main.go
 ## Running tests
 The test codebase lives in the `/test` directory and is consuming the production codebase. It is thus not part of the production codebase.
 
-Two subgroups of tests exist: `unit tests` and `integration tests`. They have their own folders in `/test` and are run separately.
+Two subgroups of tests exist: `unit tests` and `integration tests`. They have their own folders within `/test` and are run separately.
 
-To execute unit tests , from within `/` run:
+To execute unit tests , from within the repository root `/` run:
 
 ```text
 go test -C test/unit -v
 ```
 
-To execute integration tests , from within `/` run:
+To execute integration tests , from within the repository root `/` run:
 
 ```text
 go test -C test/integration -v
@@ -68,10 +70,10 @@ When running the workflows locally, `act` might initially ask you which containe
 
 To execute the **unit tests** workflow, from within `/`, run:
 ```text
-act --container-architecture linux/amd64 -W .github/workflows/on_commit.yml
+act --container-architecture linux/arm64 -W .github/workflows/on_commit.yml
 ```
 
 To execute the **integration tests** workflow, from within `/`, run:
 ```text
-act --container-architecture linux/amd64 -W .github/workflows/on_commit_workflow.yml
+act --container-architecture linux/arm64 -W .github/workflows/on_commit_workflow.yml
 ```
