@@ -90,6 +90,9 @@ def main(argv):
                 for feature in features:
                     mapping[feature.name] = feature.tags
 
+        # Sort the mapping by the feature name
+        mapping = dict(sorted(mapping.items()))
+
         # Print the mapping
         #print(mapping)
 

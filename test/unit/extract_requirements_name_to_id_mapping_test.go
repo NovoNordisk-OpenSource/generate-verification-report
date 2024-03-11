@@ -14,7 +14,7 @@ func TestExtractRequirementsMapping(t *testing.T) {
 	}
 
 	// Get the expected output
-	expected := "{'Upper case a string': 'upper_case_feature', 'Reverse String': 'reverse_string_feat', 'day_of_week_feature': 'day_of_week_feature'}\n"
+	expected := "{'Reverse String': 'reverse_string_feat', 'Upper case a string': 'upper_case_feature', 'day_of_week_feature': 'day_of_week_feature'}\n"
 
 	// Compare the output
 	actual := string(output)
