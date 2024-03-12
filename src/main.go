@@ -228,7 +228,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msg("Extracting and rendering test results")
 	generator = generator.
 		WithWorkdir(".").
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering test results'")})
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering test results'")}).
+		WithExec([]string{"python", parameters.RenderJsonTestResultPyLocation, "-folder", path.Join(InputDir, "testresults"), "-mapping", path.Join(ArtifactDir, "requirementsNameToIdMapping.dict")}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join(ArtifactDir, "renderJsonTestResults.txt")})
 	// TODO: Port + write tests
 	/*
 		python3 ${{ parameters.render_json_test_result_py_location }} -folder $(Pipeline.Workspace)/${{ parameters.test_results_artifact_name }} -mapping ./requirementsNameToIdMapping.dict > testResultsHtml.html
