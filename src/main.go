@@ -172,10 +172,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	generator = generator.
 		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and mapping feature names with unique tags'")}).
-		// TODO: Port + write tests
-		/*
-			python3 ../${{ parameters.extract_requirements_name_to_id_mapping_py_location }} -folder ${{ parameters.feature_files_path }} > ../requirementsNameToIdMapping.dict
-		*/
 		WithExec([]string{"ls", "-la"}).
 		WithExec([]string{"ls", "-la", ScriptDir}).
 		//WithExec([]string{"ls", "-la", RequirementsDir}).
@@ -185,6 +181,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 		//WithExec([]string{"ls", "-la", RequirementsDir}).
 		WithExec([]string{"ls", "-la", ArtifactDir}).
 		WithExec([]string{"cat", path.Join(ArtifactDir, "requirementsNameToIdMapping.dict")})
+	/*
+		python3 ../${{ parameters.extract_requirements_name_to_id_mapping_py_location }} -folder ${{ parameters.feature_files_path }} > ../requirementsNameToIdMapping.dict
+	*/
 
 	log.Info().Msg("Extracting and rendering requirements")
 	generator = generator.
@@ -229,8 +228,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 	generator = generator.
 		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering test results'")}).
-		WithExec([]string{"python", parameters.RenderJsonTestResultPyLocation, "-folder", path.Join(InputDir, "testresults"), "-mapping", path.Join(ArtifactDir, "requirementsNameToIdMapping.dict")}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join(ArtifactDir, "renderJsonTestResults.txt")})
-	// TODO: Port + write tests
+		WithExec([]string{"python", parameters.RenderJsonTestResultPyLocation, "-folder", path.Join(InputDir, "testresults"), "-mapping", path.Join(ArtifactDir, "requirementsNameToIdMapping.dict")}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join(ArtifactDir, "renderJsonTestResults.html")}).
+		WithExec([]string{"python", parameters.RenderReplacePyLocation, "-render", path.Join(ArtifactDir, "renderJsonTestResults.html"), "-template", "output/report.html", "-placeholder", "<var>TESTCASE_RESULTS</var>"})
 	/*
 		python3 ${{ parameters.render_json_test_result_py_location }} -folder $(Pipeline.Workspace)/${{ parameters.test_results_artifact_name }} -mapping ./requirementsNameToIdMapping.dict > testResultsHtml.html
 		python3 ${{ parameters.render_replace_py_location }} -render ./testResultsHtml.html -template ${{ parameters.verification_report_template_location }} -placeholder "<var>TESTCASE_RESULTS</var>"

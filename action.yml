@@ -40,7 +40,7 @@ runs:
       with:
         verb: run
         args: go run -C src main.go
-        version: "0.10.1"
+        version: "0.10.2"
 
     - name: Print logs
       shell: bash

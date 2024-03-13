@@ -12,7 +12,7 @@
     "render_configuration_specifications_py_location": "qms-pipeline-templates/templates/scripts/report/render_configuration_specifications.py",
     "render_design_specifications_py_location": "qms-pipeline-templates/templates/scripts/report/render_design_specifications.py",
     "render_json_test_result_py_location": "script/render_json_test_result.py",
-    "render_replace_py_location": "qms-pipeline-templates/templates/scripts/report/render_replace.py",
+    "render_replace_py_location": "script/render_replace.py",
     "render_requirements_py_location": "qms-pipeline-templates/templates/scripts/report/render_requirements.py",
     "stage_name": "generate_verification_report",
     "system_configurations_path": "",
