@@ -247,8 +247,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msg("Rendering pipeline run ID")
 	generator = generator.
 		WithWorkdir(".").
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run ID'")})
-	// TODO: Port + write tests
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run ID'")}).
+		WithExec([]string{"sh", "-c", "sed -i 's|<var>PIPELINE_RUN_ID</var>|" + parameters.PipelineRunId + "|g' output/report.html"})
+	// TODO: Make sure the parameter is set to either ADO or GitHub pipeline/workflow run ID
 	/*
 		sed -i 's|<var>PIPELINE_RUN_ID</var>|$(Build.BuildId)|g' ${{ parameters.verification_report_template_location }}
 	*/
