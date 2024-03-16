@@ -267,8 +267,10 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msg("Rendering GitHub project name")
 	generator = generator.
 		WithWorkdir(".").
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering GitHub project name'")})
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering GitHub project name'")}).
+		WithExec([]string{"sh", "-c", "sed -i 's|<var>ADO_PROJECT_NAME</var>|" + parameters.ProjectName + "|g' output/report.html"})
 	// TODO: Make sure the parameter is set
+	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
 	/*
 		sed -i 's|<var>ADO_PROJECT_NAME</var>|$(System.TeamProject)|g' ${{ parameters.verification_report_template_location }}
 	*/
@@ -276,8 +278,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msg("Rendering 'ready for' (production/use) value")
 	generator = generator.
 		WithWorkdir(".").
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering 'ready for' (production/use) value'")})
-	// TODO: Make sure the parameter is set
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering 'ready for' (production/use) value'")}).
+		WithExec([]string{"sh", "-c", "sed -i 's|<var>IS_READY_FOR</var>|" + parameters.ReadyFor + "|g' output/report.html"})
 	/*
 		sed -i 's|<var>IS_READY_FOR</var>|${{ parameters.ready_for }}|g' ${{ parameters.verification_report_template_location }}
 	*/
