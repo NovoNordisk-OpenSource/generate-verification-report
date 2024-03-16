@@ -238,8 +238,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msg("Rendering IT solution name")
 	generator = generator.
 		WithWorkdir(".").
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering IT solution name'")})
-	// TODO: Port + write tests
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering IT solution name'")}).
+		WithExec([]string{"sh", "-c", "sed -i 's|<var>IT_SOLUTION_NAME</var>|" + parameters.ItSolutionName + "|g' output/report.html"})
 	/*
 		sed -i 's|<var>IT_SOLUTION_NAME</var>|${{ parameters.it_solution_name }}|g' ${{ parameters.verification_report_template_location }}
 	*/
