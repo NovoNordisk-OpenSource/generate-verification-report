@@ -257,8 +257,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msg("Rendering target environment name")
 	generator = generator.
 		WithWorkdir(".").
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering target environment name'")})
-	// TODO: Port + write tests
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering target environment name'")}).
+		WithExec([]string{"sh", "-c", "sed -i 's|<var>ENVIRONMENT</var>|" + parameters.EnvironmentName + "|g' output/report.html"})
+	// TODO: Make sure the parameter is set
 	/*
 		sed -i 's|<var>ENVIRONMENT</var>|${{ parameters.environment_name }}|g' ${{ parameters.verification_report_template_location }}
 	*/
@@ -267,7 +268,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	generator = generator.
 		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering GitHub project name'")})
-	// TODO: Port + write tests
+	// TODO: Make sure the parameter is set
 	/*
 		sed -i 's|<var>ADO_PROJECT_NAME</var>|$(System.TeamProject)|g' ${{ parameters.verification_report_template_location }}
 	*/
@@ -276,7 +277,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	generator = generator.
 		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering 'ready for' (production/use) value'")})
-	// TODO: Port + write tests
+	// TODO: Make sure the parameter is set
 	/*
 		sed -i 's|<var>IS_READY_FOR</var>|${{ parameters.ready_for }}|g' ${{ parameters.verification_report_template_location }}
 	*/
