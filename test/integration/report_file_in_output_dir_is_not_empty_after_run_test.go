@@ -7,7 +7,7 @@ import (
 
 func TestReportFileIsNotEmpty(t *testing.T) {
 	// Set up the test case
-	reportFile := "report.html"
+	reportFile := "VerificationReport_production_Dummy1234567890_dummy_environment_name.html"
 	outputDir := "output"
 	filePath := "../../" + outputDir + "/" + reportFile
 
