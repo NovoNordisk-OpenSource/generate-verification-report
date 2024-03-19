@@ -1,10 +1,10 @@
 {
-    "environment_name": "Dummy Environment Name",
+    "environment_name": "Dummy-Environment-Name",
     "extract_requirements_name_to_id_mapping_py_location": "script/extract_requirements_name_to_id_mapping.py",
     "feature_files_path": "test/integration/requirements",
     "get_pull_request_id_py_location": "qms-pipeline-templates/templates/scripts/report/get_pull_request_id.py",
-    "get_verification_report_artifact _name_for_context_sh_location": "qms-pipeline-templates/templates/scripts/report/get_verification_report_artifact_name_for_context.sh",
-    "get_verification_report_filename_for_context_sh_location": "qms-pipeline-templates/templates/scripts/report/get_verification_report_filename_for_context.sh",
+    "get_verification_report_artifact _name_for_context_sh_location": "script/get_verification_report_artifact_name_for_context.sh",
+    "get_verification_report_filename_for_context_sh_location": "script/get_verification_report_filename_for_context.sh",
     "it_solution_name": "Dummy Solution Name",
     "pipeline_run_id": "Dummy1234567890",
     "project_name": "Dummy Project Name",

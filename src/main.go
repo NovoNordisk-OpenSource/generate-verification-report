@@ -303,14 +303,21 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 
 	log.Info().Msg("Generate verification report filename")
-	generator = generator.
+	verificationReportFilename, err := generator.
 		WithWorkdir(".").
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Generate verification report filename'")})
-	// TODO: Port + write tests
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Generate verification report filename'")}).
+		WithExec([]string{parameters.GetVerificationReportFilenameForContextShLocation, parameters.EnvironmentName, parameters.PipelineRunId, parameters.ReadyFor}).
+		Stdout(ctx)
+	// TODO: Write tests
 	// TODO: Consider moving to the alpine container
 	/*
 		echo "##vso[task.setvariable variable=verification_report_file]$(${{ parameters.get_verification_report_filename_for_context_sh_location }} "${{ parameters.environment_name }}" "$(Build.BuildId)" "${{ parameters.ready_for }}").html"
 	*/
+	if err != nil {
+		return err
+	}
+	verificationReportFilename = strings.TrimSpace(verificationReportFilename)
+	log.Info().Msgf("Verification report filename: %s.html", verificationReportFilename)
 
 	log.Info().Msg("Generate verification report artifact name")
 	generator = generator.
@@ -325,7 +332,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// 3. Export the verification report to host 'output' directory
 	_, err = client.Container().From("alpine:latest").
 		WithWorkdir(".").
-		WithFile("output/report.html", generator.File("output/report.html")).
+		WithFile(fmt.Sprintf("output/%s.html", verificationReportFilename), generator.File("output/report.html")).
 		Directory(OutputDir).
 		Export(ctx, OutputDir)
 	if err != nil {
@@ -339,7 +346,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	log.Info().Msgf("Verification report generated: %s/report.html is %d bytes", OutputDir, size)
+	log.Info().Msgf("Verification report generated: %s/%s.html is %d bytes", OutputDir, verificationReportFilename, size)
 
 	return nil
 }
