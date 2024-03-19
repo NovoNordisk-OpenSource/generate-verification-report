@@ -316,8 +316,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	verificationReportFilename = strings.TrimSpace(verificationReportFilename)
-	log.Info().Msgf("Verification report filename: %s.html", verificationReportFilename)
+	verificationReportFilename = fmt.Sprintf("%s.html", strings.TrimSpace(verificationReportFilename))
+	log.Info().Msgf("Verification report filename: %s", verificationReportFilename)
 
 	log.Info().Msg("Generate verification report artifact name")
 	generator = generator.
@@ -332,7 +332,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// 3. Export the verification report to host 'output' directory
 	_, err = client.Container().From("alpine:latest").
 		WithWorkdir(".").
-		WithFile(fmt.Sprintf("output/%s.html", verificationReportFilename), generator.File("output/report.html")).
+		WithFile(fmt.Sprintf("output/%s", verificationReportFilename), generator.File("output/report.html")).
 		Directory(OutputDir).
 		Export(ctx, OutputDir)
 	if err != nil {
@@ -340,13 +340,13 @@ func GenerateVerificationReport(ctx context.Context) error {
 	}
 
 	// NOTE: Logging file size is for debugging purposes for now——may be removed in the future unless having it in the logs is useful
-	reportTemplateFile := path.Join(OutputDir, "report.html")
+	reportTemplateFile := path.Join(OutputDir, verificationReportFilename)
 	generatedReportFile := client.Host().File(reportTemplateFile)
 	size, err := generatedReportFile.Size(ctx)
 	if err != nil {
 		return err
 	}
-	log.Info().Msgf("Verification report generated: %s/%s.html is %d bytes", OutputDir, verificationReportFilename, size)
+	log.Info().Msgf("Verification report generated: %s/%s is %d bytes", OutputDir, verificationReportFilename, size)
 
 	return nil
 }
