@@ -19,3 +19,4 @@ jobs:
       - uses: nn-dma/generate-verification-report@main
         with:
           test: testinputsforverificationreport
+          ready_for: production

@@ -5,6 +5,10 @@ inputs:
     required: true
     description: 'test'
     default: ''
+  ready_for:
+    required: true
+    description: 'Indicates whether the verification report is generated for the validation or production environment with respective possible values: [production, use].'
+    default: ''
 
 runs:
   using: 'composite'
@@ -50,7 +54,8 @@ runs:
     - name: Generate verification report artifact name
       shell: bash
       run: |
-        vran=$(src/script/get_verification_report_artifact_name_for_context.sh $(jq -r .ready_for < input/parameters.json))
+        vran=$(src/script/get_verification_report_artifact_name_for_context.sh ${{ inputs.ready_for }}
+        echo "$vran"
         echo "vran=$vran" >> $GITHUB_OUTPUT
 
     - name: Upload verification report
