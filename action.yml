@@ -51,6 +51,7 @@ runs:
       shell: bash
       run: |
         vran=$(src/script/get_verification_report_artifact_name_for_context.sh $(jq -r .ready_for < input/parameters.json))
+        echo "$vran"
         echo "vran=$vran" >> $GITHUB_OUTPUT
 
     - name: Upload verification report
