@@ -1,4 +1,4 @@
-name: GitHub Action Test
+name: GitHub Action Tests
 
 on:
   push:
@@ -6,11 +6,14 @@ on:
       - main
   
 jobs:
-  test:
-    name: Run GitHub Action integration tests
+  init:
+    name: Checkout repository
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
   generate_verification_report:
+    name: Generate verification report using GitHub Action
     runs-on: ubuntu-latest
     steps:
       - uses: nn-dma/generate-verification-report@main
