@@ -1,0 +1,18 @@
+name: GitHub Action Test
+
+on:
+  push:
+    branches:
+      - main
+  
+jobs:
+  test:
+    name: Run GitHub Action integration tests
+    runs-on: ubuntu-latest
+
+  generate_verification_report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: nn-dma/generate-verification-report@main
+        with:
+          test: testinputsforverificationreport
