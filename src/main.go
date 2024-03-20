@@ -325,6 +325,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Generate verification report artifact name'")})
 	// TODO: Port + write tests
 	// TODO: Consider moving to the alpine container
+	// TODO: Explore possibility of setting this as an environment variable in the Host OS
 	/*
 		echo "##vso[task.setvariable variable=verification_report_artifact]$(${{ parameters.get_verification_report_artifact_name_for_context_sh_location }} "${{ parameters.ready_for }}")"
 	*/
