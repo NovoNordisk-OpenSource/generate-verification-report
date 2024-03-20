@@ -54,7 +54,7 @@ runs:
     - name: Generate verification report filename
       shell: bash
       run: |
-        vrfn=$(src/script/get_verification_report_filename_for_context.sh $(jq -r '.environment_name' < input/parameters.json) $(jq -r '.pipeline_run_id' < input/parameters.json) {{ inputs.ready_for }}).html
+        vrfn=$(src/script/get_verification_report_filename_for_context.sh $(jq -r '.environment_name' < input/parameters.json) $(jq -r '.pipeline_run_id' < input/parameters.json) ${{ inputs.ready_for }}).html
         echo "$vrfn"
         echo "vrfn=$vrfn" >> $GITHUB_OUTPUT
 
