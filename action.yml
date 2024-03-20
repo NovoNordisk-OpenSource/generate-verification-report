@@ -58,17 +58,17 @@ runs:
       run: |
         vrfn=$(src/script/get_verification_report_filename_for_context.sh $(jq -r '.environment_name' < input/parameters.json) $(jq -r '.pipeline_run_id' < input/parameters.json) ${{ inputs.ready_for }}).html
         echo "$vrfn"
-        echo "vrfn=$vrfn" >> $GITHUB_OUTPUT
+        echo "vrfn=$vrfn" >> $GITHUB_ENV
 
     - name: Generate verification report artifact name
       shell: bash
       run: |
         vran=$(src/script/get_verification_report_artifact_name_for_context.sh ${{ inputs.ready_for }})
         echo "$vran"
-        echo "vran=$vran" >> $GITHUB_OUTPUT
+        echo "vran=$vran" >> $GITHUB_ENV
 
     - name: Upload verification report
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ steps.vars.outputs.vran }}
-        path: output/${{ steps.vars.outputs.vrfn }}
+        name: ${{ env.vran }}
+        path: output/${{ env.vrfn }}
