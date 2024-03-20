@@ -1,4 +1,4 @@
-[![Unit Tests](https://github.com/nn-dma/generate-verification-report/actions/workflows/on_commit.yml/badge.svg?branch=main)](https://github.com/nn-dma/generate-verification-report/actions/workflows/on_commit.yml) [![Integration Tests](https://github.com/nn-dma/generate-verification-report/actions/workflows/on_commit_workflow.yml/badge.svg?branch=main)](https://github.com/nn-dma/generate-verification-report/actions/workflows/on_commit_workflow.yml)
+[![Unit Tests](https://github.com/nn-dma/generate-verification-report/actions/workflows/run_unit_tests.yml/badge.svg?branch=main)](https://github.com/nn-dma/generate-verification-report/actions/workflows/run_unit_tests.yml) [![Integration Tests](https://github.com/nn-dma/generate-verification-report/actions/workflows/run_integration_tests.yml/badge.svg?branch=main)](https://github.com/nn-dma/generate-verification-report/actions/workflows/run_integration_tests.yml)
 
 # Who is this for?
 Software developers who understand the QMS toolchain.
