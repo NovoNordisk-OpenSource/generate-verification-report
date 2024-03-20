@@ -8,7 +8,7 @@
     "it_solution_name": "Dummy Solution Name",
     "pipeline_run_id": "Dummy1234567890",
     "project_name": "Dummy Project Name",
-    "ready_for": "use",
+    "ready_for": "production",
     "render_configuration_specifications_py_location": "qms-pipeline-templates/templates/scripts/report/render_configuration_specifications.py",
     "render_design_specifications_py_location": "qms-pipeline-templates/templates/scripts/report/render_design_specifications.py",
     "render_json_test_result_py_location": "script/render_json_test_result.py",
