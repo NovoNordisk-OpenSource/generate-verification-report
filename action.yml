@@ -51,6 +51,13 @@ runs:
       if: always()
       run: cat src/run.log
 
+    - name: Generate verification report filename
+      shell: bash
+      run: |
+        vrfn=$(src/script/get_verification_report_filename_for_context.sh $(jq -r '.environment_name' < input/parameters.json)) $(jq -r '.pipeline_run_id' < input/parameters.json)) {{ inputs.ready_for }}).html
+        echo "$vrfn"
+        echo "vrfn=$vrfn" >> $GITHUB_OUTPUT
+
     - name: Generate verification report artifact name
       shell: bash
       run: |
@@ -61,4 +68,4 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ steps.vars.outputs.vran }}
-        path: output/report.html
+        path: output/${{ steps.vars.outputs.vrfn }}
