@@ -64,6 +64,7 @@ runs:
       shell: bash
       run: |
         vran=$(src/script/get_verification_report_artifact_name_for_context.sh ${{ inputs.ready_for }})
+        echo "$vran"
         echo "vran=$vran" >> $GITHUB_OUTPUT
 
     - name: Upload verification report
