@@ -70,10 +70,10 @@ When running the workflows locally, `act` might initially ask you which containe
 
 To execute the **unit tests** workflow, from within `/`, run:
 ```text
-act --container-architecture linux/arm64 -W .github/workflows/on_commit.yml
+act --container-architecture linux/arm64 -W .github/workflows/run_unit_tests.yml
 ```
 
 To execute the **integration tests** workflow, from within `/`, run:
 ```text
-act --container-architecture linux/arm64 -W .github/workflows/on_commit_workflow.yml
+act --container-architecture linux/arm64 -W .github/workflows/run_integration_tests.yml
 ```
