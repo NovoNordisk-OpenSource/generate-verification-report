@@ -91,6 +91,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	defer client.Close()
 
 	// 1. Collect test results
+	// TODO: Simplify by moving this to the python container
 	log.Info().Msg("Collecting test results")
 	collector := client.Container().From("alpine:latest").
 		WithWorkdir(".").
@@ -309,7 +310,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{parameters.GetVerificationReportFilenameForContextShLocation, parameters.EnvironmentName, parameters.PipelineRunId, parameters.ReadyFor}).
 		Stdout(ctx)
 	// TODO: Write tests
-	// TODO: Consider moving to the alpine container
 	/*
 		echo "##vso[task.setvariable variable=verification_report_file]$(${{ parameters.get_verification_report_filename_for_context_sh_location }} "${{ parameters.environment_name }}" "$(Build.BuildId)" "${{ parameters.ready_for }}").html"
 	*/
@@ -319,18 +319,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 	verificationReportFilename = fmt.Sprintf("%s.html", strings.TrimSpace(verificationReportFilename))
 	log.Info().Msgf("Verification report filename: %s", verificationReportFilename)
 
-	log.Info().Msg("Generate verification report artifact name")
-	generator = generator.
-		WithWorkdir(".").
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Generate verification report artifact name'")})
-	// TODO: Port + write tests
-	// TODO: Consider moving to the alpine container
-	// TODO: Explore possibility of setting this as an environment variable in the Host OS
-	/*
-		echo "##vso[task.setvariable variable=verification_report_artifact]$(${{ parameters.get_verification_report_artifact_name_for_context_sh_location }} "${{ parameters.ready_for }}")"
-	*/
-
 	// 3. Export the verification report to host 'output' directory
+	// TODO: Simplify by moving this to the python container
 	_, err = client.Container().From("alpine:latest").
 		WithWorkdir(".").
 		WithFile(fmt.Sprintf("output/%s", verificationReportFilename), generator.File("output/report.html")).
