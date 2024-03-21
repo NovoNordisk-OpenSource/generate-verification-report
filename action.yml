@@ -1,9 +1,9 @@
 name: 'QMS generate verification report'
 description: 'Generates a verification report based on pipeline metadata and test results as inputs.'
 inputs:
-  test:
+  testresults_artifact_name:
     required: true
-    description: 'test'
+    description: 'Artifact name of files uploaded of previously generated test results during runs of (IV, PV) or (pIV, pPV), e.g. [testresults-validation, testresults-production].'
     default: ''
   ready_for:
     required: true
@@ -25,11 +25,21 @@ runs:
         go-version: 1.22.1
         cache: false
     
+    # Note: v3 is currently used because v4 is not yet supported in GitHub Enterprise Server
+    - name: Download test results
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ inputs.testresults_artifact_name }}
+        path: input/testresults
+
     - name: Run other tests (dev debug)
       shell: bash
       run: |
-        echo "Test input: ${{ inputs.test }}"
+        echo "Test results artifact name: ${{ inputs.testresults_artifact_name }}"
+        echo "Ready for: ${{ inputs.ready_for }}"
         echo "Current directory: $(pwd)"
+        echo "Test results directory:"
+        ls -la input/testresults
         echo "Current:"
         ls -la
         echo ""
@@ -38,7 +48,7 @@ runs:
         echo ""
         echo "Grandparent:"
         ls -la ../../
-    
+
     # TODO: Add injection of input parameters to 'parameters.json' file
 
     - name: Generate verification report
