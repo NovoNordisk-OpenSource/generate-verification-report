@@ -56,19 +56,19 @@ runs:
     - name: Generate verification report filename
       shell: bash
       run: |
-        vrfn=$(src/script/get_verification_report_filename_for_context.sh $(jq -r '.environment_name' < input/parameters.json) $(jq -r '.pipeline_run_id' < input/parameters.json) ${{ inputs.ready_for }}).html
-        echo "$vrfn"
-        echo "vrfn=$vrfn" >> $GITHUB_ENV
+        verification_report_filename=$(src/script/get_verification_report_filename_for_context.sh $(jq -r '.environment_name' < input/parameters.json) $(jq -r '.pipeline_run_id' < input/parameters.json) ${{ inputs.ready_for }}).html
+        echo "$verification_report_filename"
+        echo "verification_report_filename=$verification_report_filename" >> $GITHUB_ENV
 
     - name: Generate verification report artifact name
       shell: bash
       run: |
-        vran=$(src/script/get_verification_report_artifact_name_for_context.sh ${{ inputs.ready_for }})
-        echo "$vran"
-        echo "vran=$vran" >> $GITHUB_ENV
+        verification_report_artifact_name=$(src/script/get_verification_report_artifact_name_for_context.sh ${{ inputs.ready_for }})
+        echo "$verification_report_artifact_name"
+        echo "verification_report_artifact_name=$verification_report_artifact_name" >> $GITHUB_ENV
 
     - name: Upload verification report
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.vran }}
-        path: output/${{ env.vrfn }}
+        name: ${{ env.verification_report_artifact_name }}
+        path: output/${{ env.verification_report_filename }}
