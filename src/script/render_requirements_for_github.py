@@ -62,22 +62,20 @@ def main(argv):
         print("No arguments provided")
         exit(1)
     # Guard clause, too few arguments provided
-    if len(argv) < 8:
+    if len(argv) < 6:
         print("Not all required arguments provided")
         exit(1)
 
     # 1. Check for the arg pattern:
-    #   python3 render_requirements_for_github.py -folder <filepath> -branch <remote branch> -organization <organization> -repository <repository>
+    #   python3 render_requirements_for_github.py -folder <filepath> -branch <remote branch> -repository <repository>
     #   e.g. 
     #       argv[0] is '-folder'
     #       argv[1] is './../features'
     #       argv[2] is '-branch'
-    #       argv[3] is 'origin/release/service1'
-    #       argv[4] is '-organization'
-    #       argv[5] is 'nn-dma'
-    #       argv[6] is '-repository'
-    #       argv[7] is 'generate-verification-report'
-    if len(argv) == 8 and argv[0] == '-folder' and argv[2] == '-branch' and argv[4] == '-organization' and argv[6] == '-repository':
+    #       argv[3] is 'origin/release/v1'
+    #       argv[4] is '-repository'
+    #       argv[5] is 'nn-dma/generate-verification-report'
+    if len(argv) == 6 and argv[0] == '-folder' and argv[2] == '-branch' and argv[4] == '-repository':
 	
         # Render all feature descriptions
         # Find all .feature files in the folder and subfolders
@@ -86,8 +84,7 @@ def main(argv):
 
         # Get the current branch
         branch = argv[3]
-        organization = argv[5]
-        repository = argv[7]
+        repository = argv[5]
         
         # Render the table header and the table body element
         print('''<figure>
@@ -117,7 +114,7 @@ def main(argv):
                 repository_file_path = os.path.abspath(file).replace(os.getcwd(), "")
                 # Create link to path for file, e.g.:
                 # https://github.com/nn-dma/generate-verification-report/blob/5ef02fe1e00c1dbf9d924ce9717af85e9d83ae44/test/integration/requirements/urs/uppercase-string.feature
-                repository_file_link = f'https://github.com/{organization}/{repository}/blob/{last_modified_commit_hash}{repository_file_path}'
+                repository_file_link = f'https://github.com/{repository}/blob/{last_modified_commit_hash}{repository_file_path}'
 
                 for feature in features:
                     count_features += 1

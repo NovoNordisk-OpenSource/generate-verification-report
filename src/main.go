@@ -185,8 +185,10 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msg("Extracting and rendering requirements")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering requirements'")}).
+		WithExec([]string{"ls", "-la", RequirementsDir}).
+		WithExec([]string{"ls", "-la", RepositoryDir}).
 		WithExec([]string{"sh", "-c", "cd", RepositoryDir}).
-		WithExec([]string{"python", path.Join("../", parameters.RenderRequirementsPyLocation), "-folder", RequirementsDir, "-branch", "${GITHUB_REF_NAME}", "-organization", "innersource-nn", "-repository", "${GITHUB_REPOSITORY}"}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join(ArtifactDir, "listOfRequirementsHtml.html")}).
+		WithExec([]string{"python", path.Join("../", parameters.RenderRequirementsPyLocation), "-folder", RequirementsDir, "-branch", os.Getenv("GITHUB_REF_NAME"), "-repository", os.Getenv("GITHUB_REPOSITORY")}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join(ArtifactDir, "listOfRequirementsHtml.html")}).
 		WithExec([]string{"sh", "-c", "cd", ".."}).
 		WithExec([]string{"ls", "-la", ArtifactDir}).
 		WithExec([]string{"cat", path.Join(ArtifactDir, "listOfRequirementsHtml.html")}).
