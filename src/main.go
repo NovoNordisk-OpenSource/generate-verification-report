@@ -95,7 +95,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// TODO: Simplify by moving this to the python container
 	log.Info().Msg("Collecting test results")
 	collector := client.Container().From("alpine:latest").
-		WithWorkdir(".").
 		WithDirectory("input/testresults", client.Host().Directory(path.Join(InputDir, "testresults"))).
 		WithExec([]string{"sh", "-c", "echo 'number of test results (.json files):' $(ls -1 input/testresults | grep .json | wc -l)"})
 	log.Info().Msg("Test results collected")
@@ -107,7 +106,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Preparing state with parameters and test results and outputting debug information")
 	generator := client.Container().From("python:3.12.2-bookworm").
-		WithWorkdir(".").
 		WithEnvVariable("GITHUB_SHA", os.Getenv("GITHUB_SHA")).
 		WithEnvVariable("GITHUB_REF_NAME", os.Getenv("GITHUB_REF_NAME")).
 		WithEnvVariable("GITHUB_REPOSITORY", os.Getenv("GITHUB_REPOSITORY")).
@@ -129,7 +127,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering pull request links")
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering pull request links'")})
 	// TODO: Port to GitHub API + write tests
 	/*
@@ -141,7 +138,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering pull request closed timestamp")
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering pull request closed timestamp'")})
 	// TODO: Port to GitHub API + write tests
 	/*
@@ -153,7 +149,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering related work items")
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering related work items'")})
 	// TODO: Port to GitHub API + write tests
 	/*
@@ -176,7 +171,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and mapping feature names with unique tags")
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and mapping feature names with unique tags'")}).
 		WithExec([]string{"ls", "-la"}).
 		WithExec([]string{"ls", "-la", ScriptDir}).
@@ -190,7 +184,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering requirements")
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering requirements'")})
 	// TODO: Port to GitHub format + write tests
 	/*
@@ -200,7 +193,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering design specifications")
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering design specifications'")})
 	// TODO: Port to GitHub format + write tests
 	/*
@@ -210,7 +202,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering configuration specifications")
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering configuration specifications'")})
 	// TODO: Port to GitHub format + write tests
 	/*
@@ -230,7 +221,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering test results")
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering test results'")}).
 		WithExec([]string{"python", parameters.RenderJsonTestResultPyLocation, "-folder", path.Join(InputDir, "testresults"), "-mapping", path.Join(ArtifactDir, "requirementsNameToIdMapping.dict")}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join(ArtifactDir, "renderJsonTestResults.html")}).
 		WithExec([]string{"python", parameters.RenderReplacePyLocation, "-render", path.Join(ArtifactDir, "renderJsonTestResults.html"), "-template", "output/report.html", "-placeholder", "<var>TESTCASE_RESULTS</var>"})
@@ -241,7 +231,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Rendering IT solution name")
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering IT solution name'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>IT_SOLUTION_NAME</var>|" + parameters.ItSolutionName + "|g' output/report.html"})
 	/*
@@ -251,7 +240,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// TODO: Make sure the parameter is set to either ADO or GitHub pipeline/workflow run ID
 	log.Info().Msg("Rendering pipeline run ID")
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run ID'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>PIPELINE_RUN_ID</var>|" + parameters.PipelineRunId + "|g' output/report.html"})
 	/*
@@ -261,7 +249,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// TODO: Make sure the parameter is set
 	log.Info().Msg("Rendering target environment name")
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering target environment name'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>ENVIRONMENT</var>|" + parameters.EnvironmentName + "|g' output/report.html"})
 	/*
@@ -272,7 +259,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
 	log.Info().Msg("Rendering GitHub project name")
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering GitHub project name'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>ADO_PROJECT_NAME</var>|" + parameters.ProjectName + "|g' output/report.html"})
 	/*
@@ -283,7 +269,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// TODO: Make sure the parameter is set
 	log.Info().Msg("Rendering 'ready for' (production/use) value")
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering 'ready for' (production/use) value'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>IS_READY_FOR</var>|" + parameters.ReadyFor + "|g' output/report.html"})
 	/*
@@ -294,7 +279,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
 	log.Info().Msg("Rendering pipeline run link")
 	pipelineRunLink, err := generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run link'")}).
 		WithExec([]string{"sh", "-c", "echo https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"}).
 		Stdout(ctx)
@@ -305,7 +289,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msgf("Pipeline run link: %s", pipelineRunLink)
 
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run link'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>ADO_PIPELINE_RUN_LINK</var>|" + pipelineRunLink + "|g' output/report.html"})
 	/*
@@ -315,7 +298,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// NOTE: For GitHub, the pipeline run link is the same as the link to artifacts as these are not different pages (unlike with ADO).
 	log.Info().Msg("Rendering pipeline run artifacts link")
 	generator = generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run artifacts link'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>ARTIFACTS_ADO_PIPELINE_LINK</var>|" + pipelineRunLink + "|g' output/report.html"})
 	// TODO: Write tests
@@ -327,7 +309,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// TODO: Write tests
 	log.Info().Msg("Generate verification report filename")
 	verificationReportFilename, err := generator.
-		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Generate verification report filename'")}).
 		WithExec([]string{parameters.GetVerificationReportFilenameForContextShLocation, parameters.EnvironmentName, parameters.PipelineRunId, parameters.ReadyFor}).
 		Stdout(ctx)
@@ -340,7 +321,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// 3. Export the verification report to host 'output' directory
 	// TODO: Simplify by moving this to the python container
 	_, err = client.Container().From("alpine:latest").
-		WithWorkdir(".").
 		WithFile(fmt.Sprintf("output/%s", verificationReportFilename), generator.File("output/report.html")).
 		Directory(OutputDir).
 		Export(ctx, OutputDir)
