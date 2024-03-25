@@ -3,6 +3,7 @@ package inputs
 import "errors"
 
 type Parameters struct {
+	ProjectRepositoryPath                                 string `json:"project_repository_path"`
 	EnvironmentName                                       string `json:"environment_name"`
 	ExtractRequirementsNameToIdMappingPyLocation          string `json:"extract_requirements_name_to_id_mapping_py_location"`
 	FeatureFilesPath                                      string `json:"feature_files_path"`

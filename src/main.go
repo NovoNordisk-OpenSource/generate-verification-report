@@ -24,6 +24,7 @@ const (
 	ScriptDir       = "script"
 	ArtifactDir     = "artifact"
 	RequirementsDir = "requirements"
+	RepositoryDir   = "repository"
 )
 
 var (
@@ -114,6 +115,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithSecretVariable("GITHUB_TOKEN", GITHUB_TOKEN).
 		WithDirectory(ScriptDir, client.Host().Directory(path.Join("src", ScriptDir))).
 		WithDirectory(RequirementsDir, client.Host().Directory(parameters.FeatureFilesPath)).
+		WithDirectory(RepositoryDir, client.Host().Directory(parameters.ProjectRepositoryPath)).
 		WithDirectory("input/testresults", collector.Directory("input/testresults")).
 		WithDirectory(OutputDir, client.Directory().WithFile("report.html", client.Host().File("src/template/VerificationReportTemplate.html"))).
 		WithExec([]string{"mkdir", ArtifactDir}).
@@ -162,14 +164,15 @@ func GenerateVerificationReport(ctx context.Context) error {
 		python3 ${{ parameters.render_replace_py_location }} -render ./workItemsHtml.html -template ${{ parameters.verification_report_template_location }} -placeholder "<kbd><var>CHANGE_ITEM</var></kbd>"
 	*/
 
-	log.Info().Msg("Entering folder '$(Build.Repository.Name)' for correct script execution context")
-	generator = generator.
-		WithWorkdir(".").
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Entering folder '$(Build.Repository.Name)' for correct script execution context'")})
-	// TODO: Port
-	/*
-		cd $(Build.Repository.Name)
-	*/
+	// NOTE: This is probably not needed when using Dagger and is a remnant from the more sequential nature of the bash script.
+	// log.Info().Msgf("Entering folder '%s' for correct script execution context", RepositoryDir)
+	// generator = generator.
+	// 	WithWorkdir(".").
+	// 	WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Entering folder '$(Build.Repository.Name)' for correct script execution context'")})
+	// // TODO: Port
+	// /*
+	// 	cd $(Build.Repository.Name)
+	// */
 
 	log.Info().Msg("Extracting and mapping feature names with unique tags")
 	generator = generator.
