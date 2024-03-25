@@ -62,7 +62,7 @@ def main(argv):
         print("No arguments provided")
         exit(1)
     # Guard clause, too few arguments provided
-    if len(argv) < 10:
+    if len(argv) < 8:
         print("Not all required arguments provided")
         exit(1)
 
@@ -77,7 +77,7 @@ def main(argv):
     #       argv[5] is 'nn-dma'
     #       argv[6] is '-repository'
     #       argv[7] is 'generate-verification-report'
-    if len(argv) == 10 and argv[0] == '-folder' and argv[2] == '-branch' and argv[4] == '-organization' and argv[6] == '-repository':
+    if len(argv) == 8 and argv[0] == '-folder' and argv[2] == '-branch' and argv[4] == '-organization' and argv[6] == '-repository':
 	
         # Render all feature descriptions
         # Find all .feature files in the folder and subfolders
