@@ -109,6 +109,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithWorkdir(".").
 		WithEnvVariable("GITHUB_SHA", os.Getenv("GITHUB_SHA")).
 		WithEnvVariable("GITHUB_REF_NAME", os.Getenv("GITHUB_REF_NAME")).
+		WithEnvVariable("GITHUB_REPOSITORY", os.Getenv("GITHUB_REPOSITORY")).
+		WithEnvVariable("GITHUB_RUN_ID", os.Getenv("GITHUB_RUN_ID")).
 		WithSecretVariable("GITHUB_TOKEN", GITHUB_TOKEN).
 		WithDirectory(ScriptDir, client.Host().Directory(path.Join("src", ScriptDir))).
 		WithDirectory(RequirementsDir, client.Host().Directory(parameters.FeatureFilesPath)).
@@ -286,10 +288,23 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 
 	log.Info().Msg("Rendering pipeline run link")
+	pipelineRunLink, err := generator.
+		WithWorkdir(".").
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run link'")}).
+		WithExec([]string{"sh", "-c", "echo https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"}).
+		Stdout(ctx)
+	if err != nil {
+		return err
+	}
+	log.Info().Msgf("Pipeline run link: %s", pipelineRunLink)
+
 	generator = generator.
 		WithWorkdir(".").
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run link'")})
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run link'")}).
+		WithExec([]string{"sh", "-c", "sed -i 's|<var>ADO_PIPELINE_RUN_LINK</var>|" + pipelineRunLink + "|g' output/report.html"})
+		// sed -i 's|<var>ADO_PIPELINE_RUN_LINK</var>|https://github.com/$(GITHUB_REPOSITORY)/actions/runs/$(GITHUB_RUN_ID)|g' ${{ parameters.verification_report_template_location }}
 	// TODO: Port + write tests
+	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
 	/*
 		sed -i 's|<var>ADO_PIPELINE_RUN_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)\&view=results|g' ${{ parameters.verification_report_template_location }}
 	*/
@@ -299,20 +314,18 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run artifacts link'")})
 	// TODO: Port + write tests
+	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
 	/*
 		sed -i 's|<var>ARTIFACTS_ADO_PIPELINE_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)\&view=artifacts\&pathAsName=false\&type=publishedArtifacts|g' ${{ parameters.verification_report_template_location }}
 	*/
 
+	// TODO: Write tests
 	log.Info().Msg("Generate verification report filename")
 	verificationReportFilename, err := generator.
 		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Generate verification report filename'")}).
 		WithExec([]string{parameters.GetVerificationReportFilenameForContextShLocation, parameters.EnvironmentName, parameters.PipelineRunId, parameters.ReadyFor}).
 		Stdout(ctx)
-	// TODO: Write tests
-	/*
-		echo "##vso[task.setvariable variable=verification_report_file]$(${{ parameters.get_verification_report_filename_for_context_sh_location }} "${{ parameters.environment_name }}" "$(Build.BuildId)" "${{ parameters.ready_for }}").html"
-	*/
 	if err != nil {
 		return err
 	}
