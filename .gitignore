@@ -1,4 +1,5 @@
 .idea
+**/*.bak
 .DS_Store
 run.log
 **/output
