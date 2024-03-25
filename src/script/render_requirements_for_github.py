@@ -117,7 +117,7 @@ def main(argv):
                 repository_file_path = os.path.abspath(file).replace(os.getcwd(), "")
                 # Create link to path for file, e.g.:
                 # https://github.com/nn-dma/generate-verification-report/blob/5ef02fe1e00c1dbf9d924ce9717af85e9d83ae44/test/integration/requirements/urs/uppercase-string.feature
-                repository_file_link = f'https://github.com/{organization}/{repository}/blob/{last_modified_commit_hash}/{repository_file_path}'
+                repository_file_link = f'https://github.com/{organization}/{repository}/blob/{last_modified_commit_hash}{repository_file_path}'
 
                 for feature in features:
                     count_features += 1
