@@ -67,19 +67,17 @@ def main(argv):
         exit(1)
 
     # 1. Check for the arg pattern:
-    #   python3 get_requirements.py -folder <filepath> -branch <remote branch> -organization <organization> -project <project> -repository <repository>
+    #   python3 render_requirements_for_github.py -folder <filepath> -branch <remote branch> -organization <organization> -repository <repository>
     #   e.g. 
     #       argv[0] is '-folder'
     #       argv[1] is './../features'
     #       argv[2] is '-branch'
     #       argv[3] is 'origin/release/service1'
     #       argv[4] is '-organization'
-    #       argv[5] is 'novonordiskit'
-    #       argv[6] is '-project'
-    #       argv[7] is 'Data Management and Analytics'
-    #       argv[8] is '-repository'
-    #       argv[9] is 'QMS-TEMPLATE'
-    if len(argv) == 10 and argv[0] == '-folder' and argv[2] == '-branch' and argv[4] == '-organization' and argv[6] == '-project' and argv[8] == '-repository':
+    #       argv[5] is 'nn-dma'
+    #       argv[6] is '-repository'
+    #       argv[7] is 'generate-verification-report'
+    if len(argv) == 10 and argv[0] == '-folder' and argv[2] == '-branch' and argv[4] == '-organization' and argv[6] == '-repository':
 	
         # Render all feature descriptions
         # Find all .feature files in the folder and subfolders
@@ -89,11 +87,7 @@ def main(argv):
         # Get the current branch
         branch = argv[3]
         organization = argv[5]
-        project = argv[7]
-        repository = argv[9]
-
-        # URL encode the project name
-        project = project.replace(" ", "%20")
+        repository = argv[7]
         
         # Render the table header and the table body element
         print('''<figure>
@@ -122,8 +116,8 @@ def main(argv):
                 # /requirements/features/urs/functionality1.feature
                 repository_file_path = os.path.abspath(file).replace(os.getcwd(), "")
                 # Create link to path for file, e.g.:
-                # https://dev.azure.com/novonordiskit/Data%20Management%20and%20Analytics/_git/QMS-TEMPLATE/commit/d78d1bf6bd41b07f654c6b8178fb85b4490853f3?path=/requirements/features/urs/reverse-string-feat.feature
-                repository_file_link = f'https://dev.azure.com/{organization}/{project}/_git/{repository}/commit/{last_modified_commit_hash}?path={repository_file_path}'
+                # https://github.com/nn-dma/generate-verification-report/blob/5ef02fe1e00c1dbf9d924ce9717af85e9d83ae44/test/integration/requirements/urs/uppercase-string.feature
+                repository_file_link = f'https://github.com/{organization}/{repository}/blob/{last_modified_commit_hash}/{repository_file_path}'
 
                 for feature in features:
                     count_features += 1
