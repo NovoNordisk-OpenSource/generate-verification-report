@@ -1,4 +1,5 @@
 {
+    "project_repository_path": "input/repository",
     "environment_name": "Dummy-Environment-Name",
     "extract_requirements_name_to_id_mapping_py_location": "script/extract_requirements_name_to_id_mapping.py",
     "feature_files_path": "test/integration/requirements",

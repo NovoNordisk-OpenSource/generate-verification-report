@@ -247,22 +247,22 @@ func GenerateVerificationReport(ctx context.Context) error {
 		sed -i 's|<var>IT_SOLUTION_NAME</var>|${{ parameters.it_solution_name }}|g' ${{ parameters.verification_report_template_location }}
 	*/
 
+	// TODO: Make sure the parameter is set to either ADO or GitHub pipeline/workflow run ID
 	log.Info().Msg("Rendering pipeline run ID")
 	generator = generator.
 		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run ID'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>PIPELINE_RUN_ID</var>|" + parameters.PipelineRunId + "|g' output/report.html"})
-	// TODO: Make sure the parameter is set to either ADO or GitHub pipeline/workflow run ID
 	/*
 		sed -i 's|<var>PIPELINE_RUN_ID</var>|$(Build.BuildId)|g' ${{ parameters.verification_report_template_location }}
 	*/
 
+	// TODO: Make sure the parameter is set
 	log.Info().Msg("Rendering target environment name")
 	generator = generator.
 		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering target environment name'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>ENVIRONMENT</var>|" + parameters.EnvironmentName + "|g' output/report.html"})
-	// TODO: Make sure the parameter is set
 	/*
 		sed -i 's|<var>ENVIRONMENT</var>|${{ parameters.environment_name }}|g' ${{ parameters.verification_report_template_location }}
 	*/
