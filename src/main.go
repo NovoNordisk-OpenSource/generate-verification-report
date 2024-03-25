@@ -296,6 +296,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	pipelineRunLink = strings.TrimSpace(pipelineRunLink)
 	log.Info().Msgf("Pipeline run link: %s", pipelineRunLink)
 
 	generator = generator.
