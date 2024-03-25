@@ -222,7 +222,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	generator = generator.
 		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Exiting folder '$(Build.Repository.Name)' for correct script execution context'")})
-	// TODO: Port
+	// TODO: Port (not sure if this is needed)
 	/*
 		cd ..
 	*/
@@ -267,17 +267,19 @@ func GenerateVerificationReport(ctx context.Context) error {
 		sed -i 's|<var>ENVIRONMENT</var>|${{ parameters.environment_name }}|g' ${{ parameters.verification_report_template_location }}
 	*/
 
+	// TODO: Make sure the parameter is set
+	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
 	log.Info().Msg("Rendering GitHub project name")
 	generator = generator.
 		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering GitHub project name'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>ADO_PROJECT_NAME</var>|" + parameters.ProjectName + "|g' output/report.html"})
-	// TODO: Make sure the parameter is set
-	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
 	/*
 		sed -i 's|<var>ADO_PROJECT_NAME</var>|$(System.TeamProject)|g' ${{ parameters.verification_report_template_location }}
 	*/
 
+	// TODO: Write tests
+	// TODO: Make sure the parameter is set
 	log.Info().Msg("Rendering 'ready for' (production/use) value")
 	generator = generator.
 		WithWorkdir(".").
@@ -287,6 +289,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 		sed -i 's|<var>IS_READY_FOR</var>|${{ parameters.ready_for }}|g' ${{ parameters.verification_report_template_location }}
 	*/
 
+	// TODO: Write tests
+	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
 	log.Info().Msg("Rendering pipeline run link")
 	pipelineRunLink, err := generator.
 		WithWorkdir(".").
@@ -303,9 +307,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run link'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>ADO_PIPELINE_RUN_LINK</var>|" + pipelineRunLink + "|g' output/report.html"})
-		// sed -i 's|<var>ADO_PIPELINE_RUN_LINK</var>|https://github.com/$(GITHUB_REPOSITORY)/actions/runs/$(GITHUB_RUN_ID)|g' ${{ parameters.verification_report_template_location }}
-	// TODO: Port + write tests
-	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
 	/*
 		sed -i 's|<var>ADO_PIPELINE_RUN_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)\&view=results|g' ${{ parameters.verification_report_template_location }}
 	*/
