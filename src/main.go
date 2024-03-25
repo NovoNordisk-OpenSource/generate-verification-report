@@ -180,11 +180,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and mapping feature names with unique tags'")}).
 		WithExec([]string{"ls", "-la"}).
 		WithExec([]string{"ls", "-la", ScriptDir}).
-		//WithExec([]string{"ls", "-la", RequirementsDir}).
+		WithExec([]string{"ls", "-la", RequirementsDir}).
 		WithExec([]string{"python", parameters.ExtractRequirementsNameToIdMappingPyLocation, "-folder", RequirementsDir}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join(ArtifactDir, "requirementsNameToIdMapping.dict")}).
-		WithExec([]string{"ls", "-la"}).
-		WithExec([]string{"ls", "-la", ScriptDir}).
-		//WithExec([]string{"ls", "-la", RequirementsDir}).
 		WithExec([]string{"ls", "-la", ArtifactDir}).
 		WithExec([]string{"cat", path.Join(ArtifactDir, "requirementsNameToIdMapping.dict")})
 	/*
