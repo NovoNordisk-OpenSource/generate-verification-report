@@ -192,7 +192,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	generator = generator.
 		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering requirements'")})
-	// TODO: Port + write tests
+	// TODO: Port to GitHub format + write tests
 	/*
 		python3 ../${{ parameters.render_requirements_py_location }} -folder ${{ parameters.feature_files_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfRequirementsHtml.html
 		python3 ../${{ parameters.render_replace_py_location }} -render ./listOfRequirementsHtml.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_REQUIREMENTS</var>"
@@ -202,7 +202,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	generator = generator.
 		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering design specifications'")})
-	// TODO: Port + write tests
+	// TODO: Port to GitHub format + write tests
 	/*
 		python3 ../${{ parameters.render_design_specifications_py_location }} -folder ${{ parameters.system_design_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfDesignSpecifications.html
 		python3 ../${{ parameters.render_replace_py_location }} -render ./listOfDesignSpecifications.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_DESIGN_SPECIFICATIONS</var>"
@@ -212,20 +212,21 @@ func GenerateVerificationReport(ctx context.Context) error {
 	generator = generator.
 		WithWorkdir(".").
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering configuration specifications'")})
-	// TODO: Port + write tests
+	// TODO: Port to GitHub format + write tests
 	/*
 		python3 ../${{ parameters.render_configuration_specifications_py_location }} -folder ${{ parameters.system_configuration_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfConfigurationSpecifications.html
 		python3 ../${{ parameters.render_replace_py_location }} -render ./listOfConfigurationSpecifications.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_CONFIGURATION_SPECIFICATIONS</var>"
 	*/
 
-	log.Info().Msg("Exiting folder '$(Build.Repository.Name)' for correct script execution context")
-	generator = generator.
-		WithWorkdir(".").
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Exiting folder '$(Build.Repository.Name)' for correct script execution context'")})
-	// TODO: Port (not sure if this is needed)
-	/*
-		cd ..
-	*/
+	// NOTE: This is probably not needed when using Dagger and is a remnant from the more sequential nature of the bash script.
+	// log.Info().Msg("Exiting folder '$(Build.Repository.Name)' for correct script execution context")
+	// generator = generator.
+	// 	WithWorkdir(".").
+	// 	WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Exiting folder '$(Build.Repository.Name)' for correct script execution context'")})
+	// // TODO: Port (not sure if this is needed)
+	// /*
+	// 	cd ..
+	// */
 
 	log.Info().Msg("Extracting and rendering test results")
 	generator = generator.
