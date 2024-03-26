@@ -12,12 +12,23 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Checkout report testing repository
+        uses: actions/checkout@v4
+        with:
+          repository: nn-dma/generate-verification-report-test
+          path: input/repository
       - name: Upload sample test results
         uses: actions/upload-artifact@v3
         with:
           name: testresults-validation
           path: test/unit/data/allure-pytest/valid
+      - name: Upload sample repository
+        uses: actions/upload-artifact@v3
+        with:
+          name: repository
+          path: input/repository
 
+  # TODO: Inject the entire repository being tested as a parameter
   generate_verification_report:
     name: Generate verification report using GitHub Action
     runs-on: ubuntu-latest
