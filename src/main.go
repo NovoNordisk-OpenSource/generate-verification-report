@@ -169,6 +169,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// 	cd $(Build.Repository.Name)
 	// */
 
+	// TODO: Write tests
 	log.Info().Msg("Extracting and mapping feature names with unique tags")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and mapping feature names with unique tags'")}).
@@ -182,19 +183,19 @@ func GenerateVerificationReport(ctx context.Context) error {
 		python3 ../${{ parameters.extract_requirements_name_to_id_mapping_py_location }} -folder ${{ parameters.feature_files_path }} > ../requirementsNameToIdMapping.dict
 	*/
 
+	// TODO: Write tests
 	log.Info().Msg("Extracting and rendering requirements")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering requirements'")}).
-		WithExec([]string{"ls", "-la", RequirementsDir}).
-		WithExec([]string{"ls", "-la", RepositoryDir}).
-		WithExec([]string{"sh", "-c", "cd", RepositoryDir}).
-		WithExec([]string{"python", path.Join("../", parameters.RenderRequirementsPyLocation), "-folder", RequirementsDir, "-branch", os.Getenv("GITHUB_REF_NAME"), "-repository", os.Getenv("GITHUB_REPOSITORY")}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join(ArtifactDir, "listOfRequirementsHtml.html")}).
-		WithExec([]string{"sh", "-c", "cd", ".."}).
-		WithExec([]string{"ls", "-la", ArtifactDir}).
+		WithWorkdir(RepositoryDir).
+		WithExec([]string{"pwd"}).
+		WithExec([]string{"ls", "-la"}).
+		WithExec([]string{"python", path.Join("../", parameters.RenderRequirementsPyLocation), "-folder", RequirementsDir, "-branch", os.Getenv("GITHUB_REF_NAME"), "-repository", os.Getenv("GITHUB_REPOSITORY")}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join("../", ArtifactDir, "listOfRequirementsHtml.html")}).
+		WithWorkdir("..").
+		WithExec([]string{"ls", "-la", path.Join(ArtifactDir)}).
 		WithExec([]string{"cat", path.Join(ArtifactDir, "listOfRequirementsHtml.html")}).
 		WithExec([]string{"python", parameters.RenderReplacePyLocation, "-render", path.Join(ArtifactDir, "listOfRequirementsHtml.html"), "-template", "output/report.html", "-placeholder", "<var>LIST_OF_REQUIREMENTS</var>"})
 		// python3 ../../src/script/render_requirements_for_github.py -folder requirements -branch main -repository innersource-nn/qms-reference
-	// TODO: Port to GitHub format + write tests
 	/*
 		python3 ../${{ parameters.render_requirements_py_location }} -folder ${{ parameters.feature_files_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfRequirementsHtml.html
 		python3 ../${{ parameters.render_replace_py_location }} -render ./listOfRequirementsHtml.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_REQUIREMENTS</var>"

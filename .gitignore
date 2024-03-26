@@ -5,5 +5,3 @@ run.log
 **/output
 **/input/testresults/*.json
 **/input/testresults/*.txt
-**/input/repository
-!**/input/repository/.gitkeep
