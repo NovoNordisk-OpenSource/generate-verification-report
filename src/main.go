@@ -193,7 +193,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"ls", "-la", ArtifactDir}).
 		WithExec([]string{"cat", path.Join(ArtifactDir, "listOfRequirementsHtml.html")}).
 		WithExec([]string{"python", parameters.RenderReplacePyLocation, "-render", path.Join(ArtifactDir, "listOfRequirementsHtml.html"), "-template", "output/report.html", "-placeholder", "<var>LIST_OF_REQUIREMENTS</var>"})
-		// python3 ../../src/script/render_requirements_for_github.py -folder requirements -branch main -organization innersource-nn -repository qms-reference
+		// python3 ../../src/script/render_requirements_for_github.py -folder requirements -branch main -repository innersource-nn/qms-reference
 	// TODO: Port to GitHub format + write tests
 	/*
 		python3 ../${{ parameters.render_requirements_py_location }} -folder ${{ parameters.feature_files_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfRequirementsHtml.html
