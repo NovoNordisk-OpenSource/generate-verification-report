@@ -17,6 +17,8 @@ jobs:
         with:
           repository: nn-dma/generate-verification-report-test
           path: input/repository
+          fetch-depth: 0
+          fetch-tags: true
       - name: Upload sample test results
         uses: actions/upload-artifact@v3
         with:
@@ -27,8 +29,6 @@ jobs:
         with:
           name: repository
           path: input/repository
-          fetch-depth: 0
-          fetch-tags: true
 
   # TODO: Inject the entire repository being tested as a parameter
   generate_verification_report:
