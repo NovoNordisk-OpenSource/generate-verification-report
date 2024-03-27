@@ -90,7 +90,7 @@ runs:
         echo "verification_report_artifact_name=$verification_report_artifact_name" >> $GITHUB_ENV
 
     - name: Upload verification report
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: ${{ env.verification_report_artifact_name }}
         path: output/${{ env.verification_report_filename }}
