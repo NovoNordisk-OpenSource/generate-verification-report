@@ -5,6 +5,10 @@ inputs:
     required: true
     description: 'Artifact name of files uploaded of previously generated test results during runs of (IV, PV) or (pIV, pPV), e.g. [testresults-validation, testresults-production].'
     default: ''
+  repository_artifact:
+    required: true
+    description: 'Artifact name of the repository being tested: it will almost always be the triggering branch and repository of the workflow calling this action.'
+    default: ''
   ready_for:
     required: true
     description: 'Indicates whether the verification report is generated for the validation or production environment with respective possible values: [production, use].'
@@ -24,7 +28,13 @@ runs:
       with:
         go-version: 1.22.1
         cache: false
-    
+
+    - name: Download repository
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ inputs.repository_artifact }}
+        path: input/repository
+
     # Note: v3 is currently used because v4 is not yet supported in GitHub Enterprise Server
     - name: Download test results
       uses: actions/download-artifact@v3
@@ -38,6 +48,8 @@ runs:
         echo "Test results artifact name: ${{ inputs.testresults_artifact_name }}"
         echo "Ready for: ${{ inputs.ready_for }}"
         echo "Current directory: $(pwd)"
+        echo "Repository directory:"
+        ls -la input/repository
         echo "Test results directory:"
         ls -la input/testresults
         echo "Current:"
@@ -50,8 +62,6 @@ runs:
         ls -la ../../
 
     # TODO: Add injection of input parameters to 'parameters.json' file
-    # TODO: Checkout the referenced project repository and place it in the 'input/repository' directory, which is the default 
-    #       defined in the 'parameters.json' file for the variable 'project_repository_path' property
 
     - name: Generate verification report
       uses: dagger/dagger-for-github@v5

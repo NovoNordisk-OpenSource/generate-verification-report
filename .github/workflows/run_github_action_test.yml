@@ -38,4 +38,5 @@ jobs:
       - uses: nn-dma/generate-verification-report@main
         with:
           testresults_artifact_name: testresults-validation
+          repository_artifact: repository
           ready_for: production
