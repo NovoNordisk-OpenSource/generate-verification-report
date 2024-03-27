@@ -27,6 +27,8 @@ jobs:
         with:
           name: repository
           path: input/repository
+          fetch-depth: 0
+          fetch-tags: true
 
   # TODO: Inject the entire repository being tested as a parameter
   generate_verification_report:
