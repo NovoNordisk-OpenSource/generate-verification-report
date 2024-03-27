@@ -35,6 +35,7 @@ jobs:
   generate_verification_report:
     name: Generate verification report using GitHub Action
     runs-on: ubuntu-latest
+    needs: init
     steps:
       - uses: nn-dma/generate-verification-report@main
         with:
