@@ -184,13 +184,22 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 
 	// TODO: Write tests
+	log.Info().Msg("Extracting organization and repository name from git remote")
+	orgAndRepository, err := generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting organization and repository name from git remote'")}).
+		WithWorkdir(RepositoryDir).
+		WithExec([]string{"sh", "-c", "git remote -v | grep '^origin.* (push)' | awk '{print $2}' | sed -E 's/.*github.com[\\/:]([^\\/]+)\\/([^\\/]+)\\.git$/\\1\\/\\2/' | sed 's#https://github.com/##'"}).
+		Stdout(ctx)
+	if err != nil {
+		return err
+	}
+	orgAndRepository = strings.TrimSpace(orgAndRepository)
+	log.Info().Msgf("Organization and repository name: %s", orgAndRepository)
 	log.Info().Msg("Extracting and rendering requirements")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering requirements'")}).
 		WithWorkdir(RepositoryDir).
-		WithExec([]string{"pwd"}).
-		WithExec([]string{"ls", "-la"}).
-		WithExec([]string{"python", path.Join("../", parameters.RenderRequirementsPyLocation), "-folder", RequirementsDir, "-branch", os.Getenv("GITHUB_REF_NAME"), "-repository", os.Getenv("GITHUB_REPOSITORY")}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join("../", ArtifactDir, "listOfRequirementsHtml.html")}).
+		WithExec([]string{"python", path.Join("../", parameters.RenderRequirementsPyLocation), "-folder", RequirementsDir, "-branch", os.Getenv("GITHUB_REF_NAME"), "-repository", orgAndRepository}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join("../", ArtifactDir, "listOfRequirementsHtml.html")}).
 		WithWorkdir("..").
 		WithExec([]string{"ls", "-la", path.Join(ArtifactDir)}).
 		WithExec([]string{"cat", path.Join(ArtifactDir, "listOfRequirementsHtml.html")}).

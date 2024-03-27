@@ -29,6 +29,7 @@ runs:
         go-version: 1.22.1
         cache: false
 
+    # Note: v3 is currently used because v4 is not yet supported in GitHub Enterprise Server
     - name: Download repository
       uses: actions/download-artifact@v3
       with:
