@@ -10,7 +10,7 @@ jobs:
     name: Initialize test environment
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout action repository
         uses: actions/checkout@v4
       - name: Checkout report testing repository
         uses: actions/checkout@v4
@@ -19,16 +19,16 @@ jobs:
           path: input/repository
           fetch-depth: 0
           fetch-tags: true
-      - name: Upload sample test results
-        uses: actions/upload-artifact@v3
-        with:
-          name: testresults-validation
-          path: test/unit/data/allure-pytest/valid
       - name: Upload sample repository
         uses: actions/upload-artifact@v3
         with:
           name: repository
           path: input/repository
+      - name: Upload sample test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: testresults-validation
+          path: test/unit/data/allure-pytest/valid
 
   # TODO: Inject the entire repository being tested as a parameter
   generate_verification_report:
