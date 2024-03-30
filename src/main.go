@@ -137,8 +137,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	orgAndRepository = strings.TrimSpace(orgAndRepository)
 	log.Info().Msgf("Organization and repository name: %s", orgAndRepository)
 
-	// TODO: Move these 3 PR and work item related steps to the step where the remote 'owner/repo' value
-	//       is extracted as it is required to make these API calls
 	log.Info().Msg("Extracting and rendering pull request links")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering pull request links'")})
