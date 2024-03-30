@@ -119,11 +119,23 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"mkdir", ArtifactDir}).
 		WithExec([]string{"ls", "-la", OutputDir}).
 		WithExec([]string{"python", "--version"}).
-		WithExec([]string{"sh", "-c", "git version"}).
+		WithExec([]string{"git", "version"}).
 		WithExec([]string{"sh", "-c", "echo current directory: $(pwd)"}).
 		WithExec([]string{"sh", "-c", "echo branch: $(git branch --show-current)"}).
 		WithExec([]string{"sh", "-c", "echo triggering commit hash: ${GITHUB_SHA}"}).
 		WithExec([]string{"sh", "-c", "echo triggering branch: ${GITHUB_REF_NAME}"})
+
+	log.Info().Msg("Extracting organization and repository name from git remote")
+	orgAndRepository, err := generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting organization and repository name from git remote'")}).
+		WithWorkdir(RepositoryDir).
+		WithExec([]string{"sh", "-c", "git remote -v | grep '^origin.* (push)' | awk '{print $2}' | sed -E 's/.*github.com[\\/:]([^\\/]+)\\/([^\\/]+)\\.git$/\\1\\/\\2/' | sed 's#https://github.com/##'"}).
+		Stdout(ctx)
+	if err != nil {
+		return err
+	}
+	orgAndRepository = strings.TrimSpace(orgAndRepository)
+	log.Info().Msgf("Organization and repository name: %s", orgAndRepository)
 
 	// TODO: Move these 3 PR and work item related steps to the step where the remote 'owner/repo' value
 	//       is extracted as it is required to make these API calls
@@ -194,17 +206,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 
 	// TODO: Write tests
-	log.Info().Msg("Extracting organization and repository name from git remote")
-	orgAndRepository, err := generator.
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting organization and repository name from git remote'")}).
-		WithWorkdir(RepositoryDir).
-		WithExec([]string{"sh", "-c", "git remote -v | grep '^origin.* (push)' | awk '{print $2}' | sed -E 's/.*github.com[\\/:]([^\\/]+)\\/([^\\/]+)\\.git$/\\1\\/\\2/' | sed 's#https://github.com/##'"}).
-		Stdout(ctx)
-	if err != nil {
-		return err
-	}
-	orgAndRepository = strings.TrimSpace(orgAndRepository)
-	log.Info().Msgf("Organization and repository name: %s", orgAndRepository)
 	log.Info().Msg("Extracting and rendering requirements")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering requirements'")}).
