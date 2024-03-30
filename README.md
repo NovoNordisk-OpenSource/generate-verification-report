@@ -18,9 +18,14 @@ First, go to the repository root `/`. Following paths mentioned are relative to 
 
 ### Inputs
 
+**Parameters**
 Parameters are provided here by editing the `parameters.json` file. It is located in the `/input` directory *(not to be confused with the **`inputs`** directory inside `/src`, which is a Go package)*.
 
+**Test results**
 Test results provided as input to the Dagger worklow must be placed in the `/input/testresults` directory. For now, the test results must be in the form of one JSON file per test case result and each must be in the Allure-format.
+
+**Git repository under test**
+The Git repository under test provided as input to the Dagger workflow must be placed into the `/input/repository` directory. It must contain information about remotes as well as the full history, i.e. it cannot be a shallow copy. It must be a valid Git repository.
 
 ### Outputs
 
