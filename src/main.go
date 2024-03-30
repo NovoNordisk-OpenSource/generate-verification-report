@@ -125,10 +125,20 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"sh", "-c", "echo triggering commit hash: ${GITHUB_SHA}"}).
 		WithExec([]string{"sh", "-c", "echo triggering branch: ${GITHUB_REF_NAME}"})
 
+	// TODO: Move these 3 PR and work item related steps to the step where the remote 'owner/repo' value
+	//       is extracted as it is required to make these API calls
 	log.Info().Msg("Extracting and rendering pull request links")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering pull request links'")})
 	// TODO: Port to GitHub API + write tests
+	// GitHub version
+	/*
+		pr=$(python3 get_pull_request_id_for_github.py --commit 7c6fg6d --token ghp_sometoken1234 --repo owner/repo-name)
+		echo $pr
+		prUrl=$(jq -r '.url' < $pr)
+		sed -i "s|<var>PULL_REQUEST_LINK</var>|$prUrl|g output/report.html"
+	*/
+	// ADO version
 	/*
 		echo "python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result pull_request_id"
 		prId=$(python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result pull_request_id)

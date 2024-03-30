@@ -9,6 +9,8 @@ It is intended to be called from within the GitHub action that generates a verif
 
 However, it can technically be invoked from anywhere capable of running Dagger and Docker Engine.
 
+> It will only work with GitHub until further notice here. This is because some scripts communicate directly with the GitHub API. In the near future this will be extended to support Azure DevOps as well. These already exist elsewhere, but proper switching logic is not yet implemented here.
+
 ![](./doc/dagger_workflow.png)
 
 # How to use this?
