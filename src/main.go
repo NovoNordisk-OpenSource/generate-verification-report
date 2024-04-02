@@ -138,8 +138,17 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msgf("Organization and repository name: %s", orgAndRepository)
 
 	log.Info().Msg("Extracting and rendering pull request links")
+	prUrl, err := generator.
+		WithExec([]string{"sh", "-c", "git remote -v | grep '^origin.* (push)' | awk '{print $2}' | sed -E 's/.*github.com[\\/:]([^\\/]+)\\/([^\\/]+)\\.git$/\\1\\/\\2/' | sed 's#https://github.com/##'"}).
+		Stdout(ctx)
+	if err != nil {
+		return err
+	}
+	prUrl = strings.TrimSpace(prUrl)
+	log.Info().Msgf("Triggering pull request URL: %s", prUrl)
 	generator = generator.
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering pull request links'")})
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering pull request links'")}).
+		WithExec([]string{"sh", "-c", "sed -i 's|<var>PULL_REQUEST_LINK</var>|" + prUrl + "|g' output/report.html"})
 	// TODO: Port to GitHub API + write tests
 	// GitHub version
 	/*
