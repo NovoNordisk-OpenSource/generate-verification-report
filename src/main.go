@@ -145,7 +145,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	/*
 		pr=$(python3 get_pull_request_id_for_github.py --commit 7c6fg6d --token ghp_sometoken1234 --repo owner/repo-name)
 		echo $pr
-		prUrl=$(jq -r '.url' < $pr)
+		prUrl=$(jq -r .url <<< $pr)
 		sed -i "s|<var>PULL_REQUEST_LINK</var>|$prUrl|g output/report.html"
 	*/
 	// ADO version
