@@ -143,7 +143,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// TODO: Port to GitHub API + write tests
 	// GitHub version
 	/*
-		pr=$(python3 get_pull_request_id_for_github.py --commit 7c6fg6d --token ghp_sometoken1234 --repo owner/repo-name)
+		pr=$(python3 get_pull_request_details_for_hash_github.py --commit 7c6fg6d --token ghp_sometoken1234 --repo owner/repo-name)
 		echo $pr
 		prUrl=$(jq -r .url <<< $pr)
 		sed -i "s|<var>PULL_REQUEST_LINK</var>|$prUrl|g output/report.html"
@@ -160,6 +160,13 @@ func GenerateVerificationReport(ctx context.Context) error {
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering pull request closed timestamp'")})
 	// TODO: Port to GitHub API + write tests
+	// GitHub version
+	/*
+		// Assume the '$pr' variable is set from the previous step
+		prClosedTimestamp=$(jq -r .closed_at <<< $pr)
+		sed -i "s|<var>TIMESTAMP_PIPELINE_START</var>|$prClosedTimestamp|g output/report.html"
+	*/
+	// ADO version
 	/*
 		echo "python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result pull_request_closed_timestamp"
 		prClosedTimestamp=$(python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result pull_request_closed_timestamp)

@@ -3,7 +3,7 @@ import argparse
 import json
 from datetime import datetime
 
-def format_pull_request_timestamp(dt_string: str) -> str:
+def format_timestamp(dt_string: str) -> str:
     # Convert to datetime object
     dt_object = datetime.strptime(dt_string, '%Y-%m-%dT%H:%M:%SZ')
     # Format datetime object as string
@@ -40,7 +40,7 @@ def get_pull_request_details(commit_hash, github_token, repo):
                 "state": pr["state"],
                 "title": pr["title"],
                 "url": pr["html_url"],
-                "closed_at": format_pull_request_timestamp(pr["closed_at"])
+                "closed_at": format_timestamp(pr["closed_at"])
             })
         else:
             return "No pull request found for the given commit."
