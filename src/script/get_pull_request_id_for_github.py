@@ -1,5 +1,6 @@
 import requests
 import argparse
+import json
 
 def get_pull_request_details(commit_hash, github_token, repo):
     """
@@ -25,14 +26,14 @@ def get_pull_request_details(commit_hash, github_token, repo):
         pull_requests = response.json()
         if pull_requests:
             pr = pull_requests[0]
-            return {
+            return json.dumps({
                 "id": pr["id"],
                 "number": pr["number"],
                 "state": pr["state"],
                 "title": pr["title"],
                 "url": pr["html_url"],
                 "closed_at": pr["closed_at"]
-            }
+            })
         else:
             return "No pull request found for the given commit."
     else:
