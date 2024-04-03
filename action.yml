@@ -1,7 +1,7 @@
 name: 'QMS generate verification report'
 description: 'Generates a verification report based on pipeline metadata and test results as inputs.'
 inputs:
-  testresults_artifact_name:
+  testresults_artifact:
     required: true
     description: 'Artifact name of files uploaded of previously generated test results during runs of (IV, PV) or (pIV, pPV), e.g. [testresults-validation, testresults-production].'
     default: ''
@@ -40,13 +40,13 @@ runs:
     - name: Download test results
       uses: actions/download-artifact@v3
       with:
-        name: ${{ inputs.testresults_artifact_name }}
+        name: ${{ inputs.testresults_artifact }}
         path: input/testresults
 
     - name: Run other tests (dev debug)
       shell: bash
       run: |
-        echo "Test results artifact name: ${{ inputs.testresults_artifact_name }}"
+        echo "Test results artifact name: ${{ inputs.testresults_artifact }}"
         echo "Ready for: ${{ inputs.ready_for }}"
         echo "Current directory: $(pwd)"
         echo "Repository directory:"

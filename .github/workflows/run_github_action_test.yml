@@ -39,6 +39,6 @@ jobs:
     steps:
       - uses: nn-dma/generate-verification-report@main
         with:
-          testresults_artifact_name: testresults-validation
+          testresults_artifact: testresults-validation
           repository_artifact: repository
           ready_for: production
