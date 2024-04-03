@@ -119,7 +119,11 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"mkdir", ArtifactDir}).
 		WithExec([]string{"ls", "-la", OutputDir}).
 		WithExec([]string{"python", "--version"}).
+		WithExec([]string{"pip", "install", "requests"}). // Migrate to using requirements.txt with version pin or Poetry with version pin.
 		WithExec([]string{"git", "version"}).
+		WithExec([]string{"apt-get", "update"}).
+		WithExec([]string{"apt-get", "-y", "install", "jq=1.6-2.1"}).
+		WithExec([]string{"jq", "--version"}).
 		WithExec([]string{"sh", "-c", "echo current directory: $(pwd)"}).
 		WithExec([]string{"sh", "-c", "echo branch: $(git branch --show-current)"}).
 		WithExec([]string{"sh", "-c", "echo triggering commit hash: ${GITHUB_SHA}"}).
@@ -139,13 +143,14 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering pull request links")
 	prUrl, err := generator.
-		WithExec([]string{"sh", "-c", "git remote -v | grep '^origin.* (push)' | awk '{print $2}' | sed -E 's/.*github.com[\\/:]([^\\/]+)\\/([^\\/]+)\\.git$/\\1\\/\\2/' | sed 's#https://github.com/##'"}).
+		WithExec([]string{"sh", "-c", fmt.Sprintf("%s %s %s %s", path.Join(ScriptDir, parameters.GetPullRequestDetailsForHashGithubPyLocation), "${GITHUB_SHA}", "${GITHUB_TOKEN}", orgAndRepository)}).
 		Stdout(ctx)
 	if err != nil {
 		return err
 	}
 	prUrl = strings.TrimSpace(prUrl)
 	log.Info().Msgf("Triggering pull request URL: %s", prUrl)
+
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering pull request links'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>PULL_REQUEST_LINK</var>|" + prUrl + "|g' output/report.html"})

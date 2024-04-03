@@ -23,12 +23,14 @@ def get_pull_request_details(commit_hash, github_token, repo):
     A dictionary with pull request details or a message indicating no pull request found.
     """
     headers = {
-        "Authorization": f"token {github_token}",
-        "Accept": "application/vnd.github.v3+json"
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {github_token}",
+        "X-GitHub-Api-Version": "2022-11-28"
     }
     url = f"https://api.github.com/repos/{repo}/commits/{commit_hash}/pulls"
 
     response = requests.get(url, headers=headers)
+
 
     if response.status_code == 200:
         pull_requests = response.json()
@@ -45,7 +47,7 @@ def get_pull_request_details(commit_hash, github_token, repo):
         else:
             return "No pull request found for the given commit."
     else:
-        return f"Failed to retrieve data. HTTP Status Code: {response.status_code}"
+        return f"Failed to retrieve data. HTTP Status Code: {response.status_code}. Error: {response.text}"
 
 def main():
     parser = argparse.ArgumentParser(description="Get pull request details for a given commit hash from GitHub.")
