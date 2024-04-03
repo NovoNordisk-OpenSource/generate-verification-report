@@ -143,7 +143,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Extracting and rendering pull request links")
 	prUrl, err := generator.
-		WithExec([]string{"sh", "-c", fmt.Sprintf("%s %s %s %s", path.Join(ScriptDir, parameters.GetPullRequestDetailsForHashGithubPyLocation), "${GITHUB_SHA}", "${GITHUB_TOKEN}", orgAndRepository)}).
+		WithExec([]string{"sh", "-c", fmt.Sprintf("%s %s %s %s", path.Join(ScriptDir, parameters.GetPullRequestDetailsForHashGithubShLocation), "${GITHUB_SHA}", "${GITHUB_TOKEN}", orgAndRepository)}).
 		Stdout(ctx)
 	if err != nil {
 		return err
