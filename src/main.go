@@ -282,16 +282,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 		python3 ../${{ parameters.render_replace_py_location }} -render ./listOfConfigurationSpecifications.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_CONFIGURATION_SPECIFICATIONS</var>"
 	*/
 
-	// NOTE: This is probably not needed when using Dagger and is a remnant from the more sequential nature of the bash script.
-	// log.Info().Msg("Exiting folder '$(Build.Repository.Name)' for correct script execution context")
-	// generator = generator.
-	// 	WithWorkdir(".").
-	// 	WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Exiting folder '$(Build.Repository.Name)' for correct script execution context'")})
-	// // TODO: Port (not sure if this is needed)
-	// /*
-	// 	cd ..
-	// */
-
 	log.Info().Msg("Extracting and rendering test results")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering test results'")}).
