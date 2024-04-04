@@ -188,6 +188,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 
 	// Extract and render pull request merged timestamp
+	// TODO: Write tests
 	log.Info().Msg("Extracting pull request merged timestamp")
 	prMergedTimestamp, err := generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting pull request merged timestamp'")}).
@@ -203,13 +204,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pull request merged timestamp'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>TIMESTAMP_PIPELINE_START</var>|" + prMergedTimestamp + "|g' output/report.html"})
-	// TODO: Port to GitHub API + write tests
-	// GitHub version
-	/*
-		// Assume the '$pr' variable is set from the previous step
-		prClosedTimestamp=$(jq -r .closed_at <<< $pr)
-		sed -i "s|<var>TIMESTAMP_PIPELINE_START</var>|$prMergedTimestamp|g output/report.html"
-	*/
 	// ADO version
 	/*
 		echo "python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result pull_request_closed_timestamp"
