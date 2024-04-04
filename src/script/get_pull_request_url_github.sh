@@ -7,5 +7,5 @@ if [[ -n $pr ]]; then
 else
     # Code to execute if $pr is not set or has no value
     echo "'pr' variable is not set or has no value"
-    exit 1
+    #exit 1
 fi
