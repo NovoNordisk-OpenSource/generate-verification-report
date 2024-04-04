@@ -31,7 +31,6 @@ def get_pull_request_details(commit_hash, github_token, repo):
 
     response = requests.get(url, headers=headers)
 
-
     if response.status_code == 200:
         pull_requests = response.json()
         if pull_requests:
@@ -42,7 +41,7 @@ def get_pull_request_details(commit_hash, github_token, repo):
                 "state": pr["state"],
                 "title": pr["title"],
                 "url": pr["html_url"],
-                "closed_at": format_timestamp(pr["closed_at"])
+                "merged_at": format_timestamp(pr["merged_at"])
             })
         else:
             return "No pull request found for the given commit."

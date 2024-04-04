@@ -4,6 +4,8 @@
     "extract_requirements_name_to_id_mapping_py_location": "script/extract_requirements_name_to_id_mapping.py",
     "feature_files_path": "test/integration/requirements",
     "get_pull_request_details_for_hash_github_sh_location": "get_pull_request_details_for_hash_github.sh",
+    "get_pull_request_merged_timestamp_github_sh_location": "get_pull_request_merged_timestamp_github.sh",
+    "get_pull_request_url_github_sh_location": "get_pull_request_url_github.sh",
     "get_verification_report_artifact_name_for_context_sh_location": "script/get_verification_report_artifact_name_for_context.sh",
     "get_verification_report_filename_for_context_sh_location": "script/get_verification_report_filename_for_context.sh",
     "it_solution_name": "Dummy Solution Name",

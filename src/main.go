@@ -129,6 +129,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"sh", "-c", "echo triggering commit hash: ${GITHUB_SHA}"}).
 		WithExec([]string{"sh", "-c", "echo triggering branch: ${GITHUB_REF_NAME}"})
 
+	// Extract organization and repository name from git remote
+	// TODO: Write tests
 	log.Info().Msg("Extracting organization and repository name from git remote")
 	orgAndRepository, err := generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting organization and repository name from git remote'")}).
@@ -141,9 +143,31 @@ func GenerateVerificationReport(ctx context.Context) error {
 	orgAndRepository = strings.TrimSpace(orgAndRepository)
 	log.Info().Msgf("Organization and repository name: %s", orgAndRepository)
 
-	log.Info().Msg("Extracting and rendering pull request links")
-	prUrl, err := generator.
+	// Extract pull request details
+	// TODO: Write tests
+	log.Info().Msg("Extracting pull request details")
+	prDetails, err := generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting pull request details'")}).
 		WithExec([]string{"sh", "-c", fmt.Sprintf("%s %s %s %s", path.Join(ScriptDir, parameters.GetPullRequestDetailsForHashGithubShLocation), "${GITHUB_SHA}", "${GITHUB_TOKEN}", orgAndRepository)}).
+		Stdout(ctx)
+	if err != nil {
+		return err
+	}
+	prDetails = strings.TrimSpace(prDetails)
+	log.Info().Msgf("Triggering pull request details: %s", prDetails)
+
+	// Set the pull request details as a container environment variable
+	log.Info().Msg("Setting pull request details as container environment variable")
+	generator = generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Setting pull request details as container environment variable'")}).
+		WithEnvVariable("pr", prDetails)
+
+	// Extract and render pull request links
+	// TODO: Write tests
+	log.Info().Msg("Extracting pull request link")
+	prUrl, err := generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting pull request link'")}).
+		WithExec([]string{"sh", "-c", path.Join(ScriptDir, parameters.GetPullRequestUrlGithubShLocation)}).
 		Stdout(ctx)
 	if err != nil {
 		return err
@@ -151,17 +175,10 @@ func GenerateVerificationReport(ctx context.Context) error {
 	prUrl = strings.TrimSpace(prUrl)
 	log.Info().Msgf("Triggering pull request URL: %s", prUrl)
 
+	log.Info().Msg("Rendering pull request links")
 	generator = generator.
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering pull request links'")}).
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pull request links'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>PULL_REQUEST_LINK</var>|" + prUrl + "|g' output/report.html"})
-	// TODO: Port to GitHub API + write tests
-	// GitHub version
-	/*
-		pr=$(python3 get_pull_request_details_for_hash_github.py --commit 7c6fg6d --token ghp_sometoken1234 --repo owner/repo-name)
-		echo $pr
-		prUrl=$(jq -r .url <<< $pr)
-		sed -i "s|<var>PULL_REQUEST_LINK</var>|$prUrl|g output/report.html"
-	*/
 	// ADO version
 	/*
 		echo "python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result pull_request_id"
@@ -170,15 +187,28 @@ func GenerateVerificationReport(ctx context.Context) error {
 		sed -i "s|<var>PULL_REQUEST_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_git/$(Build.Repository.Name)/pullrequest/$prId|g" ${{ parameters.verification_report_template_location }}
 	*/
 
-	log.Info().Msg("Extracting and rendering pull request closed timestamp")
+	// Extract and render pull request merged timestamp
+	log.Info().Msg("Extracting pull request merged timestamp")
+	prMergedTimestamp, err := generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting pull request merged timestamp'")}).
+		WithExec([]string{"sh", "-c", path.Join(ScriptDir, parameters.GetPullRequestMergedTimestampGithubShLocation)}).
+		Stdout(ctx)
+	if err != nil {
+		return err
+	}
+	prMergedTimestamp = strings.TrimSpace(prMergedTimestamp)
+	log.Info().Msgf("Triggering pull request merged timestamp: %s", prMergedTimestamp)
+
+	log.Info().Msg("Rendering pull request merged timestamp")
 	generator = generator.
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering pull request closed timestamp'")})
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pull request merged timestamp'")}).
+		WithExec([]string{"sh", "-c", "sed -i 's|<var>TIMESTAMP_PIPELINE_START</var>|" + prMergedTimestamp + "|g' output/report.html"})
 	// TODO: Port to GitHub API + write tests
 	// GitHub version
 	/*
 		// Assume the '$pr' variable is set from the previous step
 		prClosedTimestamp=$(jq -r .closed_at <<< $pr)
-		sed -i "s|<var>TIMESTAMP_PIPELINE_START</var>|$prClosedTimestamp|g output/report.html"
+		sed -i "s|<var>TIMESTAMP_PIPELINE_START</var>|$prMergedTimestamp|g output/report.html"
 	*/
 	// ADO version
 	/*

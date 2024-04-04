@@ -12,6 +12,4 @@ python_script_path="$self_dir/$python_file"
 #echo "python script path: $python_script_path"
 
 pr=$(python3 "$python_script_path" --commit $commit_hash --token $github_token --repo $repo)
-# TODO: Refactor this part to its own bash script that instead relies on the "pr" variable having a value
-prUrl=$(jq -r .url <<< $pr)
-echo $prUrl
+echo $pr

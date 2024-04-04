@@ -9,6 +9,8 @@ type Parameters struct {
 	FeatureFilesPath                                      string `json:"feature_files_path"`
 	GetPullRequestIdPyLocation                            string `json:"get_pull_request_id_py_location"`
 	GetPullRequestDetailsForHashGithubShLocation          string `json:"get_pull_request_details_for_hash_github_sh_location"`
+	GetPullRequestMergedTimestampGithubShLocation         string `json:"get_pull_request_merged_timestamp_github_sh_location"`
+	GetPullRequestUrlGithubShLocation                     string `json:"get_pull_request_url_github_sh_location"`
 	GetVerificationReportArtifactNameForContextShLocation string `json:"get_verification_report_artifact_name_for_context_sh_location"`
 	GetVerificationReportFilenameForContextShLocation     string `json:"get_verification_report_filename_for_context_sh_location"`
 	ItSolutionName                                        string `json:"it_solution_name"`
