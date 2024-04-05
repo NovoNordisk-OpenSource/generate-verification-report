@@ -91,6 +91,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	}
 	defer client.Close()
 
+	// #region Setup and input data
 	// 1. Collect test results
 	// TODO: Simplify by moving this to the python container
 	log.Info().Msg("Collecting test results")
@@ -128,7 +129,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"sh", "-c", "echo branch: $(git branch --show-current)"}).
 		WithExec([]string{"sh", "-c", "echo triggering commit hash: ${GITHUB_SHA}"}).
 		WithExec([]string{"sh", "-c", "echo triggering branch: ${GITHUB_REF_NAME}"})
+	// #endregion
 
+	// #region Org and repo name
 	// Extract organization and repository name from git remote
 	// TODO: Write tests
 	log.Info().Msg("Extracting organization and repository name from git remote")
@@ -142,7 +145,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 	}
 	orgAndRepository = strings.TrimSpace(orgAndRepository)
 	log.Info().Msgf("Organization and repository name: %s", orgAndRepository)
+	// #endregion
 
+	// #region PR details
 	// Extract pull request details
 	// TODO: Write tests
 	log.Info().Msg("Extracting pull request details")
@@ -161,7 +166,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Setting pull request details as container environment variable'")}).
 		WithEnvVariable("pr", prDetails)
+	// #endregion
 
+	// #region PR link
 	// Extract and render pull request links
 	// TODO: Write tests
 	log.Info().Msg("Extracting pull request link")
@@ -186,7 +193,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 		echo $prId
 		sed -i "s|<var>PULL_REQUEST_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_git/$(Build.Repository.Name)/pullrequest/$prId|g" ${{ parameters.verification_report_template_location }}
 	*/
+	// #endregion
 
+	// #region PR timestamp
 	// Extract and render pull request merged timestamp
 	// TODO: Write tests
 	log.Info().Msg("Extracting pull request merged timestamp")
@@ -211,7 +220,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 		echo $prClosedTimestamp
 		sed -i "s|<var>TIMESTAMP_PIPELINE_START</var>|$prClosedTimestamp|g" ${{ parameters.verification_report_template_location }}
 	*/
+	// #endregion
 
+	// #region PR work items
 	log.Info().Msg("Extracting and rendering related work items")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering related work items'")})
@@ -233,7 +244,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// /*
 	// 	cd $(Build.Repository.Name)
 	// */
+	// #endregion
 
+	// #region Map features to tags
 	// TODO: Write tests
 	log.Info().Msg("Extracting and mapping feature names with unique tags")
 	generator = generator.
@@ -247,7 +260,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 	/*
 		python3 ../${{ parameters.extract_requirements_name_to_id_mapping_py_location }} -folder ${{ parameters.feature_files_path }} > ../requirementsNameToIdMapping.dict
 	*/
+	// #endregion
 
+	// #region Render requirements
 	// TODO: Write tests
 	log.Info().Msg("Extracting and rendering requirements")
 	generator = generator.
@@ -263,7 +278,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 		python3 ../${{ parameters.render_requirements_py_location }} -folder ${{ parameters.feature_files_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfRequirementsHtml.html
 		python3 ../${{ parameters.render_replace_py_location }} -render ./listOfRequirementsHtml.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_REQUIREMENTS</var>"
 	*/
+	// #endregion
 
+	// #region Render design spec.
 	log.Info().Msg("Extracting and rendering design specifications")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering design specifications'")})
@@ -272,7 +289,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 		python3 ../${{ parameters.render_design_specifications_py_location }} -folder ${{ parameters.system_design_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfDesignSpecifications.html
 		python3 ../${{ parameters.render_replace_py_location }} -render ./listOfDesignSpecifications.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_DESIGN_SPECIFICATIONS</var>"
 	*/
+	// #endregion
 
+	// #region Render config. spec.
 	log.Info().Msg("Extracting and rendering configuration specifications")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering configuration specifications'")})
@@ -281,7 +300,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 		python3 ../${{ parameters.render_configuration_specifications_py_location }} -folder ${{ parameters.system_configuration_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfConfigurationSpecifications.html
 		python3 ../${{ parameters.render_replace_py_location }} -render ./listOfConfigurationSpecifications.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_CONFIGURATION_SPECIFICATIONS</var>"
 	*/
+	// #endregion
 
+	// #region Render test results
 	log.Info().Msg("Extracting and rendering test results")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering test results'")}).
@@ -291,7 +312,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 		python3 ${{ parameters.render_json_test_result_py_location }} -folder $(Pipeline.Workspace)/${{ parameters.test_results_artifact_name }} -mapping ./requirementsNameToIdMapping.dict > testResultsHtml.html
 		python3 ${{ parameters.render_replace_py_location }} -render ./testResultsHtml.html -template ${{ parameters.verification_report_template_location }} -placeholder "<var>TESTCASE_RESULTS</var>"
 	*/
+	// #endregion
 
+	// #region Render solution name
 	log.Info().Msg("Rendering IT solution name")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering IT solution name'")}).
@@ -299,7 +322,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 	/*
 		sed -i 's|<var>IT_SOLUTION_NAME</var>|${{ parameters.it_solution_name }}|g' ${{ parameters.verification_report_template_location }}
 	*/
+	// #endregion
 
+	// #region Render run ID
 	// TODO: Make sure the parameter is set to either ADO or GitHub pipeline/workflow run ID
 	log.Info().Msg("Rendering pipeline run ID")
 	generator = generator.
@@ -308,7 +333,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 	/*
 		sed -i 's|<var>PIPELINE_RUN_ID</var>|$(Build.BuildId)|g' ${{ parameters.verification_report_template_location }}
 	*/
+	// #endregion
 
+	// #region Render environment name
 	// TODO: Make sure the parameter is set
 	log.Info().Msg("Rendering target environment name")
 	generator = generator.
@@ -317,7 +344,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 	/*
 		sed -i 's|<var>ENVIRONMENT</var>|${{ parameters.environment_name }}|g' ${{ parameters.verification_report_template_location }}
 	*/
+	// #endregion
 
+	// #region Render project name
 	// TODO: Make sure the parameter is set
 	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
 	log.Info().Msg("Rendering GitHub project name")
@@ -327,7 +356,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 	/*
 		sed -i 's|<var>ADO_PROJECT_NAME</var>|$(System.TeamProject)|g' ${{ parameters.verification_report_template_location }}
 	*/
+	// #endregion
 
+	// #region Render ready for
 	// TODO: Write tests
 	// TODO: Make sure the parameter is set
 	log.Info().Msg("Rendering 'ready for' (production/use) value")
@@ -337,7 +368,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 	/*
 		sed -i 's|<var>IS_READY_FOR</var>|${{ parameters.ready_for }}|g' ${{ parameters.verification_report_template_location }}
 	*/
+	// #endregion
 
+	// #region Render pipeline run link
 	// TODO: Write tests
 	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
 	log.Info().Msg("Rendering pipeline run link")
@@ -357,7 +390,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 	/*
 		sed -i 's|<var>ADO_PIPELINE_RUN_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)\&view=results|g' ${{ parameters.verification_report_template_location }}
 	*/
+	// #endregion
 
+	// #region Render pipeline run artifacts link
 	// NOTE: For GitHub, the pipeline run link is the same as the link to artifacts as these are not different pages (unlike with ADO).
 	log.Info().Msg("Rendering pipeline run artifacts link")
 	generator = generator.
@@ -368,7 +403,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 	/*
 		sed -i 's|<var>ARTIFACTS_ADO_PIPELINE_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)\&view=artifacts\&pathAsName=false\&type=publishedArtifacts|g' ${{ parameters.verification_report_template_location }}
 	*/
+	// #endregion
 
+	// #region Generate report filename
 	// TODO: Write tests
 	log.Info().Msg("Generate verification report filename")
 	verificationReportFilename, err := generator.
@@ -380,7 +417,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 	}
 	verificationReportFilename = fmt.Sprintf("%s.html", strings.TrimSpace(verificationReportFilename))
 	log.Info().Msgf("Verification report filename: %s", verificationReportFilename)
+	// #endregion
 
+	// #region Export report to host
 	// 3. Export the verification report to host 'output' directory
 	// TODO: Simplify by moving this to the python container
 	_, err = client.Container().From("alpine:latest").
@@ -399,6 +438,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		return err
 	}
 	log.Info().Msgf("Verification report generated: %s/%s is %d bytes", OutputDir, verificationReportFilename, size)
+	// #endregion
 
 	return nil
 }
