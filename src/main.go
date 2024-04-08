@@ -118,6 +118,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithDirectory("input/testresults", collector.Directory("input/testresults")).
 		WithDirectory(OutputDir, client.Directory().WithFile("report.html", client.Host().File("src/template/VerificationReportTemplate.html"))).
 		WithExec([]string{"mkdir", ArtifactDir}).
+		WithExec([]string{"sh", "-c", "echo Output dir:"}).
 		WithExec([]string{"ls", "-la", OutputDir}).
 		WithExec([]string{"python", "--version"}).
 		WithExec([]string{"pip", "install", "requests"}). // Migrate to using requirements.txt with version pin or Poetry with version pin.
@@ -287,7 +288,13 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// #region Render design specifications
 	log.Info().Msg("Extracting and rendering design specifications")
 	generator = generator.
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering design specifications'")})
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering design specifications'")}).
+		WithWorkdir(RepositoryDir).
+		WithExec([]string{"python", path.Join("../", parameters.RenderDesignSpecificationsPyLocation), "-folder", parameters.SystemDesignPath, "-branch", os.Getenv("GITHUB_REF_NAME"), "-repository", orgAndRepository}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join("../", ArtifactDir, "listOfDesignSpecifications.html")}).
+		WithWorkdir("..").
+		WithExec([]string{"ls", "-la", path.Join(ArtifactDir)}).
+		WithExec([]string{"cat", path.Join(ArtifactDir, "listOfDesignSpecifications.html")}).
+		WithExec([]string{"python", parameters.RenderReplacePyLocation, "-render", path.Join(ArtifactDir, "listOfDesignSpecifications.html"), "-template", "output/report.html", "-placeholder", "<var>LIST_OF_DESIGN_SPECIFICATIONS</var>"})
 	// TODO: Port to GitHub format + write tests
 	/*
 		python3 ../${{ parameters.render_design_specifications_py_location }} -folder ${{ parameters.system_design_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfDesignSpecifications.html
