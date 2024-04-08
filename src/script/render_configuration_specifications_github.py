@@ -4,7 +4,7 @@ import os
 import subprocess
 
 
-def extract_design_specification_tags(lines):
+def extract_configuration_specification_tags(lines):
     tags = []
     readTags = False
     for i, line in enumerate(lines):
@@ -42,10 +42,10 @@ def main(argv):
         exit(1)
 
     # 2. Check for the arg pattern:
-    #   python3 render_requirements_for_github.py -folder <filepath> -branch <remote branch> -repository <repository>
+    #   python3 render_configuration_specifications_github.py -folder <filepath> -branch <remote branch> -repository <repository>
     #   e.g. 
     #       argv[0] is '-folder'
-    #       argv[1] is './../features'
+    #       argv[1] is './system_documentation/docs/configuration'
     #       argv[2] is '-branch'
     #       argv[3] is 'origin/release/v1'
     #       argv[4] is '-repository'
@@ -66,7 +66,7 @@ def main(argv):
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Design specification</th>
+                <th scope="col">Configuration specification</th>
                 <th scope="col">Version</th>
                 <th scope="col">Last modified</th>
                 <th scope="col">Trace to requirements</th>
@@ -74,7 +74,7 @@ def main(argv):
         </thead>
         <tbody>''')
 
-        count_design_specifications = 0
+        count_configuration_specifications = 0
         for file in files:
             #print(f"File: {file}")
             last_modified_commit_hash = extract_last_modified_commit_hash(file, branch)
@@ -82,21 +82,21 @@ def main(argv):
 
             with open(file, mode='r', encoding='utf-8') as file_reader:
                 lines = file_reader.read().split('\n')
-                design_specification_tags = extract_design_specification_tags(lines)
+                configuration_specification_tags = extract_configuration_specification_tags(lines)
                 # Extract the path to the markdown file, e.g.:
-                # /system_documentation/docs/design/ReverseString/index.md
+                # /system_documentation/docs/configuration/AzureAD/index.md
                 repository_file_path = os.path.abspath(file).replace(os.getcwd(), "")
                 # Create link to path for file, e.g.:
                 # https://github.com/nn-dma/generate-verification-report/blob/5ef02fe1e00c1dbf9d924ce9717af85e9d83ae44/test/integration/requirements/urs/uppercase-string.feature
                 repository_file_link = f'https://github.com/{repository}/blob/{last_modified_commit_hash}{repository_file_path}'
 
-                count_design_specifications += 1
+                count_configuration_specifications += 1
                 print(f'''            <tr>
-                <th scope="row">{count_design_specifications}</th>
+                <th scope="row">{count_configuration_specifications}</th>
                 <td><a href="{repository_file_link}" target="_blank">{repository_file_path}</a></td>
                 <td>{last_modified_commit_hash}</td>
                 <td>{last_modified_commit_hash_timestamp}</td>
-                <td>{ '<kbd>' + '</kbd><kbd>'.join(design_specification_tags) + '</kbd>' if design_specification_tags else 'N/A' }</td>
+                <td>{ '<kbd>' + '</kbd><kbd>'.join(configuration_specification_tags) + '</kbd>' if configuration_specification_tags else 'N/A' }</td>
             </tr>''')
 
         # Render the table body close elements

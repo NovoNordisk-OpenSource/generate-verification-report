@@ -305,7 +305,13 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// #region Render configuration specifications
 	log.Info().Msg("Extracting and rendering configuration specifications")
 	generator = generator.
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering configuration specifications'")})
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering configuration specifications'")}).
+		WithWorkdir(RepositoryDir).
+		WithExec([]string{"python", path.Join("../", parameters.RenderConfigurationSpecificationsPyLocation), "-folder", parameters.SystemConfigurationsPath, "-branch", os.Getenv("GITHUB_REF_NAME"), "-repository", orgAndRepository}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join("../", ArtifactDir, "listOfConfigurationSpecifications.html")}).
+		WithWorkdir("..").
+		WithExec([]string{"ls", "-la", path.Join(ArtifactDir)}).
+		WithExec([]string{"cat", path.Join(ArtifactDir, "listOfConfigurationSpecifications.html")}).
+		WithExec([]string{"python", parameters.RenderReplacePyLocation, "-render", path.Join(ArtifactDir, "listOfConfigurationSpecifications.html"), "-template", "output/report.html", "-placeholder", "<var>LIST_OF_CONFIGURATION_SPECIFICATIONS</var>"})
 	// TODO: Port to GitHub format + write tests
 	/*
 		python3 ../${{ parameters.render_configuration_specifications_py_location }} -folder ${{ parameters.system_configuration_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfConfigurationSpecifications.html
