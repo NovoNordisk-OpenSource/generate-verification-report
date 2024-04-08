@@ -27,6 +27,8 @@ Test results provided as input to the Dagger worklow must be placed in the `/inp
 ##### Git repository under test
 The Git repository under test provided as input to the Dagger workflow must be placed into the `/input/repository` directory. It must contain information about remotes as well as the full history, i.e. it cannot be a shallow copy. It must be a valid Git repository.
 
+![](./doc/inputs.png)
+
 ### Outputs
 
 Output from any run will be placed in a directory here called `/output`. The content in this will be the verification report HTML file.
