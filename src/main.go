@@ -222,11 +222,25 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region PR work items
+	// #region DONE: PR work items
+	// TODO: write tests
 	log.Info().Msg("Extracting and rendering related work items")
+	prItChangeIssueNumber, err := generator.
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting related work item'")}).
+		WithExec([]string{"sh", "-c", path.Join(ScriptDir, parameters.GetPullRequestItChangeIssueGithubShLocation)}).
+		Stdout(ctx)
+	if err != nil {
+		return err
+	}
+	prItChangeIssueNumber = strings.TrimSpace(prItChangeIssueNumber)
+	log.Info().Msgf("Triggering pull request IT change issue number: %s", prItChangeIssueNumber)
+
 	generator = generator.
-		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering related work items'")})
-	// TODO: Port to GitHub API + write tests
+		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering related work item'")}).
+		WithExec([]string{"python", path.Join(ScriptDir, parameters.RenderItChangeIssueLinkGithubPyLocation), "-orgrepo", orgAndRepository, "-issue", prItChangeIssueNumber}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join(ArtifactDir, "workItemsHtml.html")}).
+		WithExec([]string{"cat", path.Join(ArtifactDir, "workItemsHtml.html")}).
+		//WithExec([]string{"python", parameters.RenderReplacePyLocation, "-render", path.Join(ArtifactDir, "workItemsHtml.html"), "-template", "output/report.html", "-placeholder", "<var>WORK_ITEM_LINKS</var>"}). // TODO: Unused in both ADO and GitHub - Remove in the future?
+		WithExec([]string{"python", parameters.RenderReplacePyLocation, "-render", path.Join(ArtifactDir, "workItemsHtml.html"), "-template", "output/report.html", "-placeholder", "<kbd><var>CHANGE_ITEM</var></kbd>"})
 	/*
 		echo "python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result work_items > workItemsHtml.html"
 		python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result work_items > workItemsHtml.html
@@ -234,16 +248,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 		python3 ${{ parameters.render_replace_py_location }} -render ./workItemsHtml.html -template ${{ parameters.verification_report_template_location }} -placeholder "<var>WORK_ITEM_LINKS</var>"
 		python3 ${{ parameters.render_replace_py_location }} -render ./workItemsHtml.html -template ${{ parameters.verification_report_template_location }} -placeholder "<kbd><var>CHANGE_ITEM</var></kbd>"
 	*/
-
-	// NOTE: This is probably not needed when using Dagger and is a remnant from the more sequential nature of the bash script.
-	// log.Info().Msgf("Entering folder '%s' for correct script execution context", RepositoryDir)
-	// generator = generator.
-	// 	WithWorkdir(".").
-	// 	WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Entering folder '$(Build.Repository.Name)' for correct script execution context'")})
-	// // TODO: Port
-	// /*
-	// 	cd $(Build.Repository.Name)
-	// */
 	// #endregion
 
 	// #region DONE: Map features to tags

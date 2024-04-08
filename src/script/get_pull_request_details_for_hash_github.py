@@ -41,7 +41,8 @@ def get_pull_request_details(commit_hash, github_token, repo):
                 "state": pr["state"],
                 "title": pr["title"],
                 "url": pr["html_url"],
-                "merged_at": format_timestamp(pr["merged_at"])
+                "merged_at": format_timestamp(pr["merged_at"]),
+                "title": pr["title"]
             })
         else:
             return "No pull request found for the given commit."
