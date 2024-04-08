@@ -285,7 +285,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region Render design specifications
+	// #region DONE: Render design specifications
 	log.Info().Msg("Extracting and rendering design specifications")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering design specifications'")}).
