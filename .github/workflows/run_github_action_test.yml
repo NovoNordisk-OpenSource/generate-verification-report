@@ -21,12 +21,12 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
       - name: Upload sample repository
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: repository
           path: input/repository
       - name: Upload sample test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: testresults-validation
           path: test/unit/data/allure-pytest/valid

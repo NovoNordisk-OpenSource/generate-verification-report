@@ -31,14 +31,14 @@ runs:
 
     # Note: v3 is currently used because v4 is not yet supported in GitHub Enterprise Server
     - name: Download repository
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ${{ inputs.repository_artifact }}
         path: input/repository
 
     # Note: v3 is currently used because v4 is not yet supported in GitHub Enterprise Server
     - name: Download test results
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ${{ inputs.testresults_artifact }}
         path: input/testresults
@@ -91,7 +91,7 @@ runs:
         echo "verification_report_artifact_name=$verification_report_artifact_name" >> $GITHUB_ENV
 
     - name: Upload verification report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.verification_report_artifact_name }}
         path: output/${{ env.verification_report_filename }}
