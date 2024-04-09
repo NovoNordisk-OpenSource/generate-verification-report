@@ -96,7 +96,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// TODO: Simplify by moving this to the python container
 	log.Info().Msg("Collecting test results")
 	collector := client.Container().From("alpine:latest").
-		WithDirectory("input/testresults", client.Host().Directory(path.Join(InputDir, "testresults"))).
+		WithDirectory("input/testresults", client.Host().Directory(parameters.TestResultsPath)).
 		WithExec([]string{"sh", "-c", "echo 'number of test results (.json files):' $(ls -1 input/testresults | grep .json | wc -l)"})
 	log.Info().Msg("Test results collected")
 
