@@ -302,7 +302,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region Render configuration specifications
+	// #region DONE: Render configuration specifications
 	log.Info().Msg("Extracting and rendering configuration specifications")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering configuration specifications'")}).
