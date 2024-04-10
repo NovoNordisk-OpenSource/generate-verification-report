@@ -31,7 +31,14 @@ type Parameters struct {
 	TestResultsArtifactName                               string `json:"test_results_artifact_name"`
 	TestResultsFormat                                     string `json:"test_results_format"`
 	VerificationReportTemplateLocation                    string `json:"verification_report_template_location"`
-	// TemplateRepo                                          string `json:"template_repo"` // no longer required in the Dagger version
+	Github                                                Github `json:"github"`
+	Azure                                                 Azure  `json:"azure"`
+}
+
+type Github struct {
+}
+
+type Azure struct {
 }
 
 func (p *Parameters) IsValid() (bool, error) {

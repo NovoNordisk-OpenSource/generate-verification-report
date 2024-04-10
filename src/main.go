@@ -28,8 +28,10 @@ const (
 )
 
 var (
-	parameters inputs.Parameters
-	workDir    string
+	parameters   inputs.Parameters
+	workDir      string
+	GITHUB_TOKEN *dagger.Secret
+	ADO_TOKEN    *dagger.Secret
 )
 
 func init() {
@@ -103,7 +105,24 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// 2. Generate verification report
 	log.Info().Msg("Generating verification report")
 	// Define local variables and secrets required for the verification report generation
-	GITHUB_TOKEN := client.SetSecret("GITHUB_TOKEN", os.Getenv("GITHUB_TOKEN"))
+
+	// Check for GITHUB token
+	log.Info().Msg("Checking for GitHub token..")
+	if os.Getenv("GITHUB_TOKEN") != "" {
+		log.Info().Msg("GITHUB_TOKEN is set")
+		GITHUB_TOKEN = client.SetSecret("GITHUB_TOKEN", os.Getenv("GITHUB_TOKEN"))
+	} else {
+		log.Info().Msg("GITHUB_TOKEN is not set")
+		log.Info().Msg("Checking for Azure DevOps token..")
+		// Check for ADO token
+		if os.Getenv("SYSTEM_ACCESSTOKEN") != "" {
+			log.Info().Msg("ADO_TOKEN is set")
+			ADO_TOKEN = client.SetSecret("ADO_TOKEN", os.Getenv("SYSTEM_ACCESSTOKEN"))
+		} else {
+			log.Info().Msg("ADO_TOKEN is not set")
+			log.Fatal().Msg("No API token found for GitHub or Azure DevOps. Exiting.")
+		}
+	}
 
 	log.Info().Msg("Preparing state with parameters and test results and outputting debug information")
 	generator := client.Container().From("python:3.12.2-bookworm").
