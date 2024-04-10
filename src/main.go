@@ -91,7 +91,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	}
 	defer client.Close()
 
-	// #region DONE: Setup and input data
+	// #region Setup and input data
 	// 1. Collect test results
 	// TODO: Simplify by moving this to the python container
 	log.Info().Msg("Collecting test results")
@@ -132,7 +132,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"sh", "-c", "echo triggering branch: ${GITHUB_REF_NAME}"})
 	// #endregion
 
-	// #region DONE: Org and repo name
+	// #region Org and repo name
 	// Extract organization and repository name from git remote
 	// TODO: Write tests
 	log.Info().Msg("Extracting organization and repository name from git remote")
@@ -148,7 +148,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msgf("Organization and repository name: %s", orgAndRepository)
 	// #endregion
 
-	// #region DONE: PR details
+	// #region PR details
 	// Extract pull request details
 	// TODO: Write tests
 	log.Info().Msg("Extracting pull request details")
@@ -169,7 +169,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithEnvVariable("pr", prDetails)
 	// #endregion
 
-	// #region DONE: PR link
+	// #region PR link
 	// Extract and render pull request links
 	// TODO: Write tests
 	log.Info().Msg("Extracting pull request link")
@@ -196,7 +196,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: PR timestamp
+	// #region PR timestamp
 	// Extract and render pull request merged timestamp
 	// TODO: Write tests
 	log.Info().Msg("Extracting pull request merged timestamp")
@@ -223,7 +223,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: PR work items
+	// #region PR work items
 	// TODO: write tests
 	log.Info().Msg("Extracting and rendering related work items")
 	prItChangeIssueNumber, err := generator.
@@ -251,7 +251,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: Map features to tags
+	// #region Map features to tags
 	// TODO: Write tests
 	log.Info().Msg("Extracting and mapping feature names with unique tags")
 	generator = generator.
@@ -267,7 +267,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: Render requirements
+	// #region Render requirements
 	// TODO: Write tests
 	log.Info().Msg("Extracting and rendering requirements")
 	generator = generator.
@@ -285,7 +285,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: Render design specifications
+	// #region Render design specifications
 	log.Info().Msg("Extracting and rendering design specifications")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering design specifications'")}).
@@ -302,7 +302,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: Render configuration specifications
+	// #region Render configuration specifications
 	log.Info().Msg("Extracting and rendering configuration specifications")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering configuration specifications'")}).
@@ -319,7 +319,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: Render test results
+	// #region Render test results
 	log.Info().Msg("Extracting and rendering test results")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering test results'")}).
@@ -331,7 +331,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: Render solution name
+	// #region Render solution name
 	log.Info().Msg("Rendering IT solution name")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering IT solution name'")}).
@@ -341,7 +341,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: Render pipeline run ID
+	// #region Render pipeline run ID
 	// TODO: Make sure the parameter is set to either ADO or GitHub pipeline/workflow run ID
 	log.Info().Msg("Rendering pipeline run ID")
 	generator = generator.
@@ -352,7 +352,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: Render environment name
+	// #region Render environment name
 	// TODO: Make sure the parameter is set
 	log.Info().Msg("Rendering target environment name")
 	generator = generator.
@@ -363,7 +363,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: Render project name
+	// #region Render project name
 	// TODO: Make sure the parameter is set
 	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
 	log.Info().Msg("Rendering GitHub project name")
@@ -375,7 +375,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: Render ready for
+	// #region Render ready for
 	// TODO: Write tests
 	// TODO: Make sure the parameter is set
 	log.Info().Msg("Rendering 'ready for' (production/use) value")
@@ -387,7 +387,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: Render pipeline run link
+	// #region Render pipeline run link
 	// TODO: Write tests
 	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
 	log.Info().Msg("Rendering pipeline run link")
@@ -409,7 +409,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: Render pipeline run artifacts link
+	// #region Render pipeline run artifacts link
 	// NOTE: For GitHub, the pipeline run link is the same as the link to artifacts as these are not different pages (unlike with ADO).
 	log.Info().Msg("Rendering pipeline run artifacts link")
 	generator = generator.
@@ -422,7 +422,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region DONE: Generate report filename
+	// #region Generate report filename
 	// TODO: Write tests
 	log.Info().Msg("Generate verification report filename")
 	verificationReportFilename, err := generator.
@@ -436,7 +436,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msgf("Verification report filename: %s", verificationReportFilename)
 	// #endregion
 
-	// #region DONE: Export report to host
+	// #region Export report to host
 	// 3. Export the verification report to host 'output' directory
 	// TODO: Simplify by moving this to the python container
 	_, err = client.Container().From("alpine:latest").
