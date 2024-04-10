@@ -105,6 +105,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// 2. Generate verification report
 	log.Info().Msg("Generating verification report")
 	// Define local variables and secrets required for the verification report generation
+	GITHUB_TOKEN = client.SetSecret("GITHUB_TOKEN", os.Getenv("GITHUB_TOKEN"))
 
 	// Check for GITHUB token
 	log.Info().Msg("Checking for GitHub token..")
