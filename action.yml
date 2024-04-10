@@ -29,19 +29,21 @@ runs:
         go-version: 1.22.2
         cache: false
 
-    # Note: v3 is currently used because v4 is not yet supported in GitHub Enterprise Server
+    # Note: v4 is currently used but is not yet fully supported in GitHub Enterprise Server
     - name: Download repository
       uses: actions/download-artifact@v4
       with:
         name: ${{ inputs.repository_artifact }}
         path: input/repository
 
-    # Note: v3 is currently used because v4 is not yet supported in GitHub Enterprise Server
+    # Note: v4 is currently used but is not yet fully supported in GitHub Enterprise Server
     - name: Download test results
       uses: actions/download-artifact@v4
       with:
         name: ${{ inputs.testresults_artifact }}
         path: input/testresults
+
+    # TODO: Read and inject other parameter values into 'parameters.json' in the /input directory
 
     - name: Run other tests (dev debug)
       shell: bash
