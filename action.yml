@@ -68,7 +68,7 @@ runs:
     - name: Inject parameter values
       shell: bash
       run: |
-        cat <<< "$(jq --indent 4 '.ready_for = "${{ inputs.ready_for }}"' parameters.json)" > parameters.json
+        cat <<< "$(jq --indent 4 '.ready_for = "${{ inputs.ready_for }}"' input/parameters.json)" > input/parameters.json
 
     - name: Generate verification report
       uses: dagger/dagger-for-github@v5
