@@ -65,6 +65,10 @@ runs:
         ls -la ../../
 
     # TODO: Add injection of input parameters to 'parameters.json' file
+    - name: Inject parameter values
+      shell: bash
+      run: |
+        cat <<< "$(jq --indent 4 '.ready_for = "${{ inputs.ready_for }}"' parameters.json)" > parameters.json
 
     - name: Generate verification report
       uses: dagger/dagger-for-github@v5
