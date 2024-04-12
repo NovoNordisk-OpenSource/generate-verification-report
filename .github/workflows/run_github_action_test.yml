@@ -41,4 +41,4 @@ jobs:
         with:
           testresults_artifact: testresults-validation
           repository_artifact: repository
-          ready_for: production
+          ready_for: use
