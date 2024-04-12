@@ -27,10 +27,6 @@
     "test_results_artifact_name": "pv-json",
     "test_results_format": "behave-allure",
     "verification_report_template_location": "qms-pipeline-templates/templates/templates/report/VerificationReportTemplate.html",
-    "github": {
-        
-    },
-    "azure": {
-
-    }
+    "github": {},
+    "azure": {}
 }
