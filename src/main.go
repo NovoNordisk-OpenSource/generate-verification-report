@@ -129,7 +129,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithEnvVariable("GITHUB_SHA", os.Getenv("GITHUB_SHA")).
 		WithEnvVariable("GITHUB_REF_NAME", os.Getenv("GITHUB_REF_NAME")).
 		WithEnvVariable("GITHUB_REPOSITORY", os.Getenv("GITHUB_REPOSITORY")).
-		WithEnvVariable("GITHUB_RUN_ID", os.Getenv("GITHUB_RUN_ID")).
 		WithSecretVariable("GITHUB_TOKEN", GITHUB_TOKEN).
 		WithDirectory(ScriptDir, client.Host().Directory(path.Join("src", ScriptDir))).
 		WithDirectory(RequirementsDir, client.Host().Directory(parameters.FeatureFilesPath)).
@@ -412,7 +411,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msg("Rendering pipeline run link")
 	pipelineRunLink, err := generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run link'")}).
-		WithExec([]string{"sh", "-c", "echo https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"}).
+		WithExec([]string{"sh", "-c", "echo https://github.com/${GITHUB_REPOSITORY}/actions/runs/" + parameters.PipelineRunId}).
 		Stdout(ctx)
 	if err != nil {
 		return err
