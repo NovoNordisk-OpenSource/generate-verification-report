@@ -26,8 +26,8 @@ type Parameters struct {
 	RenderReplacePyLocation                               string `json:"render_replace_py_location"`
 	RenderRequirementsPyLocation                          string `json:"render_requirements_py_location"`
 	StageName                                             string `json:"stage_name"`
-	SystemConfigurationsPath                              string `json:"system_configurations_path"`
-	SystemDesignPath                                      string `json:"system_design_path"`
+	SystemConfigurationSpecificationPath                  string `json:"system_configuration_specification_path"`
+	SystemDesignSpecificationPath                         string `json:"system_design_specification_path"`
 	TestResultsArtifactName                               string `json:"test_results_artifact_name"`
 	TestResultsFormat                                     string `json:"test_results_format"`
 	VerificationReportTemplateLocation                    string `json:"verification_report_template_location"`

@@ -15,7 +15,15 @@ inputs:
     default: ''
   feature_files_path:
     required: true
-    description: 'Path to the feature files directory relative to the root of the provided repository.'
+    description: 'Path to the directory containing the feature files (.feature). Subfolders within is supported. Relative to the root of the provided repository.'
+    default: ''
+  system_design_specification_path:
+    required: true
+    description: 'Path to the directory containing the system design specifications files (.md). Subfolders within is supported. Relative to the root of the provided repository.'
+    default: ''
+  system_configuration_specification_path:
+    required: true
+    description: 'Path to the directory containing the system configuration specifications files (.md). Subfolders within is supported. Relative to the root of the provided repository.'
     default: ''
 
 runs:
@@ -68,11 +76,13 @@ runs:
         echo "Grandparent:"
         ls -la ../../
 
-    # TODO: Add injection of input parameters to 'parameters.json' file
     - name: Inject parameter values
       shell: bash
       run: |
         cat <<< "$(jq --indent 4 '.ready_for = "${{ inputs.ready_for }}"' input/parameters.json)" > input/parameters.json
+        cat <<< "$(jq --indent 4 '.feature_files_path = "${{ inputs.feature_files_path }}"' input/parameters.json)" > input/parameters.json
+        cat <<< "$(jq --indent 4 '.system_configuration_specification_path = "${{ inputs.system_configuration_specification_path }}"' input/parameters.json)" > input/parameters.json
+        cat <<< "$(jq --indent 4 '.system_design_specification_path = "${{ inputs.system_design_specification_path }}"' input/parameters.json)" > input/parameters.json
         cat <<< "$(jq --indent 4 --arg grid "$GITHUB_RUN_ID" '.pipeline_run_id = $grid' input/parameters.json)" > input/parameters.json
 
     - name: Generate verification report

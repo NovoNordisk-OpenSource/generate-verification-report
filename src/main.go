@@ -308,7 +308,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering design specifications'")}).
 		WithWorkdir(RepositoryDir).
-		WithExec([]string{"python", path.Join("../", parameters.RenderDesignSpecificationsPyLocation), "-folder", parameters.SystemDesignPath, "-branch", os.Getenv("GITHUB_REF_NAME"), "-repository", orgAndRepository}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join("../", ArtifactDir, "listOfDesignSpecifications.html")}).
+		WithExec([]string{"python", path.Join("../", parameters.RenderDesignSpecificationsPyLocation), "-folder", parameters.SystemDesignSpecificationPath, "-branch", os.Getenv("GITHUB_REF_NAME"), "-repository", orgAndRepository}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join("../", ArtifactDir, "listOfDesignSpecifications.html")}).
 		WithWorkdir("..").
 		WithExec([]string{"ls", "-la", path.Join(ArtifactDir)}).
 		WithExec([]string{"cat", path.Join(ArtifactDir, "listOfDesignSpecifications.html")}).
@@ -325,7 +325,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering configuration specifications'")}).
 		WithWorkdir(RepositoryDir).
-		WithExec([]string{"python", path.Join("../", parameters.RenderConfigurationSpecificationsPyLocation), "-folder", parameters.SystemConfigurationsPath, "-branch", os.Getenv("GITHUB_REF_NAME"), "-repository", orgAndRepository}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join("../", ArtifactDir, "listOfConfigurationSpecifications.html")}).
+		WithExec([]string{"python", path.Join("../", parameters.RenderConfigurationSpecificationsPyLocation), "-folder", parameters.SystemConfigurationSpecificationPath, "-branch", os.Getenv("GITHUB_REF_NAME"), "-repository", orgAndRepository}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join("../", ArtifactDir, "listOfConfigurationSpecifications.html")}).
 		WithWorkdir("..").
 		WithExec([]string{"ls", "-la", path.Join(ArtifactDir)}).
 		WithExec([]string{"cat", path.Join(ArtifactDir, "listOfConfigurationSpecifications.html")}).
