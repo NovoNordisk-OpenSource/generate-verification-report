@@ -41,4 +41,7 @@ jobs:
         with:
           testresults_artifact: testresults-validation
           repository_artifact: repository
+          feature_files_path: requirements
+          system_configuration_specification_path: docs/configuration
+          system_design_specification_path: docs/design
           ready_for: use
