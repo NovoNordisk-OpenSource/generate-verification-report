@@ -16,15 +16,12 @@ inputs:
   feature_files_path:
     required: true
     description: 'Path to the directory containing the feature files (.feature). Subfolders within is supported. Relative to the root of the provided repository.'
-    default: ''
   system_design_specification_path:
     required: true
     description: 'Path to the directory containing the system design specifications files (.md). Subfolders within is supported. Relative to the root of the provided repository.'
-    default: ''
   system_configuration_specification_path:
     required: true
     description: 'Path to the directory containing the system configuration specifications files (.md). Subfolders within is supported. Relative to the root of the provided repository.'
-    default: ''
 
 runs:
   using: 'composite'
