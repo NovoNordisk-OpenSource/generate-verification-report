@@ -15,6 +15,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Checkout report testing repository
+        uses: actions/checkout@v4
+        with:
+          repository: nn-dma/generate-verification-report-test@main
+          path: input/repository
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Prepare test results
+        run: |
+          mkdir -p input/testresults
+          cp -r test/unit/data/allure-pytest/valid/* input/testresults
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
