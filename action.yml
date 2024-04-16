@@ -13,6 +13,10 @@ inputs:
     required: true
     description: 'Indicates whether the verification report is generated for the validation or production environment with respective possible values: [production, use].'
     default: ''
+  feature_files_path:
+    required: true
+    description: 'Path to the feature files directory relative to the root of the provided repository.'
+    default: ''
 
 runs:
   using: 'composite'

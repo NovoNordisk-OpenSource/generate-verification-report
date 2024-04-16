@@ -131,7 +131,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithEnvVariable("GITHUB_REPOSITORY", os.Getenv("GITHUB_REPOSITORY")).
 		WithSecretVariable("GITHUB_TOKEN", GITHUB_TOKEN).
 		WithDirectory(ScriptDir, client.Host().Directory(path.Join("src", ScriptDir))).
-		WithDirectory(RequirementsDir, client.Host().Directory(parameters.FeatureFilesPath)).
+		WithDirectory(RequirementsDir, client.Host().Directory(path.Join(parameters.ProjectRepositoryPath, parameters.FeatureFilesPath))).
 		WithDirectory(RepositoryDir, client.Host().Directory(parameters.ProjectRepositoryPath)).
 		WithDirectory("input/testresults", collector.Directory("input/testresults")).
 		WithDirectory(OutputDir, client.Directory().WithFile("report.html", client.Host().File("src/template/VerificationReportTemplate.html"))).

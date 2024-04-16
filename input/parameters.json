@@ -3,7 +3,7 @@
     "test_results_path": "input/testresults",
     "environment_name": "Dummy-Environment-Name",
     "extract_requirements_name_to_id_mapping_py_location": "script/extract_requirements_name_to_id_mapping.py",
-    "feature_files_path": "test/integration/requirements",
+    "feature_files_path": "requirements",
     "get_pull_request_details_for_hash_github_sh_location": "get_pull_request_details_for_hash_github.sh",
     "get_pull_request_merged_timestamp_github_sh_location": "get_pull_request_merged_timestamp_github.sh",
     "get_pull_request_url_github_sh_location": "get_pull_request_url_github.sh",
