@@ -18,7 +18,7 @@ jobs:
       - name: Checkout report testing repository
         uses: actions/checkout@v4
         with:
-          repository: nn-dma/generate-verification-report-test@main
+          repository: nn-dma/generate-verification-report-test
           path: input/repository
           fetch-depth: 0
           fetch-tags: true
