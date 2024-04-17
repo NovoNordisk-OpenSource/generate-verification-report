@@ -48,5 +48,5 @@ jobs:
           system_design_specification_path: docs/design
           it_solution_name: "Sample IT Solution"
           project_name: "Sample Project"
-          environment_name: "Sample Environment"
+          environment_name: "Sample-Environment"
           ready_for: use
