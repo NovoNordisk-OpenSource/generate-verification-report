@@ -1,6 +1,9 @@
 package inputs
 
-import "errors"
+import (
+	"errors"
+	"strings"
+)
 
 type Parameters struct {
 	ProjectRepositoryPath                                 string `json:"project_repository_path"`
@@ -45,6 +48,12 @@ func (p *Parameters) IsValid() (bool, error) {
 	// Guard clauses
 	if p.PipelineRunId == "" {
 		return false, errors.New("pipeline_run_id is required")
+	}
+	if p.EnvironmentName == "" {
+		return false, errors.New("environment_name is required")
+	}
+	if strings.Contains(p.EnvironmentName, " ") {
+		return false, errors.New("environment_name cannot contain spaces")
 	}
 
 	return true, nil
