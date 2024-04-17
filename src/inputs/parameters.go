@@ -6,8 +6,6 @@ import (
 )
 
 type Parameters struct {
-	ProjectRepositoryPath                                 string `json:"project_repository_path"`
-	TestResultsPath                                       string `json:"test_results_path"`
 	EnvironmentName                                       string `json:"environment_name"`
 	ExtractRequirementsNameToIdMappingPyLocation          string `json:"extract_requirements_name_to_id_mapping_py_location"`
 	FeatureFilesPath                                      string `json:"feature_files_path"`
@@ -22,17 +20,18 @@ type Parameters struct {
 	ItSolutionName                                        string `json:"it_solution_name"`
 	PipelineRunId                                         string `json:"pipeline_run_id"`
 	ProjectName                                           string `json:"project_name"`
+	ProjectRepositoryPath                                 string `json:"project_repository_path"`
 	ReadyFor                                              string `json:"ready_for"`
 	RenderConfigurationSpecificationsPyLocation           string `json:"render_configuration_specifications_py_location"`
 	RenderDesignSpecificationsPyLocation                  string `json:"render_design_specifications_py_location"`
 	RenderJsonTestResultPyLocation                        string `json:"render_json_test_result_py_location"`
 	RenderReplacePyLocation                               string `json:"render_replace_py_location"`
 	RenderRequirementsPyLocation                          string `json:"render_requirements_py_location"`
-	StageName                                             string `json:"stage_name"`
 	SystemConfigurationSpecificationPath                  string `json:"system_configuration_specification_path"`
 	SystemDesignSpecificationPath                         string `json:"system_design_specification_path"`
 	TestResultsArtifactName                               string `json:"test_results_artifact_name"`
 	TestResultsFormat                                     string `json:"test_results_format"`
+	TestResultsPath                                       string `json:"test_results_path"`
 	VerificationReportTemplateLocation                    string `json:"verification_report_template_location"`
 	Github                                                Github `json:"github"`
 	Azure                                                 Azure  `json:"azure"`

@@ -1,6 +1,4 @@
 {
-    "project_repository_path": "input/repository",
-    "test_results_path": "input/testresults",
     "environment_name": "Dummy-Environment-Name",
     "extract_requirements_name_to_id_mapping_py_location": "script/extract_requirements_name_to_id_mapping.py",
     "feature_files_path": "requirements",
@@ -13,6 +11,7 @@
     "it_solution_name": "Dummy Solution Name",
     "pipeline_run_id": "Dummy1234567890",
     "project_name": "Dummy Project Name",
+    "project_repository_path": "input/repository",
     "ready_for": "production",
     "render_it_change_issue_link_github_py_location": "render_it_change_issue_link_github.py",
     "render_configuration_specifications_py_location": "script/render_configuration_specifications_github.py",
@@ -20,12 +19,11 @@
     "render_json_test_result_py_location": "script/render_json_test_result.py",
     "render_replace_py_location": "script/render_replace.py",
     "render_requirements_py_location": "script/render_requirements_for_github.py",
-    "stage_name": "generate_verification_report",
     "system_configuration_specification_path": "docs/configuration",
     "system_design_specification_path": "docs/design",
-    "template_repo": "deprecated, built in now",
     "test_results_artifact_name": "pv-json",
     "test_results_format": "behave-allure",
+    "test_results_path": "input/testresults",
     "verification_report_template_location": "qms-pipeline-templates/templates/templates/report/VerificationReportTemplate.html",
     "github": {},
     "azure": {}
