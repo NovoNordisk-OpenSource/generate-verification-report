@@ -25,6 +25,18 @@ inputs:
     required: true
     description: 'Path to the directory containing the system configuration specifications files (.md). Subfolders within is supported. Relative to the root of the provided repository.'
     default: ''
+  it_solution_name:
+    required: true
+    description: 'Name of the IT solution. This will be in the verification report.'
+    default: ''
+  project_name:
+    required: true
+    description: 'Name of the project. This will be in the verification report.'
+    default: ''
+  environment_name:
+    required: true
+    description: 'Name of the environment. This will be in the verification report.'
+    default: ''
 
 runs:
   using: 'composite'
@@ -83,6 +95,9 @@ runs:
         cat <<< "$(jq --indent 4 '.feature_files_path = "${{ inputs.feature_files_path }}"' input/parameters.json)" > input/parameters.json
         cat <<< "$(jq --indent 4 '.system_configuration_specification_path = "${{ inputs.system_configuration_specification_path }}"' input/parameters.json)" > input/parameters.json
         cat <<< "$(jq --indent 4 '.system_design_specification_path = "${{ inputs.system_design_specification_path }}"' input/parameters.json)" > input/parameters.json
+        cat <<< "$(jq --indent 4 '.it_solution_name = "${{ inputs.it_solution_name }}"' input/parameters.json)" > input/parameters.json
+        cat <<< "$(jq --indent 4 '.project_name = "${{ inputs.project_name }}"' input/parameters.json)" > input/parameters.json
+        cat <<< "$(jq --indent 4 '.environment_name = "${{ inputs.environment_name }}"' input/parameters.json)" > input/parameters.json
         cat <<< "$(jq --indent 4 --arg grid "$GITHUB_RUN_ID" '.pipeline_run_id = $grid' input/parameters.json)" > input/parameters.json
 
     - name: Generate verification report
