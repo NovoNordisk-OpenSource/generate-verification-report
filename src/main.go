@@ -260,6 +260,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"cat", path.Join(ArtifactDir, "workItemsHtml.html")}).
 		//WithExec([]string{"python", parameters.RenderReplacePyLocation, "-render", path.Join(ArtifactDir, "workItemsHtml.html"), "-template", "output/report.html", "-placeholder", "<var>WORK_ITEM_LINKS</var>"}). // TODO: Unused in both ADO and GitHub - Remove in the future?
 		WithExec([]string{"python", parameters.RenderReplacePyLocation, "-render", path.Join(ArtifactDir, "workItemsHtml.html"), "-template", "output/report.html", "-placeholder", "<kbd><var>CHANGE_ITEM</var></kbd>"})
+	// ADO version
 	/*
 		echo "python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result work_items > workItemsHtml.html"
 		python3 ${{ parameters.get_pull_request_id_py_location }} -commit $COMMIT_HASH -accesstoken USE_ENV_VARIABLE -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) -result work_items > workItemsHtml.html
@@ -280,6 +281,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"python", parameters.ExtractRequirementsNameToIdMappingPyLocation, "-folder", RequirementsDir}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join(ArtifactDir, "requirementsNameToIdMapping.dict")}).
 		WithExec([]string{"ls", "-la", ArtifactDir}).
 		WithExec([]string{"cat", path.Join(ArtifactDir, "requirementsNameToIdMapping.dict")})
+	// ADO version
 	/*
 		python3 ../${{ parameters.extract_requirements_name_to_id_mapping_py_location }} -folder ${{ parameters.feature_files_path }} > ../requirementsNameToIdMapping.dict
 	*/
@@ -296,7 +298,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"ls", "-la", path.Join(ArtifactDir)}).
 		WithExec([]string{"cat", path.Join(ArtifactDir, "listOfRequirementsHtml.html")}).
 		WithExec([]string{"python", parameters.RenderReplacePyLocation, "-render", path.Join(ArtifactDir, "listOfRequirementsHtml.html"), "-template", "output/report.html", "-placeholder", "<var>LIST_OF_REQUIREMENTS</var>"})
-		// python3 ../../src/script/render_requirements_for_github.py -folder requirements -branch main -repository innersource-nn/qms-reference
+	// ADO version
 	/*
 		python3 ../${{ parameters.render_requirements_py_location }} -folder ${{ parameters.feature_files_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfRequirementsHtml.html
 		python3 ../${{ parameters.render_replace_py_location }} -render ./listOfRequirementsHtml.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_REQUIREMENTS</var>"
@@ -304,6 +306,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// #endregion
 
 	// #region Render design specifications
+	// TODO: Write tests
 	log.Info().Msg("Extracting and rendering design specifications")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering design specifications'")}).
@@ -313,7 +316,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"ls", "-la", path.Join(ArtifactDir)}).
 		WithExec([]string{"cat", path.Join(ArtifactDir, "listOfDesignSpecifications.html")}).
 		WithExec([]string{"python", parameters.RenderReplacePyLocation, "-render", path.Join(ArtifactDir, "listOfDesignSpecifications.html"), "-template", "output/report.html", "-placeholder", "<var>LIST_OF_DESIGN_SPECIFICATIONS</var>"})
-	// TODO: Port to GitHub format + write tests
+	// ADO version
 	/*
 		python3 ../${{ parameters.render_design_specifications_py_location }} -folder ${{ parameters.system_design_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfDesignSpecifications.html
 		python3 ../${{ parameters.render_replace_py_location }} -render ./listOfDesignSpecifications.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_DESIGN_SPECIFICATIONS</var>"
@@ -321,6 +324,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// #endregion
 
 	// #region Render configuration specifications
+	// TODO: Write tests
 	log.Info().Msg("Extracting and rendering configuration specifications")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering configuration specifications'")}).
@@ -330,7 +334,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"ls", "-la", path.Join(ArtifactDir)}).
 		WithExec([]string{"cat", path.Join(ArtifactDir, "listOfConfigurationSpecifications.html")}).
 		WithExec([]string{"python", parameters.RenderReplacePyLocation, "-render", path.Join(ArtifactDir, "listOfConfigurationSpecifications.html"), "-template", "output/report.html", "-placeholder", "<var>LIST_OF_CONFIGURATION_SPECIFICATIONS</var>"})
-	// TODO: Port to GitHub format + write tests
+	// ADO version
 	/*
 		python3 ../${{ parameters.render_configuration_specifications_py_location }} -folder ${{ parameters.system_configuration_path }} -branch origin/release/$(Build.SourceBranchName) -organization novonordiskit -project '$(System.TeamProject)' -repository $(Build.Repository.Name) > listOfConfigurationSpecifications.html
 		python3 ../${{ parameters.render_replace_py_location }} -render ./listOfConfigurationSpecifications.html -template ../${{ parameters.verification_report_template_location }} -placeholder "<var>LIST_OF_CONFIGURATION_SPECIFICATIONS</var>"
@@ -338,11 +342,13 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// #endregion
 
 	// #region Render test results
+	// TODO: Write tests
 	log.Info().Msg("Extracting and rendering test results")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting and rendering test results'")}).
 		WithExec([]string{"python", parameters.RenderJsonTestResultPyLocation, "-folder", path.Join(InputDir, "testresults"), "-mapping", path.Join(ArtifactDir, "requirementsNameToIdMapping.dict")}, dagger.ContainerWithExecOpts{RedirectStdout: path.Join(ArtifactDir, "renderJsonTestResults.html")}).
 		WithExec([]string{"python", parameters.RenderReplacePyLocation, "-render", path.Join(ArtifactDir, "renderJsonTestResults.html"), "-template", "output/report.html", "-placeholder", "<var>TESTCASE_RESULTS</var>"})
+	// ADO version
 	/*
 		python3 ${{ parameters.render_json_test_result_py_location }} -folder $(Pipeline.Workspace)/${{ parameters.test_results_artifact_name }} -mapping ./requirementsNameToIdMapping.dict > testResultsHtml.html
 		python3 ${{ parameters.render_replace_py_location }} -render ./testResultsHtml.html -template ${{ parameters.verification_report_template_location }} -placeholder "<var>TESTCASE_RESULTS</var>"
@@ -350,10 +356,12 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// #endregion
 
 	// #region Render solution name
+	// TODO: Write test
 	log.Info().Msg("Rendering IT solution name")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering IT solution name'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>IT_SOLUTION_NAME</var>|" + parameters.ItSolutionName + "|g' output/report.html"})
+	// ADO version
 	/*
 		sed -i 's|<var>IT_SOLUTION_NAME</var>|${{ parameters.it_solution_name }}|g' ${{ parameters.verification_report_template_location }}
 	*/
@@ -361,10 +369,12 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	// #region Render pipeline run ID
 	// TODO: Make sure the parameter is set to either ADO or GitHub pipeline/workflow run ID
+	// TODO: Write test
 	log.Info().Msg("Rendering pipeline run ID")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run ID'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>PIPELINE_RUN_ID</var>|" + parameters.PipelineRunId + "|g' output/report.html"})
+	// ADO version
 	/*
 		sed -i 's|<var>PIPELINE_RUN_ID</var>|$(Build.BuildId)|g' ${{ parameters.verification_report_template_location }}
 	*/
@@ -372,10 +382,12 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	// #region Render environment name
 	// TODO: Make sure the parameter is set
+	// TODO: Write test
 	log.Info().Msg("Rendering target environment name")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering target environment name'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>ENVIRONMENT</var>|" + parameters.EnvironmentName + "|g' output/report.html"})
+	// ADO version
 	/*
 		sed -i 's|<var>ENVIRONMENT</var>|${{ parameters.environment_name }}|g' ${{ parameters.verification_report_template_location }}
 	*/
@@ -384,22 +396,25 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// #region Render project name
 	// TODO: Make sure the parameter is set
 	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
+	// TODO: Write test
 	log.Info().Msg("Rendering GitHub project name")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering GitHub project name'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>ADO_PROJECT_NAME</var>|" + parameters.ProjectName + "|g' output/report.html"})
+	// ADO version
 	/*
 		sed -i 's|<var>ADO_PROJECT_NAME</var>|$(System.TeamProject)|g' ${{ parameters.verification_report_template_location }}
 	*/
 	// #endregion
 
 	// #region Render ready for
-	// TODO: Write tests
 	// TODO: Make sure the parameter is set
+	// TODO: Write test
 	log.Info().Msg("Rendering 'ready for' (production/use) value")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering 'ready for' (production/use) value'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>IS_READY_FOR</var>|" + parameters.ReadyFor + "|g' output/report.html"})
+	// ADO version
 	/*
 		sed -i 's|<var>IS_READY_FOR</var>|${{ parameters.ready_for }}|g' ${{ parameters.verification_report_template_location }}
 	*/
@@ -422,6 +437,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run link'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>ADO_PIPELINE_RUN_LINK</var>|" + pipelineRunLink + "|g' output/report.html"})
+	// ADO version
 	/*
 		sed -i 's|<var>ADO_PIPELINE_RUN_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)\&view=results|g' ${{ parameters.verification_report_template_location }}
 	*/
@@ -429,12 +445,13 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	// #region Render pipeline run artifacts link
 	// NOTE: For GitHub, the pipeline run link is the same as the link to artifacts as these are not different pages (unlike with ADO).
+	// TODO: Write tests
+	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
 	log.Info().Msg("Rendering pipeline run artifacts link")
 	generator = generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run artifacts link'")}).
 		WithExec([]string{"sh", "-c", "sed -i 's|<var>ARTIFACTS_ADO_PIPELINE_LINK</var>|" + pipelineRunLink + "|g' output/report.html"})
-	// TODO: Write tests
-	// TODO: Update the placeholder name to be generic (not ADO or GitHub specific)
+	// ADO version
 	/*
 		sed -i 's|<var>ARTIFACTS_ADO_PIPELINE_LINK</var>|$(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)\&view=artifacts\&pathAsName=false\&type=publishedArtifacts|g' ${{ parameters.verification_report_template_location }}
 	*/
@@ -455,7 +472,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// #endregion
 
 	// #region Export report to host
-	// 3. Export the verification report to host 'output' directory
+	// Export the verification report to host 'output' directory
 	// TODO: Simplify by moving this to the python container
 	_, err = client.Container().From("alpine:latest").
 		WithFile(fmt.Sprintf("output/%s", verificationReportFilename), generator.File("output/report.html")).
