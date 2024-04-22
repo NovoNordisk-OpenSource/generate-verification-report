@@ -33,6 +33,7 @@ type Parameters struct {
 	TestResultsFormat                                     string `json:"test_results_format"`
 	TestResultsPath                                       string `json:"test_results_path"`
 	VerificationReportTemplateLocation                    string `json:"verification_report_template_location"`
+	Version                                               string `json:"version"`
 	Github                                                Github `json:"github"`
 	Azure                                                 Azure  `json:"azure"`
 }
@@ -53,6 +54,33 @@ func (p *Parameters) IsValid() (bool, error) {
 	}
 	if strings.Contains(p.EnvironmentName, " ") {
 		return false, errors.New("environment_name cannot contain spaces")
+	}
+	if p.ProjectName == "" {
+		return false, errors.New("project_name is required")
+	}
+	if p.ProjectRepositoryPath == "" {
+		return false, errors.New("project_repository_path is required")
+	}
+	if p.FeatureFilesPath == "" {
+		return false, errors.New("feature_files_path is required")
+	}
+	if p.SystemConfigurationSpecificationPath == "" {
+		return false, errors.New("system_configuration_specification_path is required")
+	}
+	if p.SystemDesignSpecificationPath == "" {
+		return false, errors.New("system_design_specification_path is required")
+	}
+	if p.TestResultsPath == "" {
+		return false, errors.New("test_results_path is required")
+	}
+	if p.Version == "" {
+		return false, errors.New("version is required")
+	}
+	if p.ReadyFor == "" {
+		return false, errors.New("ready_for is required")
+	}
+	if p.ReadyFor != "verification" && p.ReadyFor != "production" {
+		return false, errors.New("ready_for must be either 'verification' or 'production'")
 	}
 
 	return true, nil

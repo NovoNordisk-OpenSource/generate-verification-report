@@ -25,6 +25,7 @@
     "test_results_format": "behave-allure",
     "test_results_path": "input/testresults",
     "verification_report_template_location": "qms-pipeline-templates/templates/templates/report/VerificationReportTemplate.html",
+    "version": "1",
     "github": {},
     "azure": {}
 }

@@ -367,7 +367,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	*/
 	// #endregion
 
-	// #region Render pipeline run ID
+    // #region Render pipeline run ID
 	// TODO: Make sure the parameter is set to either ADO or GitHub pipeline/workflow run ID
 	// TODO: Write test
 	log.Info().Msg("Rendering pipeline run ID")
