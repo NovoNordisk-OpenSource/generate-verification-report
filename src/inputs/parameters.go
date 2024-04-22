@@ -79,8 +79,8 @@ func (p *Parameters) IsValid() (bool, error) {
 	if p.ReadyFor == "" {
 		return false, errors.New("ready_for is required")
 	}
-	if p.ReadyFor != "verification" && p.ReadyFor != "production" {
-		return false, errors.New("ready_for must be either 'verification' or 'production'")
+	if p.ReadyFor != "production" && p.ReadyFor != "use" {
+		return false, errors.New("ready_for must be either 'production' or 'use'")
 	}
 
 	return true, nil
