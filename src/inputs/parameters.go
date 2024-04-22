@@ -55,6 +55,9 @@ func (p *Parameters) IsValid() (bool, error) {
 	if strings.Contains(p.EnvironmentName, " ") {
 		return false, errors.New("environment_name cannot contain spaces")
 	}
+	if p.ItSolutionName == "" {
+		return false, errors.New("it_solution_name is required")
+	}
 	if p.ProjectName == "" {
 		return false, errors.New("project_name is required")
 	}
