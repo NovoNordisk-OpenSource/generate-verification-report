@@ -32,8 +32,13 @@ jobs:
         with:
           name: testresults-validation
           path: test/unit/data/allure-pytest/valid
+      - name: Inject context values
+        shell: bash
+        run: |
+          export GITHUB_REPOSITORY=nn-dma/generate-verification-report-test
+          export GITHUB_REF_NAME=main
+          export GITHUB_SHA=061830180fd30a302441b6f87e149a0ab9571829
 
-  # TODO: Inject the entire repository being tested as a parameter
   generate_verification_report:
     name: Generate verification report using GitHub Action
     runs-on: ubuntu-latest
@@ -48,5 +53,5 @@ jobs:
           system_design_specification_path: docs/design
           it_solution_name: "Sample IT Solution"
           project_name: "Sample Project"
-          environment_name: "Sample-Environment"
+          environment_name: "sample-environment"
           ready_for: use
