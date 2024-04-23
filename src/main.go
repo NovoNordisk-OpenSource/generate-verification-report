@@ -144,8 +144,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"jq", "--version"}).
 		WithExec([]string{"sh", "-c", "echo current directory: $(pwd)"}).
 		WithExec([]string{"sh", "-c", "echo branch: $(git branch --show-current)"}).
-		WithExec([]string{"sh", "-c", "echo triggering commit hash: ${GITHUB_SHA}"}).
-		WithExec([]string{"sh", "-c", "echo triggering branch: ${GITHUB_REF_NAME}"})
+		WithExec([]string{"sh", "-c", "echo triggering commit hash: $GITHUB_SHA"}).
+		WithExec([]string{"sh", "-c", "echo triggering branch: $GITHUB_REF_NAME"})
 
 	// Check if the GITHUB_SHA, GITHUB_REF_NAME, and GITHUB_REPOSITORY are overridden
 	newGithubSha, overrideGithubSha := os.LookupEnv("OVERRIDE_GITHUB_SHA")
@@ -453,7 +453,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	log.Info().Msg("Rendering pipeline run link")
 	pipelineRunLink, err := generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Rendering pipeline run link'")}).
-		WithExec([]string{"sh", "-c", "echo https://github.com/${GITHUB_REPOSITORY}/actions/runs/" + parameters.PipelineRunId}).
+		WithExec([]string{"sh", "-c", "echo https://github.com/$GITHUB_REPOSITORY/actions/runs/" + parameters.PipelineRunId}).
 		Stdout(ctx)
 	if err != nil {
 		return err
