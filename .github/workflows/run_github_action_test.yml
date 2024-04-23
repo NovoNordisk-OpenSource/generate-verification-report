@@ -32,16 +32,16 @@ jobs:
         with:
           name: testresults-validation
           path: test/unit/data/allure-pytest/valid
-      # - name: Inject context values
-      #   shell: bash
-      #   run: |
-      #     echo "Injecting context values:"
-      #     echo "GITHUB_REPOSITORY=nn-dma/generate-verification-report-test" >> $GITHUB_ENV
-      #     echo "GITHUB_REF_NAME=main" >> $GITHUB_ENV
-      #     echo "GITHUB_SHA=061830180fd30a302441b6f87e149a0ab9571829" >> $GITHUB_ENV
-      #     echo "GITHUB_REPOSITORY=$GITHUB_REPOSITORY"
-      #     echo "GITHUB_REF_NAME=$GITHUB_REF_NAME"
-      #     echo "GITHUB_SHA=$GITHUB_SHA"
+      - name: Override context values
+        shell: bash
+        run: |
+          echo "Inject context values:"
+          echo "OVERRIDE_GITHUB_REPOSITORY=nn-dma/generate-verification-report-test" >> $GITHUB_ENV
+          echo "OVERRIDE_GITHUB_REF_NAME=main" >> $GITHUB_ENV
+          echo "OVERRIDE_GITHUB_SHA=061830180fd30a302441b6f87e149a0ab9571829" >> $GITHUB_ENV
+          echo "OVERRIDE_GITHUB_REPOSITORY=$OVERRIDE_GITHUB_REPOSITORY"
+          echo "OVERRIDE_GITHUB_REF_NAME=$OVERRIDE_GITHUB_REF_NAME"
+          echo "OVERRIDE_GITHUB_SHA=$OVERRIDE_GITHUB_SHA"
 
   generate_verification_report:
     name: Generate verification report using GitHub Action

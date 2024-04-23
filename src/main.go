@@ -124,9 +124,9 @@ func GenerateVerificationReport(ctx context.Context) error {
 
 	log.Info().Msg("Preparing state with parameters and test results and outputting debug information")
 	generator := client.Container().From("python:3.12.2-bookworm").
-		WithEnvVariable("GITHUB_SHA", os.Getenv("GITHUB_SHA")).
-		WithEnvVariable("GITHUB_REF_NAME", os.Getenv("GITHUB_REF_NAME")).
-		WithEnvVariable("GITHUB_REPOSITORY", os.Getenv("GITHUB_REPOSITORY")).
+		// WithEnvVariable("GITHUB_SHA", os.Getenv("GITHUB_SHA")).
+		// WithEnvVariable("GITHUB_REF_NAME", os.Getenv("GITHUB_REF_NAME")).
+		// WithEnvVariable("GITHUB_REPOSITORY", os.Getenv("GITHUB_REPOSITORY")).
 		WithSecretVariable("GITHUB_TOKEN", GITHUB_TOKEN).
 		WithDirectory(ScriptDir, client.Host().Directory(path.Join("src", ScriptDir))).
 		WithDirectory(RequirementsDir, client.Host().Directory(path.Join(parameters.ProjectRepositoryPath, parameters.FeatureFilesPath))).
@@ -146,6 +146,31 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"sh", "-c", "echo branch: $(git branch --show-current)"}).
 		WithExec([]string{"sh", "-c", "echo triggering commit hash: ${GITHUB_SHA}"}).
 		WithExec([]string{"sh", "-c", "echo triggering branch: ${GITHUB_REF_NAME}"})
+
+	// Check if the GITHUB_SHA, GITHUB_REF_NAME, and GITHUB_REPOSITORY are overridden
+	newGithubSha, overrideGithubSha := os.LookupEnv("OVERRIDE_GITHUB_SHA")
+	if overrideGithubSha {
+		log.Warn().Msg("Overriding GITHUB_SHA with: " + newGithubSha)
+		generator = generator.WithEnvVariable("GITHUB_SHA", newGithubSha)
+	} else {
+		generator = generator.WithEnvVariable("GITHUB_SHA", os.Getenv("GITHUB_SHA"))
+	}
+
+	newGithubRefName, overrideGithubRefName := os.LookupEnv("OVERRIDE_GITHUB_REF_NAME")
+	if overrideGithubRefName {
+		log.Warn().Msg("Overriding GITHUB_REF_NAME with: " + newGithubRefName)
+		generator = generator.WithEnvVariable("GITHUB_REF_NAME", newGithubRefName)
+	} else {
+		generator = generator.WithEnvVariable("GITHUB_REF_NAME", os.Getenv("GITHUB_REF_NAME"))
+	}
+
+	newGithubRepository, overrideGithubRepository := os.LookupEnv("OVERRIDE_GITHUB_REPOSITORY")
+	if overrideGithubRepository {
+		log.Warn().Msg("Overriding GITHUB_REPOSITORY with: " + newGithubRepository)
+		generator = generator.WithEnvVariable("GITHUB_REPOSITORY", newGithubRepository)
+	} else {
+		generator = generator.WithEnvVariable("GITHUB_REPOSITORY", os.Getenv("GITHUB_REPOSITORY"))
+	}
 	// #endregion
 
 	// #region Org and repo name
