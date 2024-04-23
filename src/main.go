@@ -155,7 +155,8 @@ func GenerateVerificationReport(ctx context.Context) error {
 	orgAndRepository, err := generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting organization and repository name from git remote'")}).
 		WithWorkdir(RepositoryDir).
-		WithExec([]string{"sh", "-c", "git remote -v | awk '/^origin.* \\(push\\)/ { sub(/^origin.*[:@]/, \"\", $2); sub(/\\.git$/, \"\", $2); split($2, arr, \":\"); print arr[2] }'"}).
+		//WithExec([]string{"sh", "-c", "git remote -v | awk '/^origin.* \\(push\\)/ { sub(/^origin.*[:@]/, \"\", $2); sub(/\\.git$/, \"\", $2); split($2, arr, \":\"); print arr[2] }'"}).
+		WithExec([]string{"sh", "-c", "git remote -v | awk '/^origin.* \\(push\\)/ { sub(/^origin.*[:@]/, \"\", $2); sub(/\\.git$/, \"\", $2); split($2, arr, \":\"); sub(/\\/\\/github.com\\//, \"\", arr[2]); print arr[2] }'"}).
 		Stdout(ctx)
 	if err != nil {
 		return err
