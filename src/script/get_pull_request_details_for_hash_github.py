@@ -39,7 +39,6 @@ def get_pull_request_details(commit_hash, github_token, repo):
                 "id": pr["id"],
                 "number": pr["number"],
                 "state": pr["state"],
-                "title": pr["title"],
                 "url": pr["html_url"],
                 "merged_at": format_timestamp(pr["merged_at"]),
                 "title": pr["title"]
