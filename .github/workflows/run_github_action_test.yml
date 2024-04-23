@@ -59,7 +59,3 @@ jobs:
           project_name: "Sample Project"
           environment_name: "sample-environment"
           ready_for: use
-        env:
-          GITHUB_REPOSITORY: nn-dma/generate-verification-report-test
-          GITHUB_REF_NAME: main
-          GITHUB_SHA: 061830180fd30a302441b6f87e149a0ab9571829
