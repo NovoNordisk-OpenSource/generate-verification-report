@@ -32,22 +32,32 @@ jobs:
         with:
           name: testresults-validation
           path: test/unit/data/allure-pytest/valid
-      - name: Inject context values
-        shell: bash
-        run: |
-          echo "Injecting context values:"
-          echo "GITHUB_REPOSITORY=nn-dma/generate-verification-report-test" >> $GITHUB_ENV
-          echo "GITHUB_REF_NAME=main" >> $GITHUB_ENV
-          echo "GITHUB_SHA=061830180fd30a302441b6f87e149a0ab9571829" >> $GITHUB_ENV
-          echo "GITHUB_REPOSITORY=$GITHUB_REPOSITORY"
-          echo "GITHUB_REF_NAME=$GITHUB_REF_NAME"
-          echo "GITHUB_SHA=$GITHUB_SHA"
+      # - name: Inject context values
+      #   shell: bash
+      #   run: |
+      #     echo "Injecting context values:"
+      #     echo "GITHUB_REPOSITORY=nn-dma/generate-verification-report-test" >> $GITHUB_ENV
+      #     echo "GITHUB_REF_NAME=main" >> $GITHUB_ENV
+      #     echo "GITHUB_SHA=061830180fd30a302441b6f87e149a0ab9571829" >> $GITHUB_ENV
+      #     echo "GITHUB_REPOSITORY=$GITHUB_REPOSITORY"
+      #     echo "GITHUB_REF_NAME=$GITHUB_REF_NAME"
+      #     echo "GITHUB_SHA=$GITHUB_SHA"
 
   generate_verification_report:
     name: Generate verification report using GitHub Action
     runs-on: ubuntu-latest
     needs: init
     steps:
+      - name: Inject context values
+        shell: bash
+        run: |
+          echo "Injecting context values:"
+          export GITHUB_REPOSITORY=nn-dma/generate-verification-report-test
+          export GITHUB_REF_NAME=main
+          export GITHUB_SHA=061830180fd30a302441b6f87e149a0ab9571829
+          echo "GITHUB_REPOSITORY=$GITHUB_REPOSITORY"
+          echo "GITHUB_REF_NAME=$GITHUB_REF_NAME"
+          echo "GITHUB_SHA=$GITHUB_SHA"
       - uses: nn-dma/generate-verification-report@main
         with:
           testresults_artifact: testresults-validation
