@@ -50,6 +50,4 @@ jobs:
           environment_name: "sample-environment"
           ready_for: use
         env:
-          OVERRIDE_GITHUB_REPOSITORY: nn-dma/generate-verification-report-test
-          OVERRIDE_GITHUB_REF_NAME: main
           OVERRIDE_GITHUB_SHA: 061830180fd30a302441b6f87e149a0ab9571829
