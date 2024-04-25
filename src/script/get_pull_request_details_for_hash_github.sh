@@ -3,9 +3,6 @@
 commit_hash=$1
 github_token=$2
 repo=$3
-echo "commit hash: $commit_hash"
-echo "github token: $github_token"
-echo "repo: $repo"
 
 self_dir=$(dirname "$(realpath "$0")")
 #echo "self directory: $self_dir"
