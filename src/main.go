@@ -194,11 +194,6 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// Extract pull request details
 	// TODO: Write tests
 	log.Info().Msg("Extracting pull request details")
-	// DEBUG START
-	gsha, _ := generator.EnvVariable(ctx, "GITHUB_SHA")
-	cmd := []string{"sh", "-c", fmt.Sprintf("%s %s %s %s", path.Join(ScriptDir, parameters.GetPullRequestDetailsForHashGithubShLocation), gsha, "<GITHUB_TOKEN>", orgAndRepository)}
-	log.Info().Msg(fmt.Sprintf("DEBUG CMD: %s", strings.Join(cmd, " ")))
-	// DEBUG END
 	prDetails, err := generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting pull request details'")}).
 		WithExec([]string{"sh", "-c", fmt.Sprintf("%s %s %s %s", path.Join(ScriptDir, parameters.GetPullRequestDetailsForHashGithubShLocation), "$GITHUB_SHA", "$GITHUB_TOKEN", orgAndRepository)}).
