@@ -47,7 +47,7 @@ jobs:
           system_design_specification_path: docs/design
           it_solution_name: "Sample IT Solution"
           project_name: "Sample Project"
-          environment_name: "sample-environment"
-          ready_for: use
+          environment_name: "sample-validation-environment"
+          ready_for: production
         env:
           OVERRIDE_GITHUB_SHA: 061830180fd30a302441b6f87e149a0ab9571829
