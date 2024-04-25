@@ -27,7 +27,7 @@ def get_pull_request_details(commit_hash, github_token, repo):
         "Authorization": f"Bearer {github_token}",
         "X-GitHub-Api-Version": "2022-11-28"
     }
-    url = f"https://api.github.com/repos/{repo}/commits/{commit_hash}/pulls"
+    url = f"https://api.github.com/repos/{repo}/commits/{commit_hash}/pulls?state=all"
 
     response = requests.get(url, headers=headers)
 
