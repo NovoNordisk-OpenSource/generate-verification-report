@@ -141,11 +141,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"git", "version"}).
 		WithExec([]string{"apt-get", "update"}).
 		WithExec([]string{"apt-get", "-y", "install", "jq=1.6-2.1"}).
-		WithExec([]string{"jq", "--version"}).
-		WithExec([]string{"sh", "-c", "echo current directory: $(pwd)"}).
-		WithExec([]string{"sh", "-c", "echo branch: $(git branch --show-current)"}).
-		WithExec([]string{"sh", "-c", "echo triggering commit hash: $GITHUB_SHA"}).
-		WithExec([]string{"sh", "-c", "echo triggering branch: $GITHUB_REF_NAME"})
+		WithExec([]string{"jq", "--version"})
 
 	// Check if the GITHUB_SHA, GITHUB_REF_NAME, and GITHUB_REPOSITORY are overridden
 	newGithubSha, overrideGithubSha := os.LookupEnv("OVERRIDE_GITHUB_SHA")
@@ -171,6 +167,12 @@ func GenerateVerificationReport(ctx context.Context) error {
 	} else {
 		generator = generator.WithEnvVariable("GITHUB_REPOSITORY", os.Getenv("GITHUB_REPOSITORY"))
 	}
+
+	generator.
+		WithExec([]string{"sh", "-c", "echo current directory: $(pwd)"}).
+		WithExec([]string{"sh", "-c", "echo branch: $(git branch --show-current)"}).
+		WithExec([]string{"sh", "-c", "echo triggering commit hash: $GITHUB_SHA"}).
+		WithExec([]string{"sh", "-c", "echo triggering branch: $GITHUB_REF_NAME"})
 	// #endregion
 
 	// #region Org and repo name

@@ -106,7 +106,6 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         verb: run
-        dagger-flags: --debug --progress plain
         args: go run -C src main.go
         version: "0.11.1"
 
