@@ -201,7 +201,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// DEBUG END
 	prDetails, err := generator.
 		WithExec([]string{"sh", "-c", "echo '================> " + color.Purple("Extracting pull request details'")}).
-		WithExec([]string{"sh", "-c", fmt.Sprintf("%s %s %s %s", path.Join(ScriptDir, parameters.GetPullRequestDetailsForHashGithubShLocation), "$GITHUB_SHA", "$GITHUB_TOKEN", orgAndRepository)}).
+		WithExec([]string{"sh", "-c", fmt.Sprintf("%s %s %s %s", path.Join(ScriptDir, parameters.GetPullRequestDetailsForHashGithubShLocation), "$GITHUB_SHA", os.Getenv("GITHUB_TOKEN"), orgAndRepository)}).
 		Stdout(ctx)
 	if err != nil {
 		return err
