@@ -30,7 +30,7 @@ class Testresult:
             ).total_seconds() # Time elapsed in seconds for test to execute
         time_executed = datetime.fromtimestamp(self.start/1000.0).strftime('%Y-%m-%d %H:%M:%S') # Time test was executed
         # Extract tags and features from labels list (TODO: This needs to be refactored into input in a future interface)
-        #tags = [x['value'] for x in self.labels if x['name'] == 'tag']
+        tags = [x['value'] for x in self.labels if x['name'] == 'tag']
         features = [x['value'] for x in self.labels if x['name'] == 'feature']
         na_tag = 'N/A'
 
@@ -38,13 +38,37 @@ class Testresult:
         features_tags = []
         try:
             for feature in features:
-                # Append the feature tag to the list only if not empty
-                feature_tag = mapping[feature]
-                if feature_tag != '':
-                    features_tags.append(feature_tag)
+                # Search in the explicitly named feature tags
+                try:                
+                    feature_tag = mapping[feature]
+                    if feature_tag != '':
+                        features_tags.append(feature_tag)
+                except (KeyError):
+                    pass 
+            if len(features_tags) == 0:
+                # Search in generic tags if no explicit feature tags are found
+                for tag in tags:
+                    try:
+                        # Append the tag to the list only if not empty; if it matches a mapping entry, we assume it is a feature tag
+                        feature_tag = mapping[tag]
+                        if feature_tag != '':
+                            features_tags.append(feature_tag)
+                    except (KeyError):
+                        pass
+            if len(features_tags) == 0:
+                # Reverse the mapping key-value pairs and search one last time in generic tags if no explicit feature tags are found
+                reversed_mapping = {v: k for k, v in mapping.items()}
+                for tag in tags:
+                    try:
+                        # Append the tag to the list only if not empty; if it matches a mapping entry, we assume it is a feature tag
+                        feature_tag = reversed_mapping[tag]
+                        if feature_tag != '':
+                            features_tags.append(feature_tag)
+                    except (KeyError):
+                        pass
         except (KeyError):
             pass
-        
+
         # Create rendering
         return f'''            <tr>
                 <th scope="row">{self.count}</th>
