@@ -9,31 +9,6 @@
 import sys
 import glob
 
-# Template for generating mapping lookup script
-TEMPLATE = '''
-import sys
-
-# Define mapping dictionary (key: feature name, value: feature tags)
-mapping = {mapping}
-
-def main(argv):
-    # 1. Check for the arg pattern:
-    #   python3 requirements_id_mapping_lookup.py <feature name>
-    #   e.g. args[0] is 'Evaluation of Inference Unit with multiple sub units'
-    if len(argv) == 1 and argv[0] != '':
-        try:
-            print(mapping[argv[0]])   
-        except (KeyError):
-            print('')
-    else:
-        print('MAPPING_ERROR')
-
-
-if __name__ == "__main__":
-    main(sys.argv[1:])
-
-'''
-
 # List of tags that are being removed when rendering the list of requirements, leaving only the unique ID(s)
 RESERVED_TAGS = ["URS", "GxP", "non-GxP", "CA"]
 
@@ -92,14 +67,6 @@ def main(argv):
 
         # Sort the mapping by the feature name
         mapping = dict(sorted(mapping.items()))
-
-        # Print the mapping
-        #print(mapping)
-
-        # # Write the mapping script to a file
-        # with open('requirements_id_mapping_lookup.py', mode='w', encoding='utf-8') as file_writer:
-        #     file_writer.write(TEMPLATE.replace('{mapping}', str(mapping)))
-        #     file_writer.close()
 
         # Emit the mappings as stdout
         print(str(mapping))
