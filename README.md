@@ -42,7 +42,7 @@ Logs will be written to a `src/run.log` file in the same place everytime the Dag
 - golang (version: >=1.22.2)
 - dagger runtime (version: >= 0.11.2)
 
-Install with Homebrew or another package manager.
+Install with Homebrew, manually, or another package manager.
 
 An additional requirement is that the executing host environment can reach the public Docker Hub image registry.
 
