@@ -36,6 +36,8 @@ jobs:
 
       - name: Test Dagger workflow
         uses: dagger/dagger-for-github@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           verb: run
           args: go run -C src main.go
