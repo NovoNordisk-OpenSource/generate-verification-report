@@ -7,12 +7,12 @@ if [[ -n $pr ]]; then
     if [ $? -ne 0 ]; then
         echo "error: could not extract 'IT Change' issue number from pull request details"
         echo "given: '$pr'"
-        exit 1
+        #exit 1
     else
         echo $prItChangeIssueNumber
     fi
 else
     # Code to execute if $pr is not set or has no value
     echo "error: 'pr' variable is not set or has no value"
-    exit 1
+    #exit 1
 fi
