@@ -37,6 +37,10 @@ inputs:
     required: true
     description: 'Name of the environment. This will be in the verification report.'
     default: ''
+  github_token:
+    required: true
+    description: 'GitHub token to use for API access.'
+    default: ''
 
 runs:
   using: 'composite'
@@ -103,7 +107,7 @@ runs:
     - name: Generate verification report
       uses: dagger/dagger-for-github@v5
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ inputs.github_token }}
       with:
         verb: run
         args: go run -C src main.go

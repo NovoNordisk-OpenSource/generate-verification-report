@@ -49,5 +49,6 @@ jobs:
           project_name: "Sample Project"
           environment_name: "sample-validation-environment"
           ready_for: production
+          github_token: ${{ secrets.GITHUB_TOKEN }}
         env:
           OVERRIDE_GITHUB_SHA: 061830180fd30a302441b6f87e149a0ab9571829
