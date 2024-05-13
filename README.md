@@ -39,7 +39,7 @@ Any output in this directory will be overwritten between runs unless the generat
 Logs will be written to a `src/run.log` file in the same place everytime the Dagger workflow is run. This file is appended between runs.
 
 ## Installed prerequisites
-- golang (version: >=1.22.2)
+- golang (version: >=1.22.3)
 - dagger runtime (version: >= 0.11.4)
 
 Install with Homebrew, manually, or another package manager.
