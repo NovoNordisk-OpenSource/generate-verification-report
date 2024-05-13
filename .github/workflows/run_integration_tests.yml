@@ -42,7 +42,7 @@ jobs:
         with:
           verb: run
           args: go run -C src main.go
-          version: "0.11.2"
+          version: "0.11.4"
 
       - name: Print logs
         if: always()
