@@ -24,6 +24,12 @@ The `GITHUB_TOKEN` is expected to be the dynamically generated GitHub token duri
 
 In some cases it may be necessary to override the default values of these environment variables. This can be done by [setting override environment variables](#overriding-default-github-environment-variables) that the Dagger workflow will look for.
 
+```shell
+OVERRIDE_GITHUB_REPOSITORY
+OVERRIDE_GITHUB_REF_NAME
+OVERRIDE_GITHUB_SHA
+```
+
 ### Setting default environment variables
 
 > This command assumes running on linux or macOS.
