@@ -3,7 +3,7 @@ module github.com/nn-dma/generate-verification-report
 go 1.22.3
 
 require (
-	dagger.io/dagger v0.11.5
+	dagger.io/dagger v0.11.6
 	github.com/rs/zerolog v1.31.0
 )
 
