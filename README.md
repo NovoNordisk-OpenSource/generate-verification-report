@@ -22,7 +22,7 @@ First, go to the repository root `/`. Following paths mentioned are relative to 
 Parameters are provided here by editing the `parameters.json` file. It is located in the `/input` directory *(not to be confused with the **`inputs`** directory inside `/src`, which is a Go package)*.
 
 ##### Environment variables
-The Dagger workflow expects certain environment variables to be set. These are related to the runtime context and will be set automatically by the GitHub workflow. If you run the Dagger workflow locally they can be manually set and as described [here](.doc/environment_variables.md).
+The Dagger workflow expects certain environment variables to be set. These are related to the runtime context and will be set automatically by the GitHub workflow. If you run the Dagger workflow locally they can be manually set and as described [here](doc/environment_variables.md).
 
 ##### Test results
 Test results provided as input to the Dagger worklow must be placed in the `/input/testresults` directory. For now, the test results must be in the form of one JSON file per test case result and each must be in the Allure-format.
@@ -45,7 +45,7 @@ Logs will be written to a `src/run.log` file in the same place everytime the Dag
 
  If you run the Dagger workflow locally or have a specific reason (like generating the verification report for a repository that is different from where the workflow is run) it will be necessary to override some of the default values of the environment variables. 
  
- This can be done by [setting override environment variables](.doc/environment_variables.md#override-environment-variables) that the Dagger workflow will look for.
+ This can be done by [setting override environment variables](doc/environment_variables.md#override-environment-variables) that the Dagger workflow will look for.
 
 ## Installed prerequisites
 - golang (version: >=1.22.3)
