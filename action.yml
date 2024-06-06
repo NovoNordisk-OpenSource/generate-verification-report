@@ -54,7 +54,7 @@ runs:
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: 1.22.3
+        go-version: 1.22.4
         cache: false
 
     # Note: v4 is currently used but is not yet fully supported in GitHub Enterprise Server
