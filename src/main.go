@@ -93,7 +93,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// 1. Collect test results
 	// TODO: Simplify by moving this to the python container
 	log.Info().Msg("Collecting test results")
-	collector := client.Container().From("alpine:latest").
+	collector := client.Container().From("alpine:3.20.1").
 		WithDirectory("input/testresults", client.Host().Directory(parameters.TestResultsPath)).
 		WithExec([]string{"sh", "-c", "echo 'number of test results (.json files):' $(ls -1 input/testresults | grep .json | wc -l)"})
 	log.Info().Msg("Test results collected")
@@ -500,7 +500,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 	// #region Export report to host
 	// Export the verification report to host 'output' directory
 	// TODO: Simplify by moving this to the python container
-	_, err = client.Container().From("alpine:latest").
+	_, err = client.Container().From("alpine:3.20.1").
 		WithFile(fmt.Sprintf("output/%s", verificationReportFilename), generator.File("output/report.html")).
 		Directory(OutputDir).
 		Export(ctx, OutputDir)
