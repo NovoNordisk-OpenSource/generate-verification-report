@@ -49,7 +49,7 @@ Logs will be written to a `src/run.log` file in the same place everytime the Dag
 
 ## Installed prerequisites
 - golang (version: >=1.22.4)
-- dagger runtime (version: >= 0.11.8)
+- dagger runtime (version: >= 0.11.9)
 
 Install with Homebrew, manually, or another package manager.
 

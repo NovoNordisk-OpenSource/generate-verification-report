@@ -111,7 +111,7 @@ runs:
       with:
         verb: run
         args: go run -C src main.go
-        version: "0.11.8"
+        version: "0.11.9"
 
     - name: Print logs
       shell: bash
