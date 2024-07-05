@@ -48,7 +48,7 @@ Logs will be written to a `src/run.log` file in the same place everytime the Dag
  This can be done by [setting override environment variables](doc/environment_variables.md#override-environment-variables) that the Dagger workflow will look for.
 
 ## Installed prerequisites
-- golang (version: >=1.22.4)
+- golang (version: >=1.22.5)
 - dagger runtime (version: >= 0.11.9)
 
 Install with Homebrew, manually, or another package manager.

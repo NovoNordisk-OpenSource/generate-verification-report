@@ -1,3 +1,3 @@
 module github.com/nn-dma/generate-verification-report/test/unit
 
-go 1.22.4
+go 1.22.5
