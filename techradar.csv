@@ -1,4 +1,4 @@
 name,ring,quadrant,isNew,moved,description
 Python,adopt,languages & frameworks,false,0,
-Go,adopt,languages & frameworks,true,0,
-Dagger,adopt,languages & frameworks,true,0,Used to orchestrate and encapsulate all verification report geration logic
+Go,adopt,languages & frameworks,false,0,
+Dagger,adopt,languages & frameworks,false,0,Used to orchestrate and encapsulate all verification report generation logic
