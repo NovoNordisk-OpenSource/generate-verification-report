@@ -1,6 +1,6 @@
 module github.com/nn-dma/generate-verification-report
 
-go 1.22.5
+go 1.22.6
 
 require (
 	dagger.io/dagger v0.12.4
