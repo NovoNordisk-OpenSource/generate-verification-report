@@ -54,7 +54,7 @@ runs:
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: 1.22.6
+        go-version: 1.23.0
         cache: false
 
     # Note: v4 is currently used but is not yet fully supported in GitHub Enterprise Server
@@ -111,7 +111,7 @@ runs:
       with:
         verb: run
         args: go run -C src main.go
-        version: "0.12.4"
+        version: "0.12.5"
 
     - name: Print logs
       shell: bash

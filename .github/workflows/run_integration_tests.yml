@@ -31,7 +31,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.22.6
+          go-version: 1.23.0
           cache: false
 
       - name: Test Dagger workflow
@@ -42,7 +42,7 @@ jobs:
         with:
           verb: run
           args: go run -C src main.go
-          version: "0.12.4"
+          version: "0.12.5"
 
       - name: Print logs
         if: always()
