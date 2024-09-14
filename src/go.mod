@@ -1,9 +1,9 @@
 module github.com/nn-dma/generate-verification-report
 
-go 1.23.0
+go 1.23.1
 
 require (
-	dagger.io/dagger v0.12.5
+	dagger.io/dagger v0.13.0
 	github.com/rs/zerolog v1.31.0
 )
 
