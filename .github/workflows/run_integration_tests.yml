@@ -13,10 +13,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.7
 
       - name: Checkout report testing repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.7
         with:
           repository: nn-dma/generate-verification-report-test
           path: input/repository
@@ -29,13 +29,13 @@ jobs:
           cp -r test/unit/data/allure-pytest/valid/* input/testresults
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v5.0.2
         with:
           go-version: 1.23.1
           cache: false
 
       - name: Test Dagger workflow
-        uses: dagger/dagger-for-github@v5
+        uses: dagger/dagger-for-github@v6.8.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OVERRIDE_GITHUB_SHA: 061830180fd30a302441b6f87e149a0ab9571829

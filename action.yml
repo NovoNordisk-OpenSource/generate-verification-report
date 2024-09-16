@@ -46,27 +46,27 @@ runs:
   using: 'composite'
   steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4.1.7
       with:
         repository: nn-dma/generate-verification-report
         path: .
 
     - name: Set up Go
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@v5.0.2
       with:
         go-version: 1.23.1
         cache: false
 
     # Note: v4 is currently used but is not yet fully supported in GitHub Enterprise Server
     - name: Download repository
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v4.1.8
       with:
         name: ${{ inputs.repository_artifact }}
         path: input/repository
 
     # Note: v4 is currently used but is not yet fully supported in GitHub Enterprise Server
     - name: Download test results
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v4.1.8
       with:
         name: ${{ inputs.testresults_artifact }}
         path: input/testresults
@@ -105,7 +105,7 @@ runs:
         cat <<< "$(jq --indent 4 --arg grid "$GITHUB_RUN_ID" '.pipeline_run_id = $grid' input/parameters.json)" > input/parameters.json
 
     - name: Generate verification report
-      uses: dagger/dagger-for-github@v5
+      uses: dagger/dagger-for-github@v6.8.0
       env:
         GITHUB_TOKEN: ${{ inputs.github_token }}
       with:
@@ -133,7 +133,7 @@ runs:
         echo "verification_report_artifact_name=$verification_report_artifact_name" >> $GITHUB_ENV
 
     - name: Upload verification report
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v4.4.0
       with:
         name: ${{ env.verification_report_artifact_name }}
         path: output/${{ env.verification_report_filename }}

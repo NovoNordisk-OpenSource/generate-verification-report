@@ -22,8 +22,6 @@ jobs:
           path: input/repository
           fetch-depth: 0
           fetch-tags: true
-      - name: List input repository directory
-        run: ls -la input/repository
       - name: Upload sample repository
         uses: actions/upload-artifact@v4.4.0
         with:
