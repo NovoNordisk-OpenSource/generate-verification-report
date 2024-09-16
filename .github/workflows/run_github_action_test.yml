@@ -13,6 +13,12 @@ jobs:
     name: Initialize test environment
     runs-on: ubuntu-latest
     steps:
+      - name: Print install git version
+        run: git --version
+      - name: Install latest git
+        run: 
+          apt-get install git -y
+          git --version
       - name: Checkout action repository
         uses: actions/checkout@v4
       - name: Checkout report testing repository
