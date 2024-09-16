@@ -13,8 +13,6 @@ jobs:
     name: Initialize test environment
     runs-on: ubuntu-latest
     steps:
-      - name: Configure git
-        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Checkout action repository
         uses: actions/checkout@v4
       - name: Checkout report testing repository
@@ -24,6 +22,8 @@ jobs:
           path: input/repository
           fetch-depth: 0
           fetch-tags: true
+      - name: List input repository directory
+        run: ls -la input/repository
       - name: Upload sample repository
         uses: actions/upload-artifact@v4
         with:
