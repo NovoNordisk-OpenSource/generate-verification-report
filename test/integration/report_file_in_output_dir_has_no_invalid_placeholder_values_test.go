@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestReportFileHasNoInvalidPlaceholderValues(t *testing.T) {
+func TestReportFileHasNoErrorPrVariableNotSetOrHasNoValue(t *testing.T) {
 	reportFile := "VerificationReport_validation_Dummy1234567890_dummy_environment_name.html"
 	outputDir := "output"
 	filePath := "../../" + outputDir + "/" + reportFile
