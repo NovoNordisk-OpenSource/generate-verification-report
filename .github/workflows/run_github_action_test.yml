@@ -14,9 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout action repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.7
       - name: Checkout report testing repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.7
         with:
           repository: nn-dma/generate-verification-report-test
           path: input/repository
@@ -25,12 +25,13 @@ jobs:
       - name: List input repository directory
         run: ls -la input/repository
       - name: Upload sample repository
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.4.0
         with:
           name: repository
           path: input/repository
+          include-hidden-files: true
       - name: Upload sample test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.4.0
         with:
           name: testresults-validation
           path: test/unit/data/allure-pytest/valid
