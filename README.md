@@ -32,6 +32,8 @@ The Git repository under test provided as input to the Dagger workflow must be p
 
 ![](./doc/inputs.png)
 
+> How to upload the artifacts is described [here](doc/uploading-artifacts.md).
+
 ### Outputs
 
 Output from any run will be placed in a directory here called `/output`. The content in this will be the verification report HTML file.
