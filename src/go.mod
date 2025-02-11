@@ -1,4 +1,4 @@
-module github.com/nn-dma/generate-verification-report
+module github.com/NovoNordisk-OpenSource/generate-verification-report
 
 go 1.23.6
 

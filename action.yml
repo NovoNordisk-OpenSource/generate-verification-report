@@ -48,7 +48,7 @@ runs:
     - name: Checkout code
       uses: actions/checkout@v4.1.7
       with:
-        repository: nn-dma/generate-verification-report
+        repository: NovoNordisk-OpenSource/generate-verification-report
         path: .
 
     - name: Set up Go

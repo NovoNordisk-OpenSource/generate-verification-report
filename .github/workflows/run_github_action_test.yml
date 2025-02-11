@@ -18,7 +18,7 @@ jobs:
       - name: Checkout report testing repository
         uses: actions/checkout@v4.1.7
         with:
-          repository: nn-dma/generate-verification-report-test
+          repository: NovoNordisk-OpenSource/generate-verification-report-test
           path: input/repository
           fetch-depth: 0
           fetch-tags: true
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: init
     steps:
-      - uses: nn-dma/generate-verification-report@main
+      - uses: NovoNordisk-OpenSource/generate-verification-report@main
         with:
           testresults_artifact: testresults-validation
           repository_artifact: repository

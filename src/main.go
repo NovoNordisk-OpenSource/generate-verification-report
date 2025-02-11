@@ -10,8 +10,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/nn-dma/generate-verification-report/color"
-	"github.com/nn-dma/generate-verification-report/inputs"
+	"github.com/NovoNordisk-OpenSource/generate-verification-report/color"
+	"github.com/NovoNordisk-OpenSource/generate-verification-report/inputs"
 
 	"dagger.io/dagger"
 	"github.com/rs/zerolog"

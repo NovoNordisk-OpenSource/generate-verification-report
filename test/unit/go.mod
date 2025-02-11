@@ -1,3 +1,3 @@
-module github.com/nn-dma/generate-verification-report/test/unit
+module github.com/NovoNordisk-OpenSource/generate-verification-report/test/unit
 
 go 1.23.6

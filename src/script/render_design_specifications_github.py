@@ -49,7 +49,7 @@ def main(argv):
     #       argv[2] is '-branch'
     #       argv[3] is 'origin/release/v1'
     #       argv[4] is '-repository'
-    #       argv[5] is 'nn-dma/generate-verification-report'
+    #       argv[5] is 'NovoNordisk-OpenSource/generate-verification-report'
     if len(argv) == 6 and argv[0] == '-folder' and argv[2] == '-branch' and argv[4] == '-repository':
         # Render all design specifications
         # Find all .md files in the folder and subfolders
@@ -87,7 +87,7 @@ def main(argv):
                 # /system_documentation/docs/design/ReverseString/index.md
                 repository_file_path = os.path.abspath(file).replace(os.getcwd(), "")
                 # Create link to path for file, e.g.:
-                # https://github.com/nn-dma/generate-verification-report/blob/5ef02fe1e00c1dbf9d924ce9717af85e9d83ae44/test/integration/requirements/urs/uppercase-string.feature
+                # https://github.com/NovoNordisk-OpenSource/generate-verification-report/blob/5ef02fe1e00c1dbf9d924ce9717af85e9d83ae44/test/integration/requirements/urs/uppercase-string.feature
                 repository_file_link = f'https://github.com/{repository}/blob/{last_modified_commit_hash}{repository_file_path}'
 
                 count_design_specifications += 1
