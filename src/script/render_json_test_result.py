@@ -69,14 +69,20 @@ class Testresult:
         except (KeyError):
             pass
 
+        # default method is 'Automatic'
+        method = 'Automatic'
+        for feature_tag in features_tags:
+            if 'manual' in feature_tag.split(' '):
+                method = 'Manual'
+
         # Create rendering
         return f'''            <tr>
                 <th scope="row">{self.count}</th>
                 <td>{self.name}</td>
-                <td>Automatic</td>
-                <td>Pipeline</td>
+                <td>{method}</td>
+                <td>{'Pipeline' if method == 'Automatic' else 'Not Applicable'}</td>
                 <td>{time_executed}</td>
-                <td class="{self.status}">{self.status}</td>
+                <td class="{self.status if method != 'Manual' else 'na'}">{'Not Applicable' if method == 'Manual' else self.status}</td>
                 <td>{'<kbd>' + '</kbd><kbd>'.join(features_tags) + '</kbd>' if features_tags else ''.join(na_tag)}</td>
             </tr>'''
 
