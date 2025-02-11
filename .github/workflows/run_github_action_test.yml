@@ -52,4 +52,4 @@ jobs:
           ready_for: production
           github_token: ${{ secrets.GITHUB_TOKEN }}
         env:
-          OVERRIDE_GITHUB_SHA: 061830180fd30a302441b6f87e149a0ab9571829
+          OVERRIDE_GITHUB_SHA: 857f21d4180b60ad12978b14db0e6a3e191f8ec0
