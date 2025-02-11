@@ -37,7 +37,7 @@ OVERRIDE_GITHUB_SHA
 You can set the default environment variables manually, e.g. for local use, by running the following command:
 
 ```shell
-export GITHUB_REPOSITORY=nn-dma/generate-verification-report-test
+export GITHUB_REPOSITORY=NovoNordisk-OpenSource/generate-verification-report-test
 export GITHUB_REF_NAME=main
 export GITHUB_SHA=724a0a893e760ae2df3f809985ee55feda4cb7a9
 export GITHUB_RUN_ID=0123456789
@@ -59,7 +59,7 @@ It is used to generate links and looking up information for generating the verif
 Example:
 
 ```shell
-export GITHUB_REPOSITORY=nn-dma/generate-verification-report-test
+export GITHUB_REPOSITORY=NovoNordisk-OpenSource/generate-verification-report-test
 ```
 
 #### GITHUB_REF_NAME
@@ -119,7 +119,7 @@ You may want to override the default values of the GitHub environment variables.
 You can set the override environment variables manually, e.g. for local use, by running the following command:
 
 ```shell
-export OVERRIDE_GITHUB_REPOSITORY=nn-dma/generate-verification-report-test
+export OVERRIDE_GITHUB_REPOSITORY=NovoNordisk-OpenSource/generate-verification-report-test
 export OVERRIDE_GITHUB_REF_NAME=main
 export OVERRIDE_GITHUB_SHA=724a0a893e760ae2df3f809985ee55feda4cb7a9
 ```
@@ -137,7 +137,7 @@ This environment variable is used to override the default value of `GITHUB_REPOS
 Example:
 
 ```shell
-export OVERRIDE_GITHUB_REPOSITORY=nn-dma/generate-verification-report-test
+export OVERRIDE_GITHUB_REPOSITORY=NovoNordisk-OpenSource/generate-verification-report-test
 ```
 
 #### OVERRIDE_GITHUB_REF_NAME
