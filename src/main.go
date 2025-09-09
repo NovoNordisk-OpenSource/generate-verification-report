@@ -140,7 +140,7 @@ func GenerateVerificationReport(ctx context.Context) error {
 		WithExec([]string{"pip", "install", "requests"}). // Migrate to using requirements.txt with version pin or Poetry with version pin.
 		WithExec([]string{"git", "version"}).
 		WithExec([]string{"apt-get", "update"}).
-		WithExec([]string{"apt-get", "-y", "install", "jq=1.6-2.1"}).
+		WithExec([]string{"apt-get", "-y", "install", "jq=1.6-2.1+deb12u1"}).
 		WithExec([]string{"jq", "--version"})
 
 	// Check if the GITHUB_SHA, GITHUB_REF_NAME, and GITHUB_REPOSITORY are overridden
