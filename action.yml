@@ -52,9 +52,9 @@ runs:
         path: .
 
     - name: Set up Go
-      uses: actions/setup-go@v5.0.2
+      uses: actions/setup-go@v6.0.0
       with:
-        go-version: 1.23.6
+        go-version: 1.25.3
         cache: false
 
     # Note: v4 is currently used but is not yet fully supported in GitHub Enterprise Server
@@ -105,13 +105,13 @@ runs:
         cat <<< "$(jq --indent 4 --arg grid "$GITHUB_RUN_ID" '.pipeline_run_id = $grid' input/parameters.json)" > input/parameters.json
 
     - name: Generate verification report
-      uses: dagger/dagger-for-github@v6.8.0
+      uses: dagger/dagger-for-github@v8.2.0
       env:
         GITHUB_TOKEN: ${{ inputs.github_token }}
       with:
         verb: run
         args: go run -C src main.go
-        version: "0.15.3"
+        version: "0.19.3"
 
     - name: Print logs
       shell: bash
