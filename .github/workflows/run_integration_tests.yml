@@ -29,20 +29,20 @@ jobs:
           cp -r test/unit/data/allure-pytest/valid/* input/testresults
 
       - name: Set up Go
-        uses: actions/setup-go@v5.0.2
+        uses: actions/setup-go@v6.0.0
         with:
-          go-version: 1.23.6
+          go-version: 1.25.3
           cache: false
 
       - name: Test Dagger workflow
-        uses: dagger/dagger-for-github@v6.8.0
+        uses: dagger/dagger-for-github@v8.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OVERRIDE_GITHUB_SHA: 857f21d4180b60ad12978b14db0e6a3e191f8ec0
         with:
           verb: run
           args: go run -C src main.go
-          version: "0.15.3"
+          version: "0.19.3"
 
       - name: Print logs
         if: always()
